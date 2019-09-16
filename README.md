@@ -1,17 +1,19 @@
 
 # sadash
 
-An R package for Southwick internal use: functions and templates to run individual state dashboard workflows
+An R package for Southwick internal use: functions and templates to run individual state dashboard workflows.
 
 ## Installation
 
 ## Usage
 
+### Setup templates
+
 ### License History
 
 ### Dashboard Metrics
 
-```r
+``` r
 library(tidyverse)
 library(DBI)
 library(salic)
