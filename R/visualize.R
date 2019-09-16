@@ -24,7 +24,7 @@ plot_bar <- function(df, plot_title = "", measure = "value") {
 plot_value <- function(df, seg, plot_title = "", measure = "value") {
     filter(df, segment == seg) %>%
         plot_bar(plot_title, measure) +
-        scale_y_continuous(label = scales::comma)
+        scale_y_continuous(labels = scales::comma)
 }
 
 # plot % change by year for a given segment
