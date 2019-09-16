@@ -1,7 +1,6 @@
 # state/period-specific parameters to be called in production code
 
 state <- "__state__"
-
 period <- "__period__"
 firstyr <- 2008 # first year to include in dashboard results
 

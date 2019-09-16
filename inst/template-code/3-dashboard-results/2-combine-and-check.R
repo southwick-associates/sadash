@@ -19,7 +19,7 @@ for (i in names(x)) {
 }
 
 # visualize
-run_visual(outdir) # note: this will display a filter error temporarily
+run_visual(outdir) # note: this may display a filter error temporarily
 
 # Checks ------------------------------------------------------------------
 

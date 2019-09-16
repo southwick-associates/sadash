@@ -19,7 +19,7 @@ update_dashboard <- function() {
 #' @family functions for making directories and files
 #' @export
 #' @examples
-#' # new_dashboard("XX", "2017-q4")
+#' # new_dashboard("YY", "2018-q4")
 new_dashboard <- function(
     state, time_period, sa_path = "E:/SA", 
     R_version = "3.5.1", project_library = "data-dashboards2"
@@ -62,11 +62,7 @@ new_dashboard <- function(
     x[10] <- paste0("proj_libname <- '", project_library, "'")
     writeLines(x, file.path(analysis_path, ".Rprofile"))
     
-    # make README & .Rproj (for RStudio)
-    file.copy(
-        system.file("template-setup", "README.txt", package = "sadash"), 
-        file.path(analysis_path, "README.txt")
-    )
+    # make .Rproj (for RStudio)
     file.copy(
         system.file("template-setup", "XX.Rproj", package = "sadash"), 
         file.path(analysis_path, paste0(state, "-", time_period, ".Rproj"))

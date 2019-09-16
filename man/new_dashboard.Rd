@@ -24,6 +24,6 @@ new_dashboard(state, time_period, sa_path = "E:/SA",
 This is intended to be run before data processing for a new state begins
 }
 \examples{
-# new_dashboard("XX", "2017-q4")
+# new_dashboard("YY", "2018-q4")
 }
 \concept{functions for making directories and files}
