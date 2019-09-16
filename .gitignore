@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.Rprofile
+snapshot-library.csv
+sadash.Rproj
+TODO.md
+Developing.md
+/development/*
+README-develpment.md

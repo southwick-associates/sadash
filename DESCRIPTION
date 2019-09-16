@@ -1,0 +1,21 @@
+Package: sadash
+Type: Package
+Title: Prepare Agency Dashboard Data for state-level dashboards
+Version: 0.1
+Authors@R: c(
+    person("Dan", "Kary", , "Rsoftware@SouthwickAssociates.com", role = c("aut", "cre")),
+    person("Southwick Associates", role = c("cph", "fnd"))
+    )
+Description: Functions and templates for Southwick dashboard workflow
+License: MIT + file LICENSE
+URL: https://github.com/southwick-associates/sadash
+BugReports: https://github.com/southwick-associates/sadash/issues
+Encoding: UTF-8
+LazyData: FALSE
+Depends:
+    R (>= 3.5)
+Imports:
+    data.table (>= 1.11.4),
+    dplyr (>= 0.7.6)
+RoxygenNote: 6.1.0
+Suggests:
