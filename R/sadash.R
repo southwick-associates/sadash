@@ -5,7 +5,7 @@
 # - probably only need to import all of dplyr & salic
 
 #' @import dplyr salic DBI RSQLite stringr ggplot2 shiny
-#' @importFrom utils read.csv
+#' @importFrom utils read.csv write.csv
 #' @importFrom scales comma percent
 #' @rawNamespace import(data.table, except = c(first, between, last))
 NULL
