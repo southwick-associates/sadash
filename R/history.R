@@ -6,7 +6,7 @@
 #' @param yrs years to include in license history
 #' @family functions for producing license history
 #' @export
-load_all <- function(db_license, yrs) {
+load_license <- function(db_license, yrs) {
     con <- dbConnect(RSQLite::SQLite(), db_license)
     lic <- tbl(con, "lic") %>% collect()
     sale <- tbl(con, "sale") %>%
@@ -20,63 +20,22 @@ load_all <- function(db_license, yrs) {
     list(cust = cust, lic = lic, sale = sale)
 }
 
-#' Build history table for given permission
+#' Drop rows with missing cust_id from sale table
 #' 
-#' @inheritParams load_all
-#' @param sale input sales
-#' @param lic input license types
-#' @param lic_filter query to be passed to filter_() on lic table (selects relevant lic_ids)
-#' @param quarter current quarter (if not quarter 4, the last year is excluded for lapse)
-#' @param rank_var passed to rank_sale()
-#' @param carry_vars passed to make_history()
+#' Not sure why the sales table would contain missing customer IDs, but there
+#' are usually a handfull of NAs.
+#'
+#' @param sale data frame: sale table
 #' @family functions for producing license history
 #' @export
-build_history <- function(
-    sale, lic, yrs, lic_filter, quarter, 
-    rank_var = c("duration", "res"), carry_vars = c("month", "res")
-) {
-    # sale data often contains missing cust_ids for some reason
-    drop_na_custid <- function(sale) {
-        drop <- filter(sale, is.na(cust_id))
-        if (nrow(drop) == 0) {
-            sale
-        } else {
-            message(nrow(drop), " sale records missing a cust_id were dropped")
-            filter(sale, !is.na(cust_id))
-        }
+drop_na_custid <- function(sale) {
+    drop <- filter(sale, is.na(cust_id))
+    if (nrow(drop) == 0) {
+        sale
+    } else {
+        message(nrow(drop), " sale records missing a cust_id were dropped")
+        filter(sale, !is.na(cust_id))
     }
-    # lapse should only be computed for full years
-    yrs_lapse <- if (quarter == 4) yrs else yrs[-length(yrs)]
-    
-    lic %>% 
-        filter_(lic_filter) %>%
-        select(lic_id, duration) %>%
-        inner_join(sale, by = "lic_id") %>%
-        drop_na_custid() %>%
-        rank_sale(rank_var, first_month = TRUE) %>%
-        make_history(yrs, carry_vars, yrs_lapse)
-}
-
-#' For subtype permissions: use reference permission to identify R3 & lapse
-#' 
-#' @param df_subtype subtype license history table
-#' @param ref_name name of permission that provides R3 & lapse (for subtypes)
-#' @param db_history file path to history.sqlite3
-#' @family functions for producing license history
-#' @export
-adjust_subtype <- function(df_subtype, ref_name, db_history) {
-    if (is.null(ref_name)) {
-        return(df_subtype)
-    }
-    con <- dbConnect(RSQLite::SQLite(), db_history)
-    df_ref <- tbl(con, ref_name) %>% 
-        select(cust_id, year, lapse, R3) %>% 
-        collect()
-    dbDisconnect(con)
-    
-    df_subtype %>%
-        select(-R3, -lapse) %>%
-        left_join(df_ref, by = c("cust_id", "year"))
 }
 
 #' Write history table to sqlite
