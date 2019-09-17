@@ -7,11 +7,11 @@
 # - rank_var: passed to rank_sale()
 # - carry_vars: passed to make_history()
 run_group <- function(
-    group, lic_filter, group_parent = NULL, 
+    group, lic_filter, yrs_group = yrs, group_parent = NULL, 
     rank_var = c("duration", "res"), carry_vars = c("month", "res")
 ) {
     # lapse should only be computed for full years
-    yrs_lapse <- if (quarter == 4) yrs else yrs[-length(yrs)]
+    yrs_lapse <- if (quarter == 4) yrs_group else yrs_group[-length(yrs_group)]
     
     lic_group <- all$lic %>%
         filter_(lic_filter)
@@ -21,7 +21,7 @@ run_group <- function(
         inner_join(all$sale, by = "lic_id") %>%
         drop_na_custid() %>%
         rank_sale(rank_var, first_month = TRUE) %>%
-        make_history(yrs, carry_vars, yrs_lapse)
+        make_history(yrs_group, carry_vars, yrs_lapse)
     
     if (!is.null(group_parent)) {
         # subtypes: use parent group for R3 & lapse

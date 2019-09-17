@@ -14,8 +14,6 @@ install.packages(
 
 ## Usage
 
-### Setup templates
-
 Use new_dashboard() to setup code for a given state and time period:
 
 ``` r
