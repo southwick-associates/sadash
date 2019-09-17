@@ -5,9 +5,22 @@ An R package for Southwick internal use: functions and templates to run individu
 
 ## Installation
 
+``` r
+install.packages(
+    "E:/SA/Projects/R-Software/Southwick-packages/sadash_0.1.zip", 
+    repos = NULL, type = "win.binary"
+)
+```
+
 ## Usage
 
 ### Setup templates
+
+Use new_dashboard() to setup code for a given state and time period:
+
+``` r
+sadash::new_dashboard("YY", "yyyy-qn")
+```
 
 ### License History
 

@@ -26,4 +26,4 @@ This is intended to be run before data processing for a new state begins
 \examples{
 # new_dashboard("YY", "2018-q4")
 }
-\concept{functions for making directories and files}
+\concept{functions for making template files/folders}

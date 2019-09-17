@@ -9,6 +9,7 @@ update_dashboard <- function() {
 #' Setup a new state dashboard with default directories and template scripts
 #' 
 #' This is intended to be run before data processing for a new state begins
+#' 
 #' @param state character: Two letter state designation
 #' @param time_period character: Time period for the first dashboard 
 #' (e.g., "2015", "2016-q1", etc.)
@@ -16,7 +17,7 @@ update_dashboard <- function() {
 #' (for analysis and data, etc.)
 #' @param R_version character: Version of R to use for this project
 #' @param project_library character: Name of project-specific R package library
-#' @family functions for making directories and files
+#' @family functions for making template files/folders
 #' @export
 #' @examples
 #' # new_dashboard("YY", "2018-q4")
@@ -81,14 +82,13 @@ new_dashboard <- function(
 #' 
 #' This is a helper function for preparing templates in sadash. It uses gsub, see 
 #' \code{\link[base]{grep}} (https://gist.github.com/mages/1544009)
+#' 
 #' @inheritParams base::list.files
 #' @param find_string character: String (to find) that will be replaced
 #' @param replacement_string character: New string to use
 #' @param showmessage logical: If TRUE, prints a message about replacement
 #' @keywords internal
 #' @export
-#' @examples
-#' # replace_strings()
 replace_strings <- function(
     path = ".", find_string, replacement_string, pattern = ".R", showmessage = TRUE
 ) {

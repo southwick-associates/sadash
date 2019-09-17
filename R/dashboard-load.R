@@ -1,11 +1,13 @@
 # functions to load license data from sqlite
 
-# helper function to open connection, pull data, close connection
-# use 1 documentation group for all the load_[data] functions
-# - db
-# - query
-# - state
-# - yrs
+#' Load sqlite data
+#'
+#' @param db file path to sqlite database
+#' @param query DBI statement for sqlite connection 
+#' @param yrs years to be included from sqlite table
+#' @param state 2-character abbreviation of selected state
+#' @param group name of selected permission
+#' @export
 load_sqlite <- function(db, query) {
     con <- dbConnect(RSQLite::SQLite(), db)
     x <- query(con)
@@ -15,7 +17,7 @@ load_sqlite <- function(db, query) {
 
 # State-specific ----------------------------------------------------------
 
-# load customer data
+#' @describeIn load_sqlite Load customer data
 load_cust <- function(db) {
     load_sqlite(db, function(con) {
         tbl(con, "cust") %>% 
@@ -24,7 +26,7 @@ load_cust <- function(db) {
     })
 }
 
-# load sales for data for selected years
+#' @describeIn load_sqlite Load sales for selected years
 load_sale <- function(db, yrs) {
     load_sqlite(db, function(con) {
         tbl(con, "sale") %>% 
@@ -34,7 +36,7 @@ load_sale <- function(db, yrs) {
     })
 }
 
-# load county fips-names for attaching to cust & pop_county
+#' @describeIn load_sqlite Load county fips-names for attaching to cust & pop_county
 load_counties <- function(db, state) {
     load_sqlite(db, function(con) {
         tbl(con, "county_fips") %>% 
@@ -44,7 +46,7 @@ load_counties <- function(db, state) {
     })
 }
 
-# load population for selected state (by county-age-sex)
+#' @describeIn load_sqlite Load population for selected state (by county-age-sex)
 load_pop <- function(db, state) {
     load_sqlite(db, function(con) {
         tbl(con, "pop_acs") %>%
@@ -56,7 +58,7 @@ load_pop <- function(db, state) {
 
 # Permission-specific  ----------------------------------------------------
 
-# get license IDs for selected permission
+#' @describeIn load_sqlite Load license IDs for selected permission
 load_lic_ids <- function(db, group) {
     load_sqlite(db, function(con) {
         tbl(con, "permission") %>%
@@ -66,11 +68,9 @@ load_lic_ids <- function(db, group) {
     })
 }
 
-# load license history for permission & join customers
-# - group: permission group name
+#' @describeIn load_sqlite Load license history for permission & join customers
 load_history <- function(db, group) {
     load_sqlite(db, function(con) {
         tbl(con, group) %>% collect()
     })
 }
-

@@ -3,7 +3,12 @@
 # Estimate Metrics ------------------------------------------------
 # extends salic::est_part(), salic::est_churn(), etc.
 
-# estimate population for given segment
+#' Summarize population by year for a given segment
+#'
+#' @param pop_acs data frame: population dataset 
+#' @param segment character: name of variable that holds grouping segment
+#' @family dashboard functions
+#' @export
 est_pop <- function(pop_acs, segment) {
     if (segment == "tot") segment <- NULL
     pop_acs %>%
@@ -12,7 +17,14 @@ est_pop <- function(pop_acs, segment) {
         ungroup()
 }
 
-# estimate rate based on participant and population counts
+#' Estimate rate based on participant and population counts
+#'
+#' @param part_estimate data frame: table that holds participant counts
+#' @param pop_estimate data frame: table that holds population counts
+#' @param test_threshold  numeric: threshold for output rate (e.g., 0.5 = 50
+#' percent). A warning will be printed for every row that exceeds the threshold
+#' @family dashboard functions
+#' @export
 est_rate <- function(
     part_estimate, pop_estimate, test_threshold = 0.5
 ) {
@@ -26,7 +38,15 @@ est_rate <- function(
         select(-pop, -participants)
 }
 
-# estimate monthly sales
+#' Estimate monthly sales
+#'
+#' @param sale data frame: table to use for summarizing sales by month
+#' @param history data frame: history table used for filter if use_recruits = TRUE
+#' @param dashboard_yrs numeric: years to be included in summary
+#' @param use_recruits logical: if TRUE, only include records where 
+#' history$R3 == "Recruit"
+#' @family dashboard functions
+#' @export
 est_month <- function(
     sale, history, dashboard_yrs, use_recruits = FALSE
 ) {
@@ -51,13 +71,33 @@ est_month <- function(
 
 # Calculate Metrics -----------------------------------------------------------------
 
-# convenience function for use in calc_metrics()
+#' Convenience function for use in calc_metrics() that wraps sapply
+#'
+#' @param x expression for sapply
+#' @param ... other arguments passed to sapply
+#' @keywords internal
+#' @export
 sapply2 <- function(x, ...) {
     sapply(x, simplify = FALSE, ...)
 }
 
-# calculate all 5 metrics for a permission
-# - res_type: for residency specific permissions ("Resident", "Nonresident", NULL)
+#' Calculate all 5 metrics for a permission
+#' 
+#' @inheritParams est_month
+#' @param history data frame: input history table for permission
+#' @param pop_county data frame: population table for state
+#' @param sale data frame: sales table for permission
+#' @param part_ref list: summary of parent permission to be used as reference 
+#' for privilege rate. If NULL, calculates participation rate using pop_county
+#' @param res_type identifies residency specific permissions ("Resident", 
+#' "Nonresident", NULL)
+#' @param segs character: vector of segment names to summarize
+#' @param tests test values to pass to participants & churn calculation
+#' @param tests_recruits test values to pass to recruits calculation
+#' @param scaleup_test test values to pass to scaleup_part()
+#' @param rate_test test values to pass to est_rate()
+#' @family dashboard functions
+#' @export
 calc_metrics <- function(
     history, pop_county, sale, dashboard_yrs, part_ref = NULL, res_type = NULL,
     segs = c("tot", "res", "sex", "agecat", "county"),
@@ -81,11 +121,10 @@ calc_metrics <- function(
     }
     # calculating metrics
     part <- calc_part(
-        history, dashboard_yrs, segs, tests, scaleup_test, res_type
+        history, segs, tests, scaleup_test, res_type
     )
     recruits <- calc_part(
-        history, dashboard_yrs, segs, tests_recruits, scaleup_test,  
-        res_type, use_recruits = TRUE
+        history, segs, tests_recruits, scaleup_test, res_type, use_recruits = TRUE
     )
     rate <- calc_rate(
         part$residents, pop_county, 
@@ -110,10 +149,15 @@ calc_metrics <- function(
     out
 }
 
-# calculate participants: return list of length 2 (participants, residents)
+#' Calculate participants: return list of length 2 (participants, residents)
+#'
+#' @inheritParams calc_metrics
+#' @param use_recruits logical: if TRUE, filter the history table with 
+#' history$R3 == "Recruit"
+#' @family dashboard functions
+#' @export
 calc_part <- function(
-    history, dashboard_yrs, segs, tests, scaleup_test, 
-    res_type = NULL, use_recruits = FALSE
+    history, segs, tests, scaleup_test, res_type = NULL, use_recruits = FALSE
 ) {
     if (use_recruits) {
         history <- filter(history, R3 == "Recruit")
@@ -142,7 +186,14 @@ calc_part <- function(
     list("participants" = part, "residents" = res)
 }
 
-# calculate participation rate or privilege rate
+#' Calculate participation rate (or privilege rate if part_ref is not NULL)
+#'
+#' @inheritParams calc_metrics
+#' @param part_res (for part. rate) named list that holds participant summary
+#' @param pop_county (for part. rate) data frame that holds population data
+#' @param part (for priv. rate) named list that holds participant summary
+#' @family dashboard functions
+#' @export
 calc_rate <- function(
     part_res, pop_county, part, part_ref = NULL, res_type = NULL, rate_test = 1
 ) {
@@ -174,10 +225,19 @@ calc_rate <- function(
     }
 }
 
-
 # Format Metrics ----------------------------------------------------------
 
-# slightly modified version of format_result() from salic (just 1 line)
+#' Slightly modified version of format_result() from salic
+#' 
+#' @param df data frame: Input table (3 variables) with estimated metrics
+#' @param timeframe character: value to store in the 'timeframe' variable of 
+#' the output (e.g, 'full-year', 'mid-year')
+#' @param group character: value to sore in the 'group' variable of the 
+#' output (e.g., 'all_sports', 'fish', 'hunt')
+#' @param rename_input character: generic names for input variables as they
+#' will appear in the output
+#' @family dashboard functions
+#' @export
 format_result <- function(
     df, timeframe, group, rename_input = c("category", "year", "value")
 ) {
@@ -213,10 +273,12 @@ format_result <- function(
     )
 }
 
-# format metrics (list) into a single table output (data frame)
-# - metrics: list produced by calc_metrics()
-# - timeframe: time period covered ("full-year" or "mid-year")
-# - group: name of permission group ("fish", "hunt", "all_sports")
+#' Format metrics (list) into a single table output (data frame)
+#'
+#' @inheritParams format_result
+#' @param metrics named list that holds summary data produced by calc_metrics()
+#' @family dashboard functions
+#' @export
 format_metrics <- function(
     metrics, timeframe, group = "hunt"
 ) {
@@ -233,7 +295,14 @@ format_metrics <- function(
         rename(quarter = timeframe)
 }
 
-# convenience function: output a csv file for given permission-quarter results
+#' Convenience function: output a csv file for given permission-quarter results
+#'
+#' @inheritParams format_result
+#' @param dash data frame output of format_metrics()
+#' @param quarter integer value of selected quarter
+#' @param outdir file path for output directory
+#' @family dashboard functions
+#' @export
 write_dash <- function(
     dash, quarter, group, outdir = "3-dashboard-results/dash"
 ) {

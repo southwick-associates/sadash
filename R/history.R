@@ -1,8 +1,11 @@
 # functions for producing license history
 
-# load license data (cust, lic, sale) into a list
-# - db_license: file path to license.sqlite3
-# - yrs: years to include in license history
+#' Load license data (cust, lic, sale) into a list
+#' 
+#' @param db_license file path to license.sqlite3
+#' @param yrs years to include in license history
+#' @family functions for producing license history
+#' @export
 load_all <- function(db_license, yrs) {
     con <- dbConnect(RSQLite::SQLite(), db_license)
     lic <- tbl(con, "lic") %>% collect()
@@ -17,12 +20,17 @@ load_all <- function(db_license, yrs) {
     list(cust = cust, lic = lic, sale = sale)
 }
 
-# build history table for given permission
-# - sale, lic: input license data
-# - lic_filter: query to be passed to filter_() on lic table (selects relevant lic_ids)
-# - quarter: current quarter (if not quarter 4, the last year is excluded for lapse)
-# - rank_var: passed to rank_sale()
-# - carry_vars: passed to make_history()
+#' Build history table for given permission
+#' 
+#' @inheritParams load_all
+#' @param sale input sales
+#' @param lic input license types
+#' @param lic_filter query to be passed to filter_() on lic table (selects relevant lic_ids)
+#' @param quarter current quarter (if not quarter 4, the last year is excluded for lapse)
+#' @param rank_var passed to rank_sale()
+#' @param carry_vars passed to make_history()
+#' @family functions for producing license history
+#' @export
 build_history <- function(
     sale, lic, yrs, lic_filter, quarter, 
     rank_var = c("duration", "res"), carry_vars = c("month", "res")
@@ -49,10 +57,13 @@ build_history <- function(
         make_history(yrs, carry_vars, yrs_lapse)
 }
 
-# for subtype permissions: use reference permission for R3 & lapse
-# - df_subtype: subtype license history table
-# - ref_name: name of permission that provides R3 & lapse (for subtypes)
-# - db_history: file path to history.sqlite3
+#' For subtype permissions: use reference permission to identify R3 & lapse
+#' 
+#' @param df_subtype subtype license history table
+#' @param ref_name name of permission that provides R3 & lapse (for subtypes)
+#' @param db_history file path to history.sqlite3
+#' @family functions for producing license history
+#' @export
 adjust_subtype <- function(df_subtype, ref_name, db_history) {
     if (is.null(ref_name)) {
         return(df_subtype)
@@ -68,11 +79,17 @@ adjust_subtype <- function(df_subtype, ref_name, db_history) {
         left_join(df_ref, by = c("cust_id", "year"))
 }
 
-# write history table to sqlite
-# - group: name of permission group to output
-# - lic_slct: license table for types in permission
+#' Write history table to sqlite
+#'
+#' @param history data frame: output history table
+#' @param group name of permission group to output
+#' @param lic_slct data frame: license table that identifies permission types
+#' @param db_history sqlite history database
+#' @param db_license sqlite license database
+#' @family functions for producing license history
+#' @export
 write_history <- function(
-    df_history, group, lic_slct, db_history, db_license
+    history, group, lic_slct, db_history, db_license
 ) {
     out_nm <- stringr::str_replace_all(group, " ", "_") # ensure sqlite compatibility
     
@@ -82,7 +99,7 @@ write_history <- function(
     }
     con <- dbConnect(RSQLite::SQLite(), db_history)
     if (out_nm %in% dbListTables(con)) dbRemoveTable(con, out_nm)
-    dbWriteTable(con, out_nm, data.frame(df_history))
+    dbWriteTable(con, out_nm, data.frame(history))
     dbDisconnect(con)
     
     ## 2. License Permission Table

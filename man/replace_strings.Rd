@@ -26,7 +26,4 @@ replace_strings(path = ".", find_string, replacement_string,
 This is a helper function for preparing templates in sadash. It uses gsub, see 
 \code{\link[base]{grep}} (https://gist.github.com/mages/1544009)
 }
-\examples{
-# replace_strings()
-}
 \keyword{internal}
