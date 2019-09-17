@@ -4,15 +4,23 @@
 \alias{load_license}
 \title{Load license data (cust, lic, sale) into a list}
 \usage{
-load_license(db_license, yrs)
+load_license(db_license, yrs, sale_cols = c("cust_id", "lic_id", "year",
+  "res", "month"), cust_cols = c("cust_id", "sex", "birth_year"))
 }
 \arguments{
 \item{db_license}{file path to license.sqlite3}
 
 \item{yrs}{years to include in license history}
+
+\item{sale_cols}{character vector of sale column names to include}
+
+\item{cust_cols}{character vector of cust column names to include}
 }
 \description{
-Load license data (cust, lic, sale) into a list
+All columns for the lic table will be included. Columns to include for sale
+and cust are specified by arguments. Note that the cust table likely isn't
+needed for producing a license history, but is included for the call to
+data_check.
 }
 \seealso{
 Other functions for producing license history: \code{\link{drop_na_custid}},

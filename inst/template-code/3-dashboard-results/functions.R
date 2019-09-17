@@ -1,5 +1,4 @@
-# function(s) for producing dashboard summary results
-# - uses functions from salic & sadash
+# function(s) to be called from 1-run-dash.R
 
 # summarize by permission for all_quarters, outputting to csv
 # - group: name of permission

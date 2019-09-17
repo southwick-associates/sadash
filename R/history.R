@@ -2,19 +2,30 @@
 
 #' Load license data (cust, lic, sale) into a list
 #' 
+#' All columns for the lic table will be included. Columns to include for sale
+#' and cust are specified by arguments. Note that the cust table likely isn't
+#' needed for producing a license history, but is included for the call to
+#' data_check.
+#' 
 #' @param db_license file path to license.sqlite3
 #' @param yrs years to include in license history
+#' @param sale_cols character vector of sale column names to include
+#' @param cust_cols character vector of cust column names to include
 #' @family functions for producing license history
 #' @export
-load_license <- function(db_license, yrs) {
+load_license <- function(
+    db_license, yrs,
+    sale_cols = c("cust_id", "lic_id", "year", "res", "month"),
+    cust_cols = c("cust_id", "sex", "birth_year")
+) {
     con <- dbConnect(RSQLite::SQLite(), db_license)
     lic <- tbl(con, "lic") %>% collect()
     sale <- tbl(con, "sale") %>%
         filter(year %in% yrs) %>%
-        select(cust_id, lic_id, year, res, month) %>% 
+        select(!!sale_cols) %>% 
         collect()
     cust <- tbl(con, "cust") %>%
-        select(cust_id, sex, birth_year) %>%
+        select(!!cust_cols) %>%
         collect()
     dbDisconnect(con)
     list(cust = cust, lic = lic, sale = sale)

@@ -1,7 +1,7 @@
 
 # sadash
 
-An R package for Southwick internal use: functions and templates to run individual state dashboard workflows.
+An R package for Southwick internal use: functions and templates to run individual state dashboard workflows. This extends [package salic](https://southwick-associates.github.io/salic/) to cover the more complex use-case of state-level dashboards (county-level summaries, privilege/subtype permissions, etc.).
 
 ## Installation
 
@@ -19,12 +19,35 @@ install.packages(
 Use new_dashboard() to setup code for a given state and time period:
 
 ``` r
-sadash::new_dashboard("YY", "yyyy-qn")
+# initialize template
+sadash::new_dashboard("YY", "2019-q2")
+
+# alternatively, update code from a previous period
+# sadash::new_dashboard("YY", "2019-q2", reference_period = "2018-q4")
 ```
 
-### License History
+### Preparing License Data
 
-### Dashboard Metrics
+No data preparation templates are included in sadash currently. Chelsea's templates are available under state "XX".
+
+### Summarizing for Dashboards & Data Dive
+
+The dashboard summary workflow essentially mirrors the [national/regional template](https://github.com/southwick-associates/dashboard-template). It is more complex for a number of reasons:
+
+- Summarizing by County
+- Participation Rates
+- Additional overhead to save license history in sqlite databases
+- Allowing for privileges & subtypes (with calclation of privilege rates)
+- Additional steps needed for subtypes specifically (since they don't provide real permissions)
+- Accounting for permissions that are residency-specific
+
+#### License History
+
+This is fairly straightfoward, see the relevant template code: 1-run-history.R
+
+#### Dashboard Metrics
+
+Less straightforward, details in the template code. An example workflow is included below.
 
 ``` r
 library(tidyverse)
