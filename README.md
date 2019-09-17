@@ -23,12 +23,13 @@ Use new_dashboard() to setup code for a given state and time period:
 sadash::new_dashboard("YY", "2019-q2")
 
 # alternatively, update code from a previous period
+# - this isn't yet implemented
 # sadash::new_dashboard("YY", "2019-q2", reference_period = "2018-q4")
 ```
 
 ### Preparing License Data
 
-No data preparation templates are included in sadash currently. Chelsea's templates are available under state "XX".
+No data preparation templates are included in sadash currently. Chelsea's templates are available under state "XX" on the server.
 
 ### Summarizing for Dashboards & Data Dive
 
@@ -38,18 +39,19 @@ The dashboard summary workflow essentially mirrors the [national/regional templa
 - Participation Rates
 - Additional overhead to save license history in sqlite databases
 - Allowing for privileges & subtypes (with calclation of privilege rates)
-- Additional steps needed for subtypes specifically (since they don't provide real permissions)
+- Additional steps needed for subtypes specifically (e.g., spousal license) since they don't represent unique permissions)
 - Accounting for permissions that are residency-specific
 
 #### License History
 
-This is fairly straightfoward, see the relevant template code: 1-run-history.R
+This is fairly straightfoward, see the relevant template code in 2-license-history
 
 #### Dashboard Metrics
 
-Less straightforward, details in the template code. An example workflow is included below.
+Less straightforward (details in the template code). An example workflow is included below.
 
 ``` r
+# - note, this example needs to be tested
 library(tidyverse)
 library(DBI)
 library(salic)
