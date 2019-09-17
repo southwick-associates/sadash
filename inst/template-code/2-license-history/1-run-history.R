@@ -14,7 +14,7 @@ data_check(all$cust, all$lic, all$sale)
 
 # run license history by permission (group)
 run_group <- function(group, lic_filter, ref_name = NULL) {
-    build_history(sale, all$lic, yrs, lic_filter, quarter) %>% 
+    build_history(all$sale, all$lic, yrs, lic_filter, quarter) %>% 
         adjust_subtype(ref_name, db_history) %>%
         write_history(group, filter_(all$lic, lic_filter), db_history, db_license)
 }

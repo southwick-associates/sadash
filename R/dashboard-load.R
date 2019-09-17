@@ -18,6 +18,7 @@ load_sqlite <- function(db, query) {
 # State-specific ----------------------------------------------------------
 
 #' @describeIn load_sqlite Load customer data
+#' @export
 load_cust <- function(db) {
     load_sqlite(db, function(con) {
         tbl(con, "cust") %>% 
@@ -27,6 +28,7 @@ load_cust <- function(db) {
 }
 
 #' @describeIn load_sqlite Load sales for selected years
+#' @export
 load_sale <- function(db, yrs) {
     load_sqlite(db, function(con) {
         tbl(con, "sale") %>% 
@@ -37,6 +39,7 @@ load_sale <- function(db, yrs) {
 }
 
 #' @describeIn load_sqlite Load county fips-names for attaching to cust & pop_county
+#' @export
 load_counties <- function(db, state) {
     load_sqlite(db, function(con) {
         tbl(con, "county_fips") %>% 
@@ -47,6 +50,7 @@ load_counties <- function(db, state) {
 }
 
 #' @describeIn load_sqlite Load population for selected state (by county-age-sex)
+#' @export
 load_pop <- function(db, state) {
     load_sqlite(db, function(con) {
         tbl(con, "pop_acs") %>%
@@ -59,6 +63,7 @@ load_pop <- function(db, state) {
 # Permission-specific  ----------------------------------------------------
 
 #' @describeIn load_sqlite Load license IDs for selected permission
+#' @export
 load_lic_ids <- function(db, group) {
     load_sqlite(db, function(con) {
         tbl(con, "permission") %>%
@@ -69,6 +74,7 @@ load_lic_ids <- function(db, group) {
 }
 
 #' @describeIn load_sqlite Load license history for permission & join customers
+#' @export
 load_history <- function(db, group) {
     load_sqlite(db, function(con) {
         tbl(con, group) %>% collect()
