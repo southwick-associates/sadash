@@ -5,11 +5,15 @@ An R package for Southwick internal use: functions and templates to run individu
 
 ## Installation
 
+Install from the server using the devtools package:
+
 ``` r
-install.packages(
-    "E:/SA/Projects/R-Software/Southwick-packages/sadash_0.1.zip", 
-    repos = NULL, type = "win.binary"
-)
+# dependencies (salic, dashtemplate)
+devtools::install("E:/SA/Projects/R-Software/Southwick-packages/salic")
+devtools::install("E:/SA/Projects/R-Software/Templates/dashboard-template")
+
+# sadash
+devtools::install("E:/SA/Projects/R-Software/Southwick-packages/sadash")
 ```
 
 ## Usage

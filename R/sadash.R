@@ -4,10 +4,16 @@
 # - make the imports better-specified later
 # - probably only need to import all of dplyr & salic
 
-#' @import dplyr salic DBI RSQLite stringr ggplot2 shiny
-#' @importFrom utils read.csv write.csv
-#' @importFrom scales comma percent
+#' @import dplyr salic DBI
+#' @importFrom utils write.csv
 #' @rawNamespace import(data.table, except = c(first, between, last))
 NULL
 
-# global variable definitions
+if (getRversion() >= "2.15.1") {
+    utils::globalVariables(
+        c("R3", "age", "age_year", "birth_year", "change", "county_fips",
+          "county_name", "cust_id", "description", "duration_run", "lapse",
+          "lic_id", "participants", "permission", "pop", "rate", "res", "sex",
+          "state_abbrev")
+    )
+}

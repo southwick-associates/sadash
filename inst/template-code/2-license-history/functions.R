@@ -2,6 +2,7 @@
 
 # run license history by permission (group)
 # - group: name of group to output to db_history
+# - yrs_group: year range to include in make_history()
 # - lic_filter: lic table filter condition for selecting permission sales
 # - group_parent: name of parent group (for subtype permissions, otherwise NULL)
 # - rank_var: passed to rank_sale()
