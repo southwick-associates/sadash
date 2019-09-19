@@ -15,8 +15,8 @@ devtools::install_github("southwick-associates/salic")
 # - sadash doesn't depend on dashtemplate, but it is used in template code for run_visual()
 devtools::install("E:/SA/Projects/R-Software/Templates/dashboard-template")
 
-# sadash (in this project directory)
-devtools::install()
+# sadash
+devtools::install_github("southwick-associates/sadash")
 ```
 
 ## Usage
@@ -43,8 +43,8 @@ The dashboard summary workflow essentially mirrors the [national/regional templa
 - Summarizing by County
 - Participation Rates
 - Additional overhead to save license history in sqlite databases
-- Allowing for privileges & subtypes (with calclation of privilege rates)
-- Additional steps needed for subtypes specifically (e.g., spousal license) since they don't represent unique permissions)
+- Allowing for privileges & subtypes (with calculation of privilege rates)
+- Additional steps needed for subtypes specifically (e.g., spousal license) since they don't represent unique permissions
 - Accounting for permissions that are residency-specific
 
 #### License History
@@ -56,7 +56,7 @@ This is fairly straightfoward, see the relevant template code in 2-license-histo
 Less straightforward (details in the template code). An example workflow is included below.
 
 ``` r
-# - note, this example needs to be tested
+# MO full-year hunting dashboard
 library(tidyverse)
 library(DBI)
 library(salic)
@@ -67,8 +67,8 @@ state <- "MO"
 db_license <- "E:/SA/Data-production/Data-Dashboards/MO/license.sqlite3"
 db_history <- "E:/SA/Data-production/Data-Dashboards/MO/history.sqlite3"
 db_census <- "E:/SA/Data-production/Data-Dashboards/_Shared/census.sqlite3"
-yrs <- 2007:2019
-quarter <- 2
+yrs <- 2010:2018
+quarter <- 4
 dashboard_yrs <- 2018:2019 # focus years to be available in dashboard dropdown menu
 
 # load state data
@@ -88,12 +88,12 @@ history <- db_history %>%
     prep_history()
 metrics <- history %>%
     quarterly_filter(quarter, select_quarter, yrs) %>%
-    quarterly_lapse(select_quarter, yrs)
+    quarterly_lapse(select_quarter, yrs) %>%
     calc_metrics(pop_county, sale_group, dashboard_yrs)
 dashboard <- metrics %>%
     format_metrics(select_quarter, "hunt")
 
-# do some checking
-count(dashboard, metric, segment) %>% spread(metric, n)
-filter(dashboard, metric == "participants", segment == "All")
+# visualize
+write_csv(dashboard, file.path(tempdir(), "hunt-q4.csv"))
+dashtemplate::run_visual(tempdir())
 ```
