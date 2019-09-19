@@ -5,15 +5,18 @@ An R package for Southwick internal use: functions and templates to run individu
 
 ## Installation
 
-Install from the server using the devtools package:
+Install the necessary packages using devtools. 
 
 ``` r
-# dependencies (salic, dashtemplate)
-devtools::install("E:/SA/Projects/R-Software/Southwick-packages/salic")
+# salic
+devtools::install_github("southwick-associates/salic")
+
+# dashtemplate - need to use server since package docs aren't included in repo
+# - sadash doesn't depend on dashtemplate, but it is used in template code for run_visual()
 devtools::install("E:/SA/Projects/R-Software/Templates/dashboard-template")
 
-# sadash
-devtools::install("E:/SA/Projects/R-Software/Southwick-packages/sadash")
+# sadash (in this project directory)
+devtools::install()
 ```
 
 ## Usage

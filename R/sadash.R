@@ -1,9 +1,5 @@
 # package-level documentation & imports
 
-# TODO:
-# - make the imports better-specified later
-# - probably only need to import all of dplyr & salic
-
 #' @import dplyr salic DBI
 #' @importFrom utils write.csv
 #' @rawNamespace import(data.table, except = c(first, between, last))

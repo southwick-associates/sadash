@@ -3,7 +3,6 @@
 library(tidyverse)
 library(salic)
 library(sadash)
-library(dashtemplate) # run_visual()
 
 # stack results
 dat <- list.files("3-dashboard-results/dash", full.names = TRUE) %>%
@@ -20,7 +19,7 @@ for (i in names(x)) {
 }
 
 # visualize
-run_visual(outdir)
+dashtemplate::run_visual(outdir)
 
 # Checks ------------------------------------------------------------------
 
