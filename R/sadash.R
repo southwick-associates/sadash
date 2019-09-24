@@ -1,6 +1,6 @@
 # package-level documentation & imports
 
-#' @import dplyr salic DBI
+#' @import dplyr salic
 #' @importFrom utils write.csv
 #' @rawNamespace import(data.table, except = c(first, between, last))
 NULL

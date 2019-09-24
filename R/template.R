@@ -58,7 +58,7 @@ new_dashboard <- function(
         file.copy(i, analysis_path, recursive = TRUE, overwrite = FALSE)
     }
     # make .Rprofile (using specified R version and project library)
-    x <- readLines(system.file("template-setup", ".Rprofile", package = "sadash"))
+    x <- readLines(system.file("template-setup", "Rprofile", package = "sadash"))
     x[9] <- paste0("r_version <- '", R_version, "'")
     x[10] <- paste0("proj_libname <- '", project_library, "'")
     writeLines(x, file.path(analysis_path, ".Rprofile"))

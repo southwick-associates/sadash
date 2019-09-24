@@ -9,9 +9,9 @@
 #' @param group name of selected permission
 #' @export
 load_sqlite <- function(db, query) {
-    con <- dbConnect(RSQLite::SQLite(), db)
+    con <- DBI::dbConnect(RSQLite::SQLite(), db)
     x <- query(con)
-    dbDisconnect(con)
+    DBI::dbDisconnect(con)
     x
 }
 

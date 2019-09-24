@@ -18,7 +18,7 @@ load_license <- function(
     sale_cols = c("cust_id", "lic_id", "year", "res", "month"),
     cust_cols = c("cust_id", "sex", "birth_year")
 ) {
-    con <- dbConnect(RSQLite::SQLite(), db_license)
+    con <- DBI::dbConnect(RSQLite::SQLite(), db_license)
     lic <- tbl(con, "lic") %>% collect()
     sale <- tbl(con, "sale") %>%
         filter(year %in% yrs) %>%
@@ -27,7 +27,7 @@ load_license <- function(
     cust <- tbl(con, "cust") %>%
         select(!!cust_cols) %>%
         collect()
-    dbDisconnect(con)
+    DBI::dbDisconnect(con)
     list(cust = cust, lic = lic, sale = sale)
 }
 
@@ -67,10 +67,10 @@ write_history <- function(
     if (!file.exists(db_history)) {
         src_sqlite(db_history, create = TRUE)
     }
-    con <- dbConnect(RSQLite::SQLite(), db_history)
-    if (out_nm %in% dbListTables(con)) dbRemoveTable(con, out_nm)
-    dbWriteTable(con, out_nm, data.frame(history))
-    dbDisconnect(con)
+    con <- DBI::dbConnect(RSQLite::SQLite(), db_history)
+    if (out_nm %in% DBI::dbListTables(con)) DBI::dbRemoveTable(con, out_nm)
+    DBI::dbWriteTable(con, out_nm, data.frame(history))
+    DBI::dbDisconnect(con)
     
     ## 2. License Permission Table
     # The idea here is to have a separate table that explicitly identifies all the 
@@ -80,16 +80,16 @@ write_history <- function(
         mutate(permission = out_nm) %>%
         select(permission, lic_id, description)
     
-    con <- dbConnect(RSQLite::SQLite(), db_license)
-    if (!("permission" %in% dbListTables(con))) {
-        dbWriteTable(con, "permission", data.frame(permission))
+    con <- DBI::dbConnect(RSQLite::SQLite(), db_license)
+    if (!("permission" %in% DBI::dbListTables(con))) {
+        DBI::dbWriteTable(con, "permission", data.frame(permission))
     } else {
         # overwrite selected priv records to ensure only the newest is kept
         permission_old <- tbl(con, "permission") %>% 
             collect() %>%
             filter(permission != out_nm)
         permission <- bind_rows(permission, permission_old)
-        dbWriteTable(con, "permission", data.frame(permission), overwrite = TRUE)
+        DBI::dbWriteTable(con, "permission", data.frame(permission), overwrite = TRUE)
     }
-    dbDisconnect(con)
+    DBI::dbDisconnect(con)
 }
