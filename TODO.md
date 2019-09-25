@@ -3,6 +3,7 @@
 
 - take a look at the MO example again. The mid-year results don't look odd in nat/reg dashboard
     + do they look odd here? If so, what's up?
+    + probably want to run on full 2010 for apples-to-apples
 - tweak dashboard calc_metrics() arguments >> group_parent
     + to match history workflow
 - test with OR

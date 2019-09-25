@@ -52,7 +52,12 @@ est_month <- function(
 ) {
     # one leading year is needed for monthly comparisons
     month_yrs <- c(dashboard_yrs[1]-1, dashboard_yrs)
-    sale <- filter(sale, year %in% month_yrs)
+    missing_yrs <- setdiff(month_yrs, unique(sale$year))
+    if (length(missing_yrs) > 0) {
+        stop("Incomplete years in sale table for monthly breakouts:\n", 
+             "- missing yrs: ", paste(missing_yrs, collapse = ", "), 
+             call. = FALSE)
+    }
     
     if (use_recruits) {
         history <- filter(history, R3 == "Recruit")

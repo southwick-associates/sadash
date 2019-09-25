@@ -75,8 +75,10 @@ load_lic_ids <- function(db, group) {
 
 #' @describeIn load_sqlite Load license history for permission & join customers
 #' @export
-load_history <- function(db, group) {
+load_history <- function(db, group, yrs) {
     load_sqlite(db, function(con) {
-        tbl(con, group) %>% collect()
+        tbl(con, group) %>% 
+            filter(year %in% yrs) %>%
+            collect()
     })
 }

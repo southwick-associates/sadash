@@ -14,7 +14,7 @@ run_dash <- function(
     lic_ids <- load_lic_ids(db_license, group)
     sale_group <- filter(sale, lic_id %in% lic_ids) %>% 
         distinct(cust_id, year, month)
-    history <- load_history(db_history, group) %>%
+    history <- load_history(db_history, group, yrs) %>%
         left_join(cust, by = "cust_id") %>%
         prep_history()
     

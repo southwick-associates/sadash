@@ -67,23 +67,25 @@ state <- "MO"
 db_license <- "E:/SA/Data-production/Data-Dashboards/MO/license.sqlite3"
 db_history <- "E:/SA/Data-production/Data-Dashboards/MO/history.sqlite3"
 db_census <- "E:/SA/Data-production/Data-Dashboards/_Shared/census.sqlite3"
-yrs <- 2010:2018
+yrs <- 2009:2018
 quarter <- 4
-dashboard_yrs <- 2018:2019 # focus years to be available in dashboard dropdown menu
+dashboard_yrs <- 2018 # focus years to be available in dashboard dropdown menu
 
 # load state data
 counties <- load_counties(db_census, state)
 cust <- load_cust(db_license) %>% left_join(counties)
-sale <- load_sale(db_license, yrs)
+sale <- load_sale(db_license, 2017:2018) # only 2 yrs needed for monthly breakouts
 pop_county <- load_pop(db_census, state) %>% prep_pop(yrs) %>% left_join(counties)
 
 # run permission summary for hunting full-year (quarter 4)
 select_quarter <- 4
-lic_ids <- load_lic_ids(db_license, "hunt")
-sale_group <- filter(sale, lic_id %in% lic_ids) %>% # for monthly sales
+group <- "hunt"
+
+lic_ids <- load_lic_ids(db_license, group)
+sale_group <- filter(sale, lic_id %in% lic_ids) %>% 
     distinct(cust_id, year, month)
 history <- db_history %>%
-    load_history("hunt") %>%
+    load_history(group, yrs) %>%
     left_join(cust, by = "cust_id") %>%
     prep_history()
 metrics <- history %>%
@@ -91,7 +93,7 @@ metrics <- history %>%
     quarterly_lapse(select_quarter, yrs) %>%
     calc_metrics(pop_county, sale_group, dashboard_yrs)
 dashboard <- metrics %>%
-    format_metrics(select_quarter, "hunt")
+    format_metrics(select_quarter, group)
 
 # visualize
 write_csv(dashboard, file.path(tempdir(), "hunt-q4.csv"))

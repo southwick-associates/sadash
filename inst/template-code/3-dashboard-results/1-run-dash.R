@@ -10,12 +10,13 @@ source("3-dashboard-results/functions.R") # run_dash()
 
 # define additional parameters
 all_quarters <- quarter  # quarters to be estimated
-dashboard_yrs <- lastyr   # focus years to be available in dashboard dropdown menu
+dashboard_yrs <- lastyr  # focus years to be available in dashboard dropdown menu
+month_yrs <- c(dashboard_yrs[1]-1, dashboard_yrs) # for sales by month
 
 # pull customer, sales, & population data for state
 counties <- load_counties(db_census, state)
 cust <- load_cust(db_license) %>% left_join(counties)
-sale <- load_sale(db_license, yrs)
+sale <- load_sale(db_license, month_yrs)
 pop_county <- load_pop(db_census, state) %>% prep_pop(yrs) %>% left_join(counties)
 
 # Run by Permission -------------------------------------------------------

@@ -22,7 +22,7 @@ load_pop(db, state)
 
 load_lic_ids(db, group)
 
-load_history(db, group)
+load_history(db, group, yrs)
 }
 \arguments{
 \item{db}{file path to sqlite database}
