@@ -42,7 +42,6 @@ Calculate all 5 metrics for a permission
 Other dashboard functions: \code{\link{calc_part}},
   \code{\link{calc_rate}}, \code{\link{est_month}},
   \code{\link{est_pop}}, \code{\link{est_rate}},
-  \code{\link{format_metrics}},
-  \code{\link{format_result}}, \code{\link{write_dash}}
+  \code{\link{format_metrics}}, \code{\link{write_dash}}
 }
 \concept{dashboard functions}

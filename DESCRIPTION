@@ -19,6 +19,6 @@ Imports:
     DBI (>= 1.0.0),
     dplyr (>= 0.7.6),
     RSQLite (>= 2.1.1),
-    salic (>= 2.0.0),
+    salic (>= 2.0.1),
     stringr (>= 1.3.1)
 RoxygenNote: 6.1.0

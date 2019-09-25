@@ -23,7 +23,6 @@ Convenience function: output a csv file for given permission-quarter results
 Other dashboard functions: \code{\link{calc_metrics}},
   \code{\link{calc_part}}, \code{\link{calc_rate}},
   \code{\link{est_month}}, \code{\link{est_pop}},
-  \code{\link{est_rate}}, \code{\link{format_metrics}},
-  \code{\link{format_result}}
+  \code{\link{est_rate}}, \code{\link{format_metrics}}
 }
 \concept{dashboard functions}

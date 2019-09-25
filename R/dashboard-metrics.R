@@ -227,55 +227,9 @@ calc_rate <- function(
 
 # Format Metrics ----------------------------------------------------------
 
-#' Slightly modified version of format_result() from salic
-#' 
-#' @param df data frame: Input table (3 variables) with estimated metrics
-#' @param timeframe character: value to store in the 'timeframe' variable of 
-#' the output (e.g, 'full-year', 'mid-year')
-#' @param group character: value to sore in the 'group' variable of the 
-#' output (e.g., 'all_sports', 'fish', 'hunt')
-#' @param rename_input character: generic names for input variables as they
-#' will appear in the output
-#' @family dashboard functions
-#' @export
-format_result <- function(
-    df, timeframe, group, rename_input = c("category", "year", "value")
-) {
-    # expecting exactly 3 columns in the input data frame
-    out <- df
-    names(out) <- rename_input
-    
-    # stored as input variable names >> placed in output variable values
-    segment <- colnames(df)[1]
-    metric <- colnames(df)[3]
-    
-    # adding variables to represent structure in a single table
-    out$segment <- segment
-    out$metric <- metric
-    out$timeframe <- timeframe
-    out$group <- group
-    out$category <- as.character(out$category)
-    
-    # modify segment names
-    out <- out %>% dplyr::mutate(
-        segment = dplyr::case_when(
-            segment == "tot" ~ "All",
-            segment == "res" ~ "Residency",
-            segment == "sex" ~ "Gender",
-            segment == "agecat" ~ "Age",
-            segment == "county" ~ "County",
-            TRUE ~ segment ### not included in salic 2.0.0
-        )
-    )
-    out %>% dplyr::select(
-        .data$timeframe, .data$group, .data$segment, .data$year,  
-        .data$category, .data$metric, .data$value
-    )
-}
-
 #' Format metrics (list) into a single table output (data frame)
 #'
-#' @inheritParams format_result
+#' @inheritParams salic::format_result
 #' @param metrics named list that holds summary data produced by calc_metrics()
 #' @family dashboard functions
 #' @export
@@ -297,7 +251,7 @@ format_metrics <- function(
 
 #' Convenience function: output a csv file for given permission-quarter results
 #'
-#' @inheritParams format_result
+#' @inheritParams salic::format_result
 #' @param dash data frame output of format_metrics()
 #' @param quarter integer value of selected quarter
 #' @param outdir file path for output directory
