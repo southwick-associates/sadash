@@ -14,6 +14,7 @@ dat <- list.files("3-dashboard-results/dash", full.names = TRUE) %>%
 # get csv files by quarter
 x <- split(dat, dat$quarter)
 outdir <- "3-dashboard-results/dash-combine"
+dir.create(outdir, showWarnings = FALSE)
 for (i in names(x)) {
     write_csv(x[[i]], file.path(outdir, paste0("qtr", i, ".csv")))
 }
