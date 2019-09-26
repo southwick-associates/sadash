@@ -202,19 +202,21 @@ calc_rate <- function(
     part_res, pop_county, part, part_ref = NULL, res_type = NULL, rate_test = 1
 ) {
     # convenience function
-    mapply_rate <- function(part, pop) {
-        if (unique(names(part)) != unique(names(pop))) {
-            stop("In calculating rate, your participants & population don't align:\n",
-                 "- participant dimensions: ", paste(names(part), collapse = ", "),
-                 "- population dimensions: ", paste(names(pop), collapse = ", "))
+    apply_rate <- function(part, pop) {
+        part_names <- sort(names(part))
+        pop_names <- sort(names(pop))
+        if (!all(part_names == pop_names)) {
+            warning("In calculating rate, your participants & population don't align:\n",
+                 "- participant dimensions: ", paste(names(part), collapse = ", "), "\n",
+                 "- population dimensions: ", paste(names(pop), collapse = ", "),
+                 call. = FALSE)
         }
-        mapply(est_rate, part, pop, SIMPLIFY = FALSE, 
-               MoreArgs = list(test_threshold = rate_test))
+        sapply2(names(part), function(x) est_rate(part[[x]], pop[[x]], rate_test))
     }
     if (!is.null(part_ref)) {
         # calculate a privilege rate
         pop <- lapply(part_ref, function(x) rename(x, pop = participants))
-        mapply_rate(part, pop)
+        apply_rate(part, pop)
     } else {
         # calculate a participation rate
         # - not for nonresident-specific permissions though
@@ -222,7 +224,7 @@ calc_rate <- function(
             return(invisible)
         }
         pop <- sapply2(names(part_res), function(x) est_pop(pop_county, x))
-        out <- mapply_rate(part_res, pop)
+        out <- apply_rate(part_res, pop)
         
         # residency-flagged rates are also included for Tableau (a bit of a hack)
         # - all nonresident values will show zero
