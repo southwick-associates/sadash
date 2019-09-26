@@ -1,5 +1,9 @@
 # functions for producing license history
 
+data_check_sa <- function() {
+    
+}
+
 #' Load license data (cust, lic, sale) into a list
 #' 
 #' All columns for the lic table will be included. Columns to include for sale

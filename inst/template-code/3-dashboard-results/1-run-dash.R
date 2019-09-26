@@ -32,5 +32,5 @@ sink()
 
 # you can investigate errors by opening log.txt & searching for "Error"
 # - there can be alot of threshold warnings (usually harmless)
-# - errors stop only the current permission-quarter run 
+# - errors should stop only the current permission-quarter run 
 #   (i.e., code will continue to run for remaining permissions/quarters)

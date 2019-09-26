@@ -1,6 +1,6 @@
 # function(s) to be called from 1-run-dash.R
 
-# Summarize by permission for all_quarters, outputting to csv
+# Summarize one permission for all_quarters, outputting to csv
 # 
 # This function encapsulates the workflow for producing dashboard metrics for 
 # a specified permission. It is included in template code (rather than in sadash)
@@ -23,37 +23,53 @@ run_dash <- function(
         left_join(cust, by = "cust_id") %>%
         recode_history()
     
-    # function to run selected quarter
-    run_quarter <- function(qtr) {
-        metrics <- history %>%
-            quarterly_filter(quarter, qtr, yrs) %>%
-            quarterly_lapse(qtr, yrs) %>%
-            calc_metrics(pop_county, sale_group, dashboard_yrs, 
-                         part_ref[[paste0("q", qtr)]], res_type)
-        if (write_csv) {
-            metrics %>%
-                format_metrics(qtr, group) %>%
-                write_dash(qtr, group, "3-dashboard-results/dash")
-        }
-        metrics
+    # define function to produce metrics for one quarter
+    # - wraps run_qtr_handler() for error/warning handling
+    run_qtr <- function(qtr, group) {
+        run_qtr_handler({
+            history %>%
+                quarterly_filter(quarter, qtr, yrs) %>%
+                quarterly_lapse(qtr, yrs) %>%
+                calc_metrics(pop_county, sale_group, dashboard_yrs, 
+                             part_ref[[paste0("q", qtr)]], res_type)
+        }, qtr, group)
     }
-    # run over quarters with error handling (prints errors/warnings as code progresses)
-    # - the threshold warnings are typically harmless, but good to check
-    # - warnings/errors will also be printed in a blob at the end (less useful)
-    out <- list()
-    for (qtr in all_quarters) {
-        tryCatch(
-            withCallingHandlers(
-                out[[paste0("q", qtr)]] <- run_quarter(qtr),
-                warning = function(w) { print(w); cat("\n") },
-                finally = cat("\nRun for", group, "quarter", qtr, "--------------------\n\n")
-            ),
-            error = function(e) { 
-                message("Caught an error: ", group, " quarter ", qtr)
-                print(e); cat("\n") 
-            }
-        )
-    }
+    
+    # run over all quarters (with error handling)
+    # - using tryCatch() allows remaining quarters to be run if error is caught
+    # out <- list()
+    # for (qtr in all_quarters) {
+    #     out[[paste0("q", qtr)]] <- run_qtr(qtr, group)
+    # }
+    out <- lapply(all_quarters, function(x) run_qtr(x, group))
+    names(out) <- paste0("q", all_quarters)
+    
+    # wrap up
     if (return_ref) out
 }
 
+# To run metrics with error/warning handling: only to be called from run_qtr()
+#
+# This provides a couple useful features:
+# 1. stop the current quarter run (on error) but continue running any remaining quarters
+# 2. logs errors & warnings with headers showing current permission-quarter. 
+#    These can be logged with sink() to facilitate automation
+run_qtr_handler <- function(run_expr, qtr, group) {
+    # using tryCatch() allows remaining quarters to be run if error is caught
+    tryCatch(
+        # use withCallingHandlers() to log every warning & error
+        withCallingHandlers(
+            run_expr,
+            warning = function(w) { print(w); cat("\n") },
+            finally = cat("\nRun for", group, "quarter", qtr, "--------------------\n\n")
+        ),
+        error = function(e) { 
+            message("Caught an error: ", group, " quarter ", qtr)
+            print(e); cat("\n") 
+        }
+    )
+}
+
+# write_output <- function() {
+#     
+# }
