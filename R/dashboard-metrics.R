@@ -110,7 +110,7 @@ calc_metrics <- function(
     scaleup_test = 25, 
     rate_test = 1
 ) {
-    # error handling for dashboard_yrs
+    # handle errors for dashboard_yrs
     missing_yrs <- setdiff(dashboard_yrs, unique(history$year))
     dashboard_yrs <- setdiff(dashboard_yrs, missing_yrs)
     if (length(dashboard_yrs) == 0) {
@@ -118,38 +118,86 @@ calc_metrics <- function(
              "- missing yrs: ", paste(missing_yrs, collapse = ", "), 
              call. = FALSE)
     }
-    # residency-specific logic
+    # prepare residency-specific logic
     if (!is.null(res_type)) {
         history <- filter(history, res == res_type)
         if (res_type == "Nonresident") segs <- setdiff(segs, "county")
     }
-    # calculating metrics
+    
+    # calculate 5 metrics
     part <- calc_part(
         history, segs, tests, scaleup_test, res_type
     )
     recruits <- calc_part(
         history, segs, tests_recruits, scaleup_test, res_type, use_recruits = TRUE
     )
-    rate <- calc_rate(
-        part$residents, pop_county, 
-        part$participants, part_ref$participants, res_type, rate_test
-    )
-    churn <- sapply2(segs, function(x) est_churn(history, x, tests[x]))
+    rate <- if (is.null(part_ref)) {
+        calc_part_rate(part$residents, pop_county, rate_test, res_type)
+    } else {
+        calc_priv_rate(part$participants, part_ref$participants, rate_test)
+    }
     month <- list(
         "participants" = est_month(sale, history, dashboard_yrs),
         "recruits" = est_month(sale, history, dashboard_yrs, use_recruits = TRUE)
     )
-    # collecting metrics into a list
+    churn <- sapply2(segs, function(x) est_churn(history, x, tests[x]))
+    
+    # collect metrics into a list
     participants <- part$participants
     recruits <- recruits$participants
     out <- mget(c("participants", "recruits", "churn", "month"))
     if (is.list(rate)) out[["rate"]] <- rate
     
-    # dropping non-dashboard_yrs for county-level results
+    # drop non-dashboard_yrs for county-level results
     for (i in setdiff(names(out), "month")) {
         if (!"county" %in% segs) return(out)
         out[[i]]$county <- filter(out[[i]]$county, year %in% dashboard_yrs)
     }
+    out
+}
+
+#' Calculate privilege rate
+#' 
+#' A privilege rate refers to the ratio between a given privilege (or subtype)
+#' permission and a reference overall permission.
+#' 
+#' @inheritParams calc_metrics
+#' @param part named list that holds participant summary for given selected
+#' privilege/subtype permission
+#' @param part_ref name list that holds reference participant summary
+#' @family dashboard functions
+#' @export
+calc_priv_rate <- function(part, part_ref, rate_test) {
+    pop <- part_ref %>%
+        lapply(function(x) rename(x, pop = participants))
+    names(part) %>%
+        sapply2(function(x) est_rate(part[[x]], pop[[x]], rate_test))
+}
+
+#' Calculate participation rate
+#' 
+#' Refers to the ratio of permission resident participants to the state 
+#' population.
+#' 
+#' @inheritParams calc_metrics
+#' @param part named list holding resident participant summary for privilege
+#' @family dashboard functions
+#' @export
+calc_part_rate <- function(part, pop_county, rate_test, res_type) {
+    if (!is.null(res_type) && res_type == "Nonresident") {
+        return(invisible)
+    }
+    pop <- names(part) %>%
+        sapply2(function(x) est_pop(pop_county, x))
+    out <- names(part) %>%
+        sapply2(function(x) est_rate(part[[x]], pop[[x]], rate_test))
+    
+    # residency-flagged rates are also included for Tableau (a bit of a hack)
+    # - all nonresident values will show zero
+    out[["res"]] <- bind_rows(
+        mutate(out$tot, res = "Resident") %>% select(res, year, rate),
+        mutate(out$tot, res = "Nonresident", rate = 0) %>% select(res, year, rate)
+    )
     out
 }
 
@@ -168,71 +216,32 @@ calc_part <- function(
         est_part <- function(...) est_recruit(...)
         scaleup_part <- function(...) scaleup_recruit(...)
     }
-    # participants by segment
+    
+    # summarize participants by segment
     # - county-level is treated separately
     part <- setdiff(segs, "county") %>%
         sapply2(function(x) est_part(history, x, tests[x]))
-    part <- lapply(part, function(x) scaleup_part(x, part$tot, scaleup_test))
+    part <- part %>%
+        lapply(function(x) scaleup_part(x, part$tot, scaleup_test))
     
-    # resident participants
-    # - for county-level & intermediate result for part. rates
-    if (!is.null(res_type)) {
-        # of course this isn't done for nonresident permissions
-        if (res_type == "Nonresident") return(list("participants" = part))
+    # return participants for nonresident permissions
+    if (!is.null(res_type) && res_type == "Nonresident") {
+        return(list("participants" = part))
     }
+    
+    # summarize resident participants
+    # - used for county-level & as an intermediate result for part. rates
     history_res <- filter(history, res == "Resident")
     scale_res <- filter(part[["res"]], res == "Resident") # for scaleup_part()
     
     res <- setdiff(segs, "res") %>%
         sapply2(function(x) est_part(history_res, x, tests[x]))
-    res <- lapply(res, function(x) scaleup_part(x, scale_res, scaleup_test))
+    res <- res %>%
+        lapply(function(x) scaleup_part(x, scale_res, scaleup_test))
+    
+    # return participants & residents
     part[["county"]] <- res[["county"]]
     list("participants" = part, "residents" = res)
-}
-
-#' Calculate participation rate (or privilege rate if part_ref is not NULL)
-#'
-#' @inheritParams calc_metrics
-#' @param part_res (for part. rate) named list that holds participant summary
-#' @param pop_county (for part. rate) data frame that holds population data
-#' @param part (for priv. rate) named list that holds participant summary
-#' @family dashboard functions
-#' @export
-calc_rate <- function(
-    part_res, pop_county, part, part_ref = NULL, res_type = NULL, rate_test = 1
-) {
-    # convenience function
-    apply_rate <- function(part, pop) {
-        part_names <- paste(sort(names(part)), collapse = ", ")
-        pop_names <- paste(sort(names(pop)), collapse = ", ")
-        if (part_names != pop_names) {
-            warning("In calculating rate, participants & population don't align:\n",
-                 "- participant dimensions: ", part_names, "\n",
-                 "- population dimensions: ", pop_names, call. = FALSE)
-        }
-        sapply2(names(part), function(x) est_rate(part[[x]], pop[[x]], rate_test))
-    }
-    if (!is.null(part_ref)) {
-        # calculate a privilege rate
-        pop <- lapply(part_ref, function(x) rename(x, pop = participants))
-        apply_rate(part, pop)
-    } else {
-        # calculate a participation rate
-        # - not for nonresident-specific permissions though
-        if (!is.null(res_type) && res_type == "Nonresident") {
-            return(invisible)
-        }
-        pop <- sapply2(names(part_res), function(x) est_pop(pop_county, x))
-        out <- apply_rate(part_res, pop)
-        
-        # residency-flagged rates are also included for Tableau (a bit of a hack)
-        # - all nonresident values will show zero
-        out[["res"]] <- bind_rows(
-            mutate(out$tot, res = "Resident") %>% select(res, year, rate),
-            mutate(out$tot, res = "Nonresident", rate = 0) %>% select(res, year, rate)
-        )
-        out
-    }
 }
 
 # Format Metrics ----------------------------------------------------------
