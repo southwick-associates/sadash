@@ -1,6 +1,29 @@
 # functions for producing license history
 
-data_check_sa <- function() {
+#' Check std. data formatting rules for Southwick dashboards
+#'
+#' This is a variation on \code{\link[salic]{data_check}} that has some 
+#' differences in required variables and allowed values.
+#' 
+#' @inheritParams salic::data_check
+#' @param cust_vars cust required_vars
+#' @param lic_vals lic allowed_values
+#' @param sale_vals sale allowed values
+#' @family functions for producing license history
+#' @export
+data_check_sa <- function(
+    cust, lic, sale,
+    cust_vars = c("cust_id", "sex", "birth_year", "county_fips"),
+    lic_vals = list(type = c("fish", "hunt", "combo", "trap", "other"), 
+                    duration = 1:99),
+    sale_vals = list(year = c(2000:substr(Sys.Date(), 1, 4)), month = 0:15, 
+                     res = c(1, 0, NA))
+) {
+    data_check_cust(cust, required_vars = cust_vars)
+    data_foreign_key(sale, cust, "cust_id")
+    data_check_lic(lic, allowed_values = lic_vals)
+    data_foreign_key(sale, lic, "lic_id")
+    data_check_sale(sale, allowed_values = sale_vals)
     
 }
 
@@ -20,7 +43,7 @@ data_check_sa <- function() {
 load_license <- function(
     db_license, yrs,
     sale_cols = c("cust_id", "lic_id", "year", "res", "month"),
-    cust_cols = c("cust_id", "sex", "birth_year")
+    cust_cols = c("cust_id", "sex", "birth_year", "county_fips")
 ) {
     con <- DBI::dbConnect(RSQLite::SQLite(), db_license)
     lic <- tbl(con, "lic") %>% collect()

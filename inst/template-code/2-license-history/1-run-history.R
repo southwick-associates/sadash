@@ -10,7 +10,7 @@ source("2-license-history/functions.R") # run_group()
 
 # pull license data into a list
 all <- load_license(db_license, yrs)
-data_check(all$cust, all$lic, all$sale)
+data_check_sa(all$cust, all$lic, all$sale)
 
 # Run by Permission -------------------------------------------------------
 

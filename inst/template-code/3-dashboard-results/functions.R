@@ -5,6 +5,10 @@
 # This function encapsulates the workflow for producing dashboard metrics for 
 # a specified permission. It is included in template code (rather than in sadash)
 # because state-specific tweaking of the workflow may be necessary.
+#
+# You can optionally return the metrics (list) to an object (return_ref = TRUE). 
+# This can then be  used as input to a privilege (e.g., deer hunting) for 
+# calculating privilege rate.
 # 
 # - group: name of permission
 # - part_ref: reference permission data for use in privilege rates
@@ -12,6 +16,7 @@
 # - return_ref: if TRUE, will also return a list (as reference for privilege rates)
 # - res_type: for residency specific permissions ("Resident", "Nonresident", NULL)
 # - write_csv: if TRUE, will write csv file(s) for permission-quarter(s)
+#   setting to FALSE is intended for testing
 run_dash <- function(
     group, part_ref = NULL, return_ref = FALSE, res_type = NULL, write_csv = TRUE
 ) {
@@ -44,10 +49,12 @@ run_dash <- function(
     if (return_ref) out
 }
 
-# To run metrics with error/warning handling: only to be called from run_qtr()
+# Called from run_dash() ----------------------------------------------------
+
+# To run metrics with error/warning handling
 #
-# This provides a couple useful features:
-# 1. stops the current quarter run (on error) but continue running any remaining quarters
+# This provides a couple of useful features:
+# 1. stops the current quarter run (on error) but continues running any remaining quarters
 # 2. logs errors & warnings with headers showing current permission-quarter. 
 #    These can be saved to a file with sink() to facilitate automation
 run_qtr_handler <- function(code_to_run, qtr, group) {

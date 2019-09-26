@@ -30,7 +30,8 @@ run_dash("firearm_deer", hunt) # privilege example
 
 sink()
 
-# you can investigate errors by opening log.txt & searching for "Error"
+# Notes on logged errors/warnings
+# - you can investigate errors by opening log.txt & searching for "Error"
 # - there can be alot of threshold warnings (usually harmless)
 # - errors should stop only the current permission-quarter run 
 #   (i.e., code will continue to run for remaining permissions/quarters)

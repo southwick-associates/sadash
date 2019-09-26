@@ -14,7 +14,7 @@ Not sure why the sales table would contain missing customer IDs, but there
 are usually a handfull of NAs.
 }
 \seealso{
-Other functions for producing license history: \code{\link{load_license}},
-  \code{\link{write_history}}
+Other functions for producing license history: \code{\link{data_check_sa}},
+  \code{\link{load_license}}, \code{\link{write_history}}
 }
 \concept{functions for producing license history}

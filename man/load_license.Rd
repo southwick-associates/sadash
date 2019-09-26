@@ -5,7 +5,8 @@
 \title{Load license data (cust, lic, sale) into a list}
 \usage{
 load_license(db_license, yrs, sale_cols = c("cust_id", "lic_id", "year",
-  "res", "month"), cust_cols = c("cust_id", "sex", "birth_year"))
+  "res", "month"), cust_cols = c("cust_id", "sex", "birth_year",
+  "county_fips"))
 }
 \arguments{
 \item{db_license}{file path to license.sqlite3}
@@ -23,7 +24,7 @@ needed for producing a license history, but is included for the call to
 data_check.
 }
 \seealso{
-Other functions for producing license history: \code{\link{drop_na_custid}},
-  \code{\link{write_history}}
+Other functions for producing license history: \code{\link{data_check_sa}},
+  \code{\link{drop_na_custid}}, \code{\link{write_history}}
 }
 \concept{functions for producing license history}
