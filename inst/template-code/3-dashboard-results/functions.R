@@ -23,7 +23,7 @@ run_dash <- function(
         left_join(cust, by = "cust_id") %>%
         recode_history()
     
-    # define function to produce metrics for one quarter
+    # function to produce metrics for one quarter
     # - wraps run_qtr_handler() for error/warning handling on provided code
     run_qtr <- function(qtr, group) {
         run_qtr_handler(code_to_run = {
@@ -68,7 +68,9 @@ run_qtr_handler <- function(code_to_run, qtr, group) {
 
 # Write output metrics for a selected permission-quarter
 write_output <- function(metrics, qtr, group) {
-    if (length(metrics) == 0) return(invisible())
+    if (length(metrics) == 0) {
+        return(invisible())
+    }
     metrics %>%
         format_metrics(qtr, group) %>%
         write_dash(qtr, group)
