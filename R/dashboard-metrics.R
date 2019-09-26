@@ -203,13 +203,12 @@ calc_rate <- function(
 ) {
     # convenience function
     apply_rate <- function(part, pop) {
-        part_names <- sort(names(part))
-        pop_names <- sort(names(pop))
-        if (!all(part_names == pop_names)) {
-            warning("In calculating rate, your participants & population don't align:\n",
-                 "- participant dimensions: ", paste(names(part), collapse = ", "), "\n",
-                 "- population dimensions: ", paste(names(pop), collapse = ", "),
-                 call. = FALSE)
+        part_names <- paste(sort(names(part)), collapse = ", ")
+        pop_names <- paste(sort(names(pop)), collapse = ", ")
+        if (part_names != pop_names) {
+            warning("In calculating rate, participants & population don't align:\n",
+                 "- participant dimensions: ", part_names, "\n",
+                 "- population dimensions: ", pop_names, call. = FALSE)
         }
         sapply2(names(part), function(x) est_rate(part[[x]], pop[[x]], rate_test))
     }
