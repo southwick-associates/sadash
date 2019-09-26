@@ -203,6 +203,11 @@ calc_rate <- function(
 ) {
     # convenience function
     mapply_rate <- function(part, pop) {
+        if (unique(names(part)) != unique(names(pop))) {
+            stop("In calculating rate, your participants & population don't align:\n",
+                 "- participant dimensions: ", paste(names(part), collapse = ", "),
+                 "- population dimensions: ", paste(names(pop), collapse = ", "))
+        }
         mapply(est_rate, part, pop, SIMPLIFY = FALSE, 
                MoreArgs = list(test_threshold = rate_test))
     }
