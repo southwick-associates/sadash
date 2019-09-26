@@ -79,7 +79,7 @@ extrapolate_pop <- function(pop, yrs) {
 #' @param month_to_quarter function used to calculate quarter (based on month values)
 #' @family functions to prepare data for summarization
 #' @export
-prep_history <- function(
+recode_history <- function(
     history, 
     month_to_quarter = function(x) case_when(x <= 3 ~ 1, x <= 6 ~ 2, x <= 9 ~ 3, TRUE ~ 4)
 ) {

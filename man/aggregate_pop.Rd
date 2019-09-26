@@ -14,8 +14,8 @@ Collapses the larger number of age categories provided by acs
 }
 \seealso{
 Other functions to prepare data for summarization: \code{\link{extrapolate_pop}},
-  \code{\link{prep_history}}, \code{\link{prep_pop}},
-  \code{\link{quarterly_filter}},
-  \code{\link{quarterly_lapse}}
+  \code{\link{prep_pop}}, \code{\link{quarterly_filter}},
+  \code{\link{quarterly_lapse}},
+  \code{\link{recode_history}}
 }
 \concept{functions to prepare data for summarization}

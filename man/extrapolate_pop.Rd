@@ -16,8 +16,8 @@ Extrapolate population forward for years without estimates
 }
 \seealso{
 Other functions to prepare data for summarization: \code{\link{aggregate_pop}},
-  \code{\link{prep_history}}, \code{\link{prep_pop}},
-  \code{\link{quarterly_filter}},
-  \code{\link{quarterly_lapse}}
+  \code{\link{prep_pop}}, \code{\link{quarterly_filter}},
+  \code{\link{quarterly_lapse}},
+  \code{\link{recode_history}}
 }
 \concept{functions to prepare data for summarization}

@@ -113,7 +113,7 @@ sale_group <- filter(sale, lic_id %in% lic_ids) %>%
 history <- db_history %>%
     load_history(group, yrs) %>%
     left_join(cust, by = "cust_id") %>%
-    prep_history()
+    recode_history()
 metrics <- history %>%
     quarterly_filter(quarter, select_quarter, yrs) %>%
     quarterly_lapse(select_quarter, yrs) %>%

@@ -17,8 +17,8 @@ This is partly a wrapper for aggregate_pop() & extrapolate_pop()
 \seealso{
 Other functions to prepare data for summarization: \code{\link{aggregate_pop}},
   \code{\link{extrapolate_pop}},
-  \code{\link{prep_history}},
   \code{\link{quarterly_filter}},
-  \code{\link{quarterly_lapse}}
+  \code{\link{quarterly_lapse}},
+  \code{\link{recode_history}}
 }
 \concept{functions to prepare data for summarization}

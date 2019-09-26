@@ -21,7 +21,7 @@ run_dash <- function(
         distinct(cust_id, year, month)
     history <- load_history(db_history, group, yrs) %>%
         left_join(cust, by = "cust_id") %>%
-        prep_history()
+        recode_history()
     
     # function to run selected quarter
     run_quarter <- function(qtr) {
