@@ -24,9 +24,9 @@ run_dash <- function(
         recode_history()
     
     # define function to produce metrics for one quarter
-    # - wraps run_qtr_handler() for error/warning handling
+    # - wraps run_qtr_handler() for error/warning handling on provided code
     run_qtr <- function(qtr, group) {
-        run_qtr_handler({
+        run_qtr_handler(code_to_run = {
             history %>%
                 quarterly_filter(quarter, qtr, yrs) %>%
                 quarterly_lapse(qtr, yrs) %>%
@@ -35,31 +35,27 @@ run_dash <- function(
         }, qtr, group)
     }
     
-    # run over all quarters (with error handling)
-    # - using tryCatch() allows remaining quarters to be run if error is caught
-    # out <- list()
-    # for (qtr in all_quarters) {
-    #     out[[paste0("q", qtr)]] <- run_qtr(qtr, group)
-    # }
+    # produce metrics for all quarters
     out <- lapply(all_quarters, function(x) run_qtr(x, group))
     names(out) <- paste0("q", all_quarters)
     
     # wrap up
+    if (write_csv) mapply(write_output, out, all_quarters, group)
     if (return_ref) out
 }
 
 # To run metrics with error/warning handling: only to be called from run_qtr()
 #
 # This provides a couple useful features:
-# 1. stop the current quarter run (on error) but continue running any remaining quarters
+# 1. stops the current quarter run (on error) but continue running any remaining quarters
 # 2. logs errors & warnings with headers showing current permission-quarter. 
-#    These can be logged with sink() to facilitate automation
-run_qtr_handler <- function(run_expr, qtr, group) {
+#    These can be saved to a file with sink() to facilitate automation
+run_qtr_handler <- function(code_to_run, qtr, group) {
     # using tryCatch() allows remaining quarters to be run if error is caught
     tryCatch(
-        # use withCallingHandlers() to log every warning & error
+        # use withCallingHandlers() to log every warning
         withCallingHandlers(
-            run_expr,
+            code_to_run,
             warning = function(w) { print(w); cat("\n") },
             finally = cat("\nRun for", group, "quarter", qtr, "--------------------\n\n")
         ),
@@ -70,6 +66,10 @@ run_qtr_handler <- function(run_expr, qtr, group) {
     )
 }
 
-# write_output <- function() {
-#     
-# }
+# Write output metrics for a selected permission-quarter
+write_output <- function(metrics, qtr, group) {
+    if (length(metrics) == 0) return(invisible())
+    metrics %>%
+        format_metrics(qtr, group) %>%
+        write_dash(qtr, group)
+}
