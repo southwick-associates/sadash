@@ -36,7 +36,7 @@ run_group <- function(
             select(cust_id, year, lapse, R3)
         history <- history %>%
             select(-R3, -lapse) %>%
-            left_join(history_parent, by = "cust_id", "year")
+            left_join(history_parent, by = c("cust_id", "year"))
     }
     write_history(history, group, lic_group, db_history, db_license)
 }
