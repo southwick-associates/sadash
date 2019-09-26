@@ -1,7 +1,6 @@
 # run dashboard results for each permission
 
 library(tidyverse)
-library(DBI)
 library(salic)
 library(sadash)
 

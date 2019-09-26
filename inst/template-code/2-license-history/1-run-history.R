@@ -2,7 +2,6 @@
 # note that code may need to be tweaked for state-specific needs
 
 library(tidyverse)
-library(DBI)
 library(salic)
 library(sadash)
 

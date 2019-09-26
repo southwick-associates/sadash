@@ -49,16 +49,42 @@ The dashboard summary workflow essentially mirrors the [national/regional templa
 
 #### License History
 
-This is fairly straightfoward, see the relevant template code in 2-license-history
+This is fairly straightfoward (see the template code in 2-license-history). An example workflow for one permission is included below.
+
+``` r
+# MO hunting license history
+library(tidyverse)
+library(salic)
+library(sadash)
+
+# set parameters
+db_license <- "E:/SA/Data-production/Data-Dashboards/MO/license.sqlite3"
+db_history <- "E:/SA/Data-production/Data-Dashboards/MO/history.sqlite3"
+yrs <- 2009:2018
+
+# pull license data into a list
+all <- load_license(db_license, yrs)
+data_check(all$cust, all$lic, all$sale)
+
+# run hunting license history
+lic_group <- all$lic %>%
+        filter(type %in% c("hunt", "combo", "trap"))
+    
+history <- lic_group  %>%
+    select(lic_id, duration) %>%
+    inner_join(all$sale, by = "lic_id") %>%
+    drop_na_custid() %>%
+    rank_sale(rank_var = c("duration", "res"), first_month = TRUE) %>%
+    make_history(yrs, carry_vars = c("month", "res"))
+```
 
 #### Dashboard Metrics
 
-Less straightforward (details in the template code). An example workflow is included below.
+The code is a bit more involved than running license history (see template code in 3-dashboard-results). An example workflow for one permission-quarter is included below.
 
 ``` r
 # MO full-year hunting dashboard
 library(tidyverse)
-library(DBI)
 library(salic)
 library(sadash)
 
@@ -96,6 +122,6 @@ dashboard <- metrics %>%
     format_metrics(select_quarter, group)
 
 # visualize
-write_csv(dashboard, file.path(tempdir(), "hunt-q4.csv"))
+write_csv(dashboard, file.path(tempdir(), "dash.csv"))
 dashtemplate::run_visual(tempdir())
 ```
