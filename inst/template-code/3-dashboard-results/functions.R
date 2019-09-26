@@ -1,9 +1,14 @@
 # function(s) to be called from 1-run-dash.R
 
-# summarize by permission for all_quarters, outputting to csv
+# Summarize by permission for all_quarters, outputting to csv
+# 
+# This function encapsulates the workflow for producing dashboard metrics for 
+# a specified permission. It is included in template code (rather than in sadash)
+# because state-specific tweaking of the workflow may be necessary.
+# 
 # - group: name of permission
 # - part_ref: reference permission data for use in privilege rates
-#   + use NULL for participation rates (e.g., for overall permissions like "hunt")
+#   use NULL for participation rates (e.g., for overall permissions like "hunt")
 # - return_ref: if TRUE, will also return a list (as reference for privilege rates)
 # - res_type: for residency specific permissions ("Resident", "Nonresident", NULL)
 # - write_csv: if TRUE, will write csv file(s) for permission-quarter(s)

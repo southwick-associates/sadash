@@ -50,7 +50,7 @@ est_rate <- function(
 est_month <- function(
     sale, history, dashboard_yrs, use_recruits = FALSE
 ) {
-    # one leading year is needed for monthly comparisons
+    # error handling: one leading year is needed for monthly comparisons
     month_yrs <- c(dashboard_yrs[1]-1, dashboard_yrs)
     missing_yrs <- setdiff(month_yrs, unique(sale$year))
     if (length(missing_yrs) > 0) {
@@ -58,7 +58,6 @@ est_month <- function(
              "- missing yrs: ", paste(missing_yrs, collapse = ", "), 
              call. = FALSE)
     }
-    
     if (use_recruits) {
         history <- filter(history, R3 == "Recruit")
         sale <- semi_join(sale, history, by = c("cust_id", "year"))

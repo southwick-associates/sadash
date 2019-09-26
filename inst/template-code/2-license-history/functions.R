@@ -1,6 +1,11 @@
 # function(s) to be called from 1-run-history.R
 
-# run license history by permission (group)
+# Run license history by permission (group)
+# 
+# This function encapsulates the workflow for producing license history for 
+# a specified permission. It is included in template code (rather than in sadash)
+# because state-specific tweaking of the workflow may be necessary.
+# 
 # - group: name of group to output to db_history
 # - yrs_group: year range to include in make_history()
 # - lic_filter: lic table filter condition for selecting permission sales
