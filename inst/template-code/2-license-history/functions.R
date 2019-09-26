@@ -31,9 +31,11 @@ run_group <- function(
     
     if (!is.null(group_parent)) {
         # subtypes: use parent group for R3 & lapse
-        history_parent <- load_history(db_history, group_parent) %>%
+        history_parent <- db_history %>%
+            load_history(group_parent, yrs_group) %>%
             select(cust_id, year, lapse, R3)
-        history <- select(history, -R3, -lapse) %>%
+        history <- history %>%
+            select(-R3, -lapse) %>%
             left_join(history_parent, by = "cust_id", "year")
     }
     write_history(history, group, lic_group, db_history, db_license)
