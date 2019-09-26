@@ -1,7 +1,7 @@
 Package: sadash
 Type: Package
 Title: Prepare Agency Dashboard Data for state-level dashboards
-Version: 0.2
+Version: 1.0
 Authors@R: c(
     person("Dan", "Kary", , "Rsoftware@SouthwickAssociates.com", role = c("aut", "cre")),
     person("Southwick Associates", role = c("cph", "fnd"))
