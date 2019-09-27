@@ -17,14 +17,17 @@
 # - res_type: for residency specific permissions ("Resident", "Nonresident", NULL)
 # - write_csv: if TRUE, will write csv file(s) for permission-quarter(s)
 #   setting to FALSE is intended for testing
+# - group_yrs: years to include in dashboard, useful if certain permissions
+#   need to be truncated (defaults to yrs parameter)
 run_dash <- function(
-    group, part_ref = NULL, return_ref = FALSE, res_type = NULL, write_csv = TRUE
+    group, part_ref = NULL, return_ref = FALSE, res_type = NULL, 
+    write_csv = TRUE, group_yrs = yrs
 ) {
     # get data for permission
     lic_ids <- load_lic_ids(db_license, group)
     sale_group <- filter(sale, lic_id %in% lic_ids) %>% 
         distinct(cust_id, year, month)
-    history <- load_history(db_history, group, yrs) %>%
+    history <- load_history(db_history, group, group_yrs) %>%
         left_join(cust, by = "cust_id") %>%
         recode_history()
     
@@ -33,8 +36,8 @@ run_dash <- function(
     run_qtr <- function(qtr, group) {
         run_qtr_handler(code_to_run = {
             history %>%
-                quarterly_filter(quarter, qtr, yrs) %>%
-                quarterly_lapse(qtr, yrs) %>%
+                quarterly_filter(quarter, qtr, group_yrs) %>%
+                quarterly_lapse(qtr, group_yrs) %>%
                 calc_metrics(pop_county, sale_group, dashboard_yrs, 
                              part_ref[[paste0("q", qtr)]], res_type)
         }, qtr, group)
