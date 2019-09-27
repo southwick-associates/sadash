@@ -32,11 +32,11 @@ dat %>%
     count(group, year) %>%
     spread(year, n)
 
-# provide to Ben for summary
+# provide to Tableau designer for summary
 # - counts by year for each group (permission)
 dat %>%
-    filter(segment == "All", metric == "participants", quarter == 2) %>% 
-    select(group, year, value) %>% 
+    filter(segment == "All", metric == "participants") %>% 
+    select(quarter, group, year, value) %>% 
     spread(year, value) %>%
     write.csv(file = "out/priv-counts.csv")
 
