@@ -9,7 +9,7 @@ dat <- list.files("3-dashboard-results/dash", full.names = TRUE) %>%
     lapply(read_csv) %>%
     bind_rows()
 
-# Visualize ---------------------------------------------------------------
+# Check ---------------------------------------------------------------
 
 # get csv files by quarter
 x <- split(dat, dat$quarter)
@@ -22,26 +22,21 @@ for (i in names(x)) {
 # visualize
 dashtemplate::run_visual(outdir)
 
-# Checks ------------------------------------------------------------------
-
 # check row counts
 # - first year won't have churn
 # - first 5 years won't have recruitment
 dat %>%
     filter(segment != "month") %>%
     count(group, year) %>%
-    spread(year, n)
-
-# provide to Tableau designer for summary
-# - counts by year for each group (permission)
-dat %>%
-    filter(segment == "All", metric == "participants") %>% 
-    select(quarter, group, year, value) %>% 
-    spread(year, value) %>%
-    write.csv(file = "out/priv-counts.csv")
+    spread(year, n) %>%
+    View()
 
 # Write for Tableau -------------------------------------------------------
 
+# After writing to csv, these 2 tables should be manually save as Excel in
+#  O365 > Data Dashboards > [state] > data
+
+# direct input to Tableau
 dat %>% mutate(
     segment = tolower(segment),
     metric = case_when(
@@ -50,3 +45,11 @@ dat %>% mutate(
         TRUE ~ metric
     )
 ) %>% write_csv("out/dash-out.csv", na = "")
+
+# summary for Tableau designer
+# - counts by year for each group (permission)
+dat %>%
+    filter(segment == "All", metric == "participants") %>% 
+    select(quarter, group, year, value) %>% 
+    spread(year, value) %>%
+    write.csv(file = "out/priv-counts.csv")
