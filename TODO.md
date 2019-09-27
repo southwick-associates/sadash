@@ -30,4 +30,5 @@ est_part <- function(
 - maybe investigate scaleup warnings with VA resident permissions (in counties)
     + rounding error? > might be worth a closer look
     + at least none of the discrepancies appear enormous
+- new_dashboard() function to copy over code from previous iteration of state
     

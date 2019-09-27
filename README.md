@@ -25,7 +25,7 @@ Sadash serves two primary purposes: (1) providing boilerplate (template) code fo
 
 ### Setup Templates
 
-Use new_dashboard() to setup code for a given state and time period:
+Use `new_dashboard()` to setup code for a given state and time period:
 
 ``` r
 # initialize template
