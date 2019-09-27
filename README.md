@@ -53,7 +53,7 @@ The dashboard summary workflow essentially mirrors the [national/regional templa
 
 #### License History
 
-This is fairly straightfoward (see the template code in 2-license-history). An example workflow for one permission is included below.
+Producing license histories is fairly straightfoward (see the template code in 2-license-history). An example workflow for one permission is included below.
 
 ``` r
 # MO hunting license history
@@ -84,7 +84,7 @@ history <- lic_group  %>%
 
 #### Dashboard Metrics
 
-The code is a bit more involved than running license history (see template code in 3-dashboard-results). An example workflow for one permission-quarter is included below.
+Producing dashboard metrics is a bit more involved than running license history (see template code in 3-dashboard-results). An example workflow for one permission-quarter is included below.
 
 ``` r
 # MO full-year hunting dashboard
