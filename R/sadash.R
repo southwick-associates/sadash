@@ -13,3 +13,44 @@ if (getRversion() >= "2.15.1") {
           "state_abbrev")
     )
 }
+
+#' sadash: Prepare state data dashboards
+#' 
+#' This includes a summary of the core functions grouped by task.
+#' 
+#' @section Setup Templates:
+#' \itemize{
+#'   \item use \code{\link{new_dashboard}} to setup files/folders for a new state
+#'   or a new period
+#' }
+#' 
+#' @section Preparing License History:
+#' \itemize{
+#'   \item use \code{\link{load_license}} to pull standardized license data 
+#'   from sqlite
+#'   \item use \code{\link{data_check_sa}} to check formatting rules of 
+#'   standardized data
+#'   \item use \code{\link{drop_na_custid}} to remove any records with a missing
+#'   customer ID from the sale table
+#'   \item use functions from salic (\code{\link{rank_sale}}, \code{\link{make_history}}) 
+#'   to build license history
+#'   \item finally use \code{\link{write_history}} to write to sqlite
+#' }
+#' 
+#' @section Preparing Dashboard Metrics:
+#' \itemize{
+#'   \item use \code{\link{load_sqlite}} functions to pull in state-level 
+#'   customer, sales, and census population data
+#'   \item use \code{\link{load_history}} and \code{\link{recode_history}} to
+#'   prepare data for a specific permission
+#'   \item use \code{\link{quarterly_filter}}, \code{\link{quarterly_lapse}},
+#'   and \code{\link{calc_metrics}} in sequence to produce a list that stores
+#'   all metrics for a permission
+#'   \item use \code{\link{format_metrics}} and \code{\link{write_dash}}
+#'   in sequence to produce csv files by permission-quarter
+#'   \item use dashtemplate::run_visual() to check results
+#' }
+#' 
+#' @docType package
+#' @name sadash
+NULL

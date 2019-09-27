@@ -21,6 +21,10 @@ devtools::install_github("southwick-associates/sadash")
 
 ## Usage
 
+Sadash serves two primary purposes: (1) providing boilerplate (template) code for state processing, and (2) providing a modular workflow through data processing functions. Run `?sadash` for an overview of the included functionality.
+
+### Setup Templates
+
 Use new_dashboard() to setup code for a given state and time period:
 
 ``` r
