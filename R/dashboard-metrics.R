@@ -114,9 +114,12 @@ calc_metrics <- function(
     missing_yrs <- setdiff(dashboard_yrs, unique(history$year))
     dashboard_yrs <- setdiff(dashboard_yrs, missing_yrs)
     if (length(dashboard_yrs) == 0) {
-        stop("No dashboard_yrs available in the history table:\n", 
-             "- missing yrs: ", paste(missing_yrs, collapse = ", "), 
-             call. = FALSE)
+        stop("No dashboard_yrs available in the history table:", 
+             "\n- years in history: ", paste(unique(history$year), collapse = ", "),
+             "\n- missing yrs: ", paste(missing_yrs, collapse = ", "), 
+             "\nPerhaps this permission is missing sales in selected quarter?",
+             "\nAlternatively, quarterly_filter() can cause this if 'quarter'",
+             " (i.e., current quarter) is set incorrectly.", call. = FALSE)
     }
     # prepare residency-specific logic
     if (!is.null(res_type)) {

@@ -92,6 +92,11 @@ recode_history <- function(
 
 #' Filter by quarter in prepartion for calculating metrics
 #' 
+#' There are 2 basic filter scenarios: (1) the select_quarter is less than 4
+#' (i.e., partial year) and records for later quarters are removed, or (2)
+#' the current quarter (quarter argument) is behind select_quarter, in which
+#' case the most recent year is dropped.
+#' 
 #' @param history data frame that holds license history for selected permission
 #' @param quarter current quarter
 #' @param select_quarter quarter to be summarized
