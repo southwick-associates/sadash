@@ -75,8 +75,16 @@ extrapolate_pop <- function(pop, yrs) {
 
 #' Prepare license history for selected quarter (recoding)
 #' 
+#' This is basically a wrapper for several functions called in sequence, particularly
+#' \code{\link[salic]{label_categories}} and \code{\link[salic]{recode_agecat}}.
+#' The month_to_quarter parameter is used to specify an output "quarter" variable
+#' based on the input "month" variable.
+#' 
 #' @param history data frame: table produced by load_history()
-#' @param month_to_quarter function used to calculate quarter (based on month values)
+#' @param month_to_quarter function used to calculate quarter (based on month values).
+#' The default function assumes a calendar year, so it will need to be modified
+#' in cases where fiscal year is used (see VA 2019-q2 code for an example).
+#' 
 #' @family functions to prepare data for summarization
 #' @export
 recode_history <- function(

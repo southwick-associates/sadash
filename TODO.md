@@ -1,4 +1,9 @@
 
+## Version 1.0.1
+
+- Function documentation should be improved by at least including better descriptions (can probably forego examples)
+    + probably start at the beginning of the history workflow (see template code) and step through documentation for each function (particularly user-facing functions, but internal funcs are important as well)
+
 ## Version 1.1
 
 It may be that functions will need to be tweaked, improved, etc. on the backend. However, it is difficult to do that reliably without tests (and probably sample data). Therefore, any changes should begin with tests to ensure that functionality is not broken, or a change to a function leads to an error in calculation.
@@ -8,8 +13,13 @@ It may be that functions will need to be tweaked, improved, etc. on the backend.
     + would also want to drop the filter at the end of calc_metrics(), which is nice because the code is then cleaner & fewer threshold warnings would be produced (a benefit on the user end)
     
 ``` r
-# Estimate participants (a wrapper for salic::est_part)
-# - dashboard_yrs  years for dashboard focus
+#' Estimate participants
+#' 
+#' This is basically a wrapper for salic::est_part() that filters out non-dashboard_yrs
+#' for county-level results
+#' 
+#' @params dashboard_yrs years for dashboard focus
+#' @export
 est_part <- function(
     history, segment = "tot", test_threshold = 20, show_test_stat = FALSE,
     suppress_warning = FALSE, outvar = "participants", dashboard_yrs
