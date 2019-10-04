@@ -3,6 +3,7 @@
 
 - Function documentation should be improved by at least including better descriptions (can probably forego examples)
     + probably start at the beginning of the history workflow (see template code) and step through documentation for each function (particularly user-facing functions, but internal funcs are important as well)
+    + probably go through one R/ file at a time and check each function
 
 ## Version 1.1
 
@@ -38,7 +39,6 @@ est_part <- function(
     + filling with zeroes for any missing categories (in res, sex, agecat)
     + probably won't happen for sex, agecat, but might be worth generalizing
 - maybe investigate scaleup warnings with VA resident permissions (in counties)
-    + rounding error? > might be worth a closer look
-    + at least none of the discrepancies appear enormous
+    + the discrepancies are quite small (almost certainly rounding error) but probably worth a closer look
 - new_dashboard() function to copy over code from previous iteration of state
     
