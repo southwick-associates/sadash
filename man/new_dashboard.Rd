@@ -21,9 +21,13 @@ new_dashboard(state, time_period, sa_path = "E:/SA",
 \item{project_library}{character: Name of project-specific R package library}
 }
 \description{
-This is intended to be run before data processing for a new state begins
+This is intended to be run before data processing for a new state begins.
 }
 \examples{
 # new_dashboard("YY", "2018-q4")
+}
+\seealso{
+Other functions for making template files/folders: \code{\link{setup_dashboard}},
+  \code{\link{update_dashboard}}
 }
 \concept{functions for making template files/folders}

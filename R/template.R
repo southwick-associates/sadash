@@ -1,30 +1,15 @@
 # make template files/folders for selected state/time-period
 
-# TODO: 
-# for state updates: copy existing code with replacements (__period__, first = FALSE)
-update_dashboard <- function() {
-    
-}
-
-#' Setup a new state dashboard with default directories and template scripts
+#' Helper function for for dashboard templates
 #' 
-#' This is intended to be run before data processing for a new state begins
+#' Called from \code{\link{new_dashboard}} and \code{\link{update_dashboard}}. 
+#' Runs initial variable preparation, sets up folders, and creates a ".Rproj"
+#' file in the analysis folder.
 #' 
-#' @param state character: Two letter state designation
-#' @param time_period character: Time period for the first dashboard 
-#' (e.g., "2015", "2016-q1", etc.)
-#' @param sa_path character: File path to the Southwick main folder 
-#' (for analysis and data, etc.)
-#' @param R_version character: Version of R to use for this project
-#' @param project_library character: Name of project-specific R package library
+#' @inheritParams new_dashboard
 #' @family functions for making template files/folders
 #' @export
-#' @examples
-#' # new_dashboard("YY", "2018-q4")
-new_dashboard <- function(
-    state, time_period, sa_path = "E:/SA", 
-    R_version = "3.5.1", project_library = "data-dashboards2"
-) {
+setup_dashboard <- function(state, time_period, sa_path) {
     # initial variable prep
     state <- toupper(state)
     time_period <- as.character(time_period)
@@ -50,32 +35,104 @@ new_dashboard <- function(
         file.path(sa_path, "Data-production", "Data-Dashboards", state),  
         showWarnings = FALSE
     )
-    # copy project template files to analysis_path
-    template_paths <- list.files(
-        system.file("template-code", package = "sadash"), full.names = TRUE
-    )
-    for (i in template_paths) {
-        file.copy(i, analysis_path, recursive = TRUE, overwrite = FALSE)
-    }
-    # make .Rprofile (using specified R version and project library)
-    x <- readLines(system.file("template-setup", "Rprofile", package = "sadash"))
-    x[9] <- paste0("r_version <- '", R_version, "'")
-    x[10] <- paste0("proj_libname <- '", project_library, "'")
-    writeLines(x, file.path(analysis_path, ".Rprofile"))
-    
     # make .Rproj (for RStudio)
     file.copy(
         system.file("template-setup", "XX.Rproj", package = "sadash"), 
         file.path(analysis_path, paste0(state, "-", time_period, ".Rproj"))
     )
+    mget(c("state", "time_period", "analysis_path"))
+}
+
+#' Setup a new period for a dashboard state
+#' 
+#' This will setup files based on a reference time period, rather than 
+#' creating new files based on the default template. The new analysis folder
+#' will include all reference ".R" files and their containing folders.
+#' 
+#' @inheritParams new_dashboard
+#' @param ref_period folder name of reference time period (e.g., 2018-q4)
+#' @family functions for making template files/folders
+#' @export
+update_dashboard <- function(
+    state, time_period, ref_period, sa_path = "E:/SA"
+) {
+    ref_path <- file.path(
+        sa_path, "Projects", "Data-Dashboards", toupper(state), ref_period
+    )
+    if (!dir.exists(ref_path)) {
+        stop("The reference path (", ref_path, ") doesn't exist", call. = FALSE)
+    }
+    params <- setup_dashboard(state, time_period, sa_path)
+    
+    # identify files/folders to copy
+    all_files <- list.files(ref_path, recursive = TRUE, all.files = TRUE)
+    r_files <- all_files[grep(".R", all_files)]
+    r_files <- r_files[-grep(".Rproj", r_files)] # R project file already created
+        
+    # copy R files
+    for (i in r_files) {
+        dir.create(
+            file.path(params$analysis_path, dirname(i)), 
+            recursive = TRUE, showWarnings = FALSE
+        )
+        file.copy(
+            file.path(ref_path, i), 
+            file.path(params$analysis_path, i),
+            overwrite = FALSE
+        )
+    }
+    # replace strings for previous time period
+    replace_strings(
+        params$analysis_path, ref_period, params$time_period, showmessage = FALSE
+    )
+    # print message
+    message("A new dashboard project has been initialized:\n  ", params$analysis_path)
+}
+
+#' Setup a new state dashboard with default directories and template scripts
+#' 
+#' This is intended to be run before data processing for a new state begins.
+#' 
+#' @param state character: Two letter state designation
+#' @param time_period character: Time period for the first dashboard 
+#' (e.g., "2015", "2016-q1", etc.)
+#' @param sa_path character: File path to the Southwick main folder 
+#' (for analysis and data, etc.)
+#' @param R_version character: Version of R to use for this project
+#' @param project_library character: Name of project-specific R package library
+#' @family functions for making template files/folders
+#' @export
+#' @examples
+#' # new_dashboard("YY", "2018-q4")
+new_dashboard <- function(
+    state, time_period, sa_path = "E:/SA", 
+    R_version = "3.5.1", project_library = "data-dashboards2"
+) {
+    params <- setup_dashboard(state, time_period, sa_path)
+    
+    # copy project template files to analysis_path
+    template_paths <- list.files(
+        system.file("template-code", package = "sadash"), full.names = TRUE
+    )
+    for (i in template_paths) {
+        file.copy(i, params$analysis_path, recursive = TRUE, overwrite = FALSE)
+    }
+    # make .Rprofile (using specified R version and project library)
+    x <- readLines(system.file("template-setup", "Rprofile", package = "sadash"))
+    x[9] <- paste0("r_version <- '", R_version, "'")
+    x[10] <- paste0("proj_libname <- '", project_library, "'")
+    writeLines(x, file.path(params$analysis_path, ".Rprofile"))
+    
     # replace placeholder strings in template code
     # doing this saves the analyst some time and helps enforce naming conventions
-    replace_strings(analysis_path, "__state__", state, showmessage = FALSE)
-    replace_strings(analysis_path, "__period__", time_period, showmessage = FALSE)
-    
+    replace_strings(
+        params$analysis_path, "__state__", params$state, showmessage = FALSE
+    )
+    replace_strings(
+        params$analysis_path, "__period__", params$time_period, showmessage = FALSE
+    )
     # print message
-    message("A new dashboard project has been initialized:\n  ", analysis_path)
-    
+    message("A new dashboard project has been initialized:\n  ", params$analysis_path)
 }
 
 #' Search and replace string across files with R

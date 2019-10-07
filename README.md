@@ -25,15 +25,14 @@ Sadash serves two primary purposes: (1) providing boilerplate (template) code fo
 
 ### Setup Templates
 
-Use `new_dashboard()` to setup code for a given state and time period:
+Use `new_dashboard()` or `update_dashboard()` to setup code for a given state and time period:
 
 ``` r
-# initialize template
-sadash::new_dashboard("YY", "2019-q2")
+# initialize new template
+sadash::new_dashboard("YY", "2018-q4")
 
 # alternatively, update code from a previous period
-# - this isn't yet implemented
-# sadash::new_dashboard("YY", "2019-q2", reference_period = "2018-q4")
+sadash::update_dashboard("YY", "2019-q2", "2018-q4")
 ```
 
 ### Preparing License Data

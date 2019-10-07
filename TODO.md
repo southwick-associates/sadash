@@ -1,12 +1,5 @@
 
-## Version 1.0.1
-
-- Function documentation should be improved by at least including better descriptions (can probably forego examples)
-    + probably start at the beginning of the history workflow (see template code) and step through documentation for each function (particularly user-facing functions, but internal funcs are important as well)
-    + probably go through one R/ file at a time and check each function
-- Remember to update NEWS when 1.0.1 is finalized (& use a different version on next iteration)
-
-## Version 1.1
+## Version 1.1.0
 
 It may be that functions will need to be tweaked, improved, etc. on the backend. However, it is difficult to do that reliably without tests (and probably sample data). Therefore, any changes should begin with tests to ensure that functionality is not broken, or a change to a function leads to an error in calculation.
 
