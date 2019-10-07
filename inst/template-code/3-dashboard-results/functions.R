@@ -19,9 +19,11 @@
 #   setting to FALSE is intended for testing
 # - yrs_group: years to include in dashboard, useful if certain permissions
 #   need to be truncated (defaults to yrs parameter)
+# - group_out: optionally use a different name than stored in group argument
+#   for the output, potentially useful (for example) in residency-specific permissions
 run_dash <- function(
     group, part_ref = NULL, return_ref = FALSE, res_type = NULL, 
-    write_csv = TRUE, yrs_group = yrs
+    write_csv = TRUE, yrs_group = yrs, group_out = group
 ) {
     # get data for permission
     lic_ids <- load_lic_ids(db_license, group)
@@ -38,8 +40,11 @@ run_dash <- function(
             history %>%
                 quarterly_filter(quarter, qtr, yrs_group) %>%
                 quarterly_lapse(qtr, yrs_group) %>%
-                calc_metrics(pop_county, sale_group, dashboard_yrs, 
-                             part_ref[[paste0("q", qtr)]], res_type)
+                calc_metrics(
+                    pop_county, sale_group, dashboard_yrs,  
+                    part_ref[[paste0("q", qtr)]], res_type, 
+                    scaleup_test = 25 # this often needs to be relaxed
+                )
         }, qtr, group)
     }
     
@@ -48,7 +53,7 @@ run_dash <- function(
     names(out) <- paste0("q", all_quarters)
     
     # wrap up
-    if (write_csv) mapply(write_output, out, all_quarters, group)
+    if (write_csv) mapply(write_output, out, all_quarters, group_out)
     if (return_ref) out
 }
 
