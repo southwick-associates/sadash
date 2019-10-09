@@ -45,7 +45,7 @@ The dashboard summary workflow essentially mirrors the [national/regional templa
 
 - Summarizing by County
 - Participation Rates
-- Additional overhead to save license history in sqlite databases
+- Additional overhead for working with sqlite databases
 - Allowing for privileges & subtypes (with calculation of privilege rates)
 - Additional steps needed for subtypes specifically (e.g., spousal license) since they don't represent unique permissions
 - Accounting for permissions that are residency-specific
