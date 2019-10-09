@@ -5,8 +5,12 @@ library(salic)
 library(sadash)
 
 # stack results
+coltyp <- cols(
+    .default = col_character(), quarter = col_integer(), year = col_integer(), 
+    value = col_double() 
+)
 dat <- list.files("3-dashboard-results/dash", full.names = TRUE) %>%
-    lapply(read_csv) %>%
+    lapply(read_csv, col_types = coltyp) %>%
     bind_rows()
 
 # Check ---------------------------------------------------------------

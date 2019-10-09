@@ -34,5 +34,4 @@ est_part <- function(
     + probably won't happen for sex, agecat, but might be worth generalizing
 - maybe investigate scaleup warnings with VA resident permissions (in counties)
     + the discrepancies are quite small (almost certainly rounding error) but probably worth a closer look
-- new_dashboard() function to copy over code from previous iteration of state
     
