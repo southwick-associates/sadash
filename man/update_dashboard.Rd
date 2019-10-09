@@ -4,7 +4,9 @@
 \alias{update_dashboard}
 \title{Setup a new period for a dashboard state}
 \usage{
-update_dashboard(state, time_period, ref_period, sa_path = "E:/SA")
+update_dashboard(state, time_period, ref_period, sa_path = "E:/SA",
+  files_to_keep = c("\\\\.r", "documentation\\\\.tex"),
+  files_to_drop = c("\\\\.rproj"))
 }
 \arguments{
 \item{state}{character: Two letter state designation}
@@ -16,11 +18,18 @@ update_dashboard(state, time_period, ref_period, sa_path = "E:/SA")
 
 \item{sa_path}{character: File path to the Southwick main folder 
 (for analysis and data, etc.)}
+
+\item{files_to_keep}{file matching for grep (not case sensitive). Files
+with matching patterns will be copied from ref_period}
+
+\item{files_to_drop}{file exclusion for grep (not case sensitive). The
+default is to exclude R studio .Rproj files (which get matched in files_to_keep)}
 }
 \description{
 This will setup files based on a reference time period, rather than 
-creating new files based on the default template. The new analysis folder
-will include all reference ".R" files and their containing folders.
+creating new files based on the default template. By default, the new analysis 
+folder will include all ref_period R files (.R, .Rmd, etc.) and their
+containing folders, as well as the documentation.tex file.
 }
 \seealso{
 Other functions for making template files/folders: \code{\link{new_dashboard}},

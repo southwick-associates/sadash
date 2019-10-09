@@ -46,15 +46,23 @@ setup_dashboard <- function(state, time_period, sa_path) {
 #' Setup a new period for a dashboard state
 #' 
 #' This will setup files based on a reference time period, rather than 
-#' creating new files based on the default template. The new analysis folder
-#' will include all reference ".R" files and their containing folders.
+#' creating new files based on the default template. By default, the new analysis 
+#' folder will include all ref_period R files (.R, .Rmd, etc.) and their
+#' containing folders, as well as the documentation.tex file.
 #' 
 #' @inheritParams new_dashboard
 #' @param ref_period folder name of reference time period (e.g., 2018-q4)
+#' @param files_to_keep file matching for grep (not case sensitive). Files
+#' with matching patterns will be copied from ref_period
+#' @param files_to_drop file exclusion for grep (not case sensitive). The
+#' default is to exclude R studio .Rproj files (which get matched in files_to_keep)
+#' 
 #' @family functions for making template files/folders
 #' @export
 update_dashboard <- function(
-    state, time_period, ref_period, sa_path = "E:/SA"
+    state, time_period, ref_period, sa_path = "E:/SA",
+    files_to_keep = c("\\.r", "documentation\\.tex"),
+    files_to_drop = c("\\.rproj")
 ) {
     ref_path <- file.path(
         sa_path, "Projects", "Data-Dashboards", toupper(state), ref_period
@@ -65,12 +73,18 @@ update_dashboard <- function(
     params <- setup_dashboard(state, time_period, sa_path)
     
     # identify files/folders to copy
+    match_files <- function(file_match, all_files) {
+        file_match %>%
+            lapply(grep, x = tolower(all_files)) %>% 
+            unlist() %>% 
+            unique()
+    }
     all_files <- list.files(ref_path, recursive = TRUE, all.files = TRUE)
-    r_files <- all_files[grep(".R", all_files)]
-    r_files <- r_files[-grep(".Rproj", r_files)] # R project file already created
+    keep_files <- all_files[match_files(files_to_keep, all_files)]
+    keep_files <- keep_files[-match_files(files_to_drop, keep_files)]
         
     # copy R files
-    for (i in r_files) {
+    for (i in keep_files) {
         dir.create(
             file.path(params$analysis_path, dirname(i)), 
             recursive = TRUE, showWarnings = FALSE

@@ -1,4 +1,8 @@
 
+## Version 1.0.2
+
+Small template code tweaks & more flexible update_dashboard().
+
 ## Version 1.0.1
 
 This includes some small tweaks and improved documentation. An update_dashboard() function was also added.
