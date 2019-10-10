@@ -1,4 +1,8 @@
 
+## Version 1.0.3
+
+Fixed a bug in calc_metrics() that would hit an error if R3 wasn't included in the history table (i.e., fewer than 5 years for a permission).
+
 ## Version 1.0.2
 
 Small template code tweaks & more flexible update_dashboard().
