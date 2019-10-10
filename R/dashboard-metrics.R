@@ -148,7 +148,7 @@ calc_metrics <- function(
     
     # collect metrics into a list
     out <- mget(c("participants", "churn", "month"))
-    if (exists(recruits)) out$recruits <- recruits$participants
+    if (exists("recruits")) out$recruits <- recruits$participants
     if (is.list(rate)) out$rate <- rate
     
     # drop non-dashboard_yrs for county-level results
