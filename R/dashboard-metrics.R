@@ -128,27 +128,27 @@ calc_metrics <- function(
     }
     
     # calculate 5 metrics
-    part <- calc_part(
-        history, segs, tests, scaleup_test, res_type
-    )
-    recruits <- calc_part(
-        history, segs, tests_recruits, scaleup_test, res_type, use_recruits = TRUE
-    )
+    part <- calc_part(history, segs, tests, scaleup_test, res_type)
+    participants <- part$participants
+    
     rate <- if (is.null(part_ref)) {
         calc_part_rate(part$residents, pop_county, rate_test, res_type)
     } else {
         calc_priv_rate(part$participants, part_ref$participants, rate_test)
     }
-    month <- list(
-        "participants" = est_month(sale, history, dashboard_yrs),
-        "recruits" = est_month(sale, history, dashboard_yrs, use_recruits = TRUE)
-    )
+    month <- list("participants" = est_month(sale, history, dashboard_yrs))
+    
+    if ("R3" %in% names(history)) {
+        recruits <- calc_part(
+            history, segs, tests_recruits, scaleup_test, res_type, use_recruits = TRUE
+        )
+        month$recruits <- est_month(sale, history, dashboard_yrs, use_recruits = TRUE)
+    }
     churn <- sapply2(segs, function(x) est_churn(history, x, tests[x]))
     
     # collect metrics into a list
-    participants <- part$participants
     out <- mget(c("participants", "churn", "month"))
-    if (is.list(recruits)) out$recruits <- recruits$participants
+    if (exists(recruits)) out$recruits <- recruits$participants
     if (is.list(rate)) out$rate <- rate
     
     # drop non-dashboard_yrs for county-level results
@@ -215,9 +215,6 @@ calc_part <- function(
     history, segs, tests, scaleup_test, res_type = NULL, use_recruits = FALSE
 ) {
     if (use_recruits) {
-        if (!"R3" %in% names(history)) {
-            return(invisible())
-        }
         history <- filter(history, R3 == "Recruit")
         est_part <- function(...) est_recruit(...)
         scaleup_part <- function(...) scaleup_recruit(...)
