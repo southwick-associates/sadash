@@ -147,9 +147,9 @@ calc_metrics <- function(
     
     # collect metrics into a list
     participants <- part$participants
-    recruits <- recruits$participants
-    out <- mget(c("participants", "recruits", "churn", "month"))
-    if (is.list(rate)) out[["rate"]] <- rate
+    out <- mget(c("participants", "churn", "month"))
+    if (is.list(recruits)) out$recruits <- recruits$participants
+    if (is.list(rate)) out$rate <- rate
     
     # drop non-dashboard_yrs for county-level results
     for (i in setdiff(names(out), "month")) {
@@ -215,6 +215,9 @@ calc_part <- function(
     history, segs, tests, scaleup_test, res_type = NULL, use_recruits = FALSE
 ) {
     if (use_recruits) {
+        if (!"R3" %in% names(history)) {
+            return(invisible())
+        }
         history <- filter(history, R3 == "Recruit")
         est_part <- function(...) est_recruit(...)
         scaleup_part <- function(...) scaleup_recruit(...)
