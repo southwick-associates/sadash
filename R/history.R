@@ -34,6 +34,15 @@ data_check_sa <- function(
     data_check_lic(lic, allowed_values = lic_vals)
     data_foreign_key(sale, lic, "lic_id")
     data_check_sale(sale, allowed_values = sale_vals)
+    
+    # county_fips must be integer for joining with census data
+    if ("county_fips" %in% names(cust)) {
+        fips_type <- typeof(cust$county_fips)
+        if (!fips_type == "integer") {
+            warning("cust$county_fips must be integer, not ", fips_type,
+                    call. = FALSE)
+        }
+    }
 }
 
 #' Load license data (cust, lic, sale) into a list
