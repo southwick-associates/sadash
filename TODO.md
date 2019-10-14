@@ -1,6 +1,8 @@
 
 ## Version 1.1.0
 
+Need tests! Making changes to code is quite a pain currently b/c it is laborious to find things like syntax errors. Although even including examples (which get run with R CMD check) would improve this.
+
 It may be that functions will need to be tweaked, improved, etc. on the backend. However, it is difficult to do that reliably without tests (and probably sample data). Therefore, any changes should begin with tests to ensure that functionality is not broken, or a change to a function leads to an error in calculation.
 
 - Consider limiting the county results to dashboard_yrs by making sadash-specific versions of est_part, etc. (would look something like the code below)

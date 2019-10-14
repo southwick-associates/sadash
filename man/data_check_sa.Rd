@@ -7,7 +7,9 @@
 data_check_sa(cust, lic, sale, cust_vars = c("cust_id", "sex",
   "birth_year", "county_fips"), lic_vals = list(type = c("fish", "hunt",
   "combo", "trap", "other"), duration = 1:99), sale_vals = list(year =
-  c(2000:substr(Sys.Date(), 1, 4)), month = 0:15, res = c(1, 0, NA)))
+  c(2000:substr(Sys.Date(), 1, 4)), month = 0:15, res = c(1, 0, NA)),
+  cust_vals = list(sex = c(1, 2, NA), birth_year =
+  c(1870:substr(Sys.Date(), 1, 4), NA)))
 }
 \arguments{
 \item{cust}{data frame: customer table (primary key = "cust_id")}
@@ -21,6 +23,8 @@ data_check_sa(cust, lic, sale, cust_vars = c("cust_id", "sex",
 \item{lic_vals}{lic allowed_values}
 
 \item{sale_vals}{sale allowed values}
+
+\item{cust_vals}{sale allowed values}
 }
 \description{
 This is a variation on \code{\link[salic]{data_check}} that has some 

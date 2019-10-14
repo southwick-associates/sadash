@@ -9,22 +9,31 @@
 #' @param cust_vars cust required_vars
 #' @param lic_vals lic allowed_values
 #' @param sale_vals sale allowed values
+#' @param cust_vals sale allowed values
 #' @family functions for producing license history
 #' @export
 data_check_sa <- function(
     cust, lic, sale,
     cust_vars = c("cust_id", "sex", "birth_year", "county_fips"),
-    lic_vals = list(type = c("fish", "hunt", "combo", "trap", "other"), 
-                    duration = 1:99),
-    sale_vals = list(year = c(2000:substr(Sys.Date(), 1, 4)), month = 0:15, 
-                     res = c(1, 0, NA))
+    lic_vals = list(
+        type = c("fish", "hunt", "combo", "trap", "other"),  
+        duration = 1:99
+    ),
+    sale_vals = list(
+        year = c(2000:substr(Sys.Date(), 1, 4)), 
+        month = 0:15,  
+        res = c(1, 0, NA)
+    ),
+    cust_vals = list(
+        sex = c(1, 2, NA), 
+        birth_year = c(1870:substr(Sys.Date(), 1, 4), NA)
+    )
 ) {
-    data_check_cust(cust, required_vars = cust_vars)
+    data_check_cust(cust, required_vars = cust_vars, allowed_values = cust_vals)
     data_foreign_key(sale, cust, "cust_id")
     data_check_lic(lic, allowed_values = lic_vals)
     data_foreign_key(sale, lic, "lic_id")
     data_check_sale(sale, allowed_values = sale_vals)
-    
 }
 
 #' Load license data (cust, lic, sale) into a list
