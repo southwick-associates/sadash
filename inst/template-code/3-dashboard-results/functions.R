@@ -21,9 +21,12 @@
 #   need to be truncated (defaults to yrs parameter)
 # - group_out: optionally use a different name than stored in group argument
 #   for the output, potentially useful (for example) in residency-specific permissions
+# - quarters_group: quarters to include for selected group, useful for permissions
+#   that are only sold for example in the second half of the year
 run_dash <- function(
     group, part_ref = NULL, return_ref = FALSE, res_type = NULL, 
-    write_csv = TRUE, yrs_group = yrs, group_out = group
+    write_csv = TRUE, yrs_group = yrs, group_out = group, 
+    quarters_group = all_quarters
 ) {
     # get data for permission
     lic_ids <- load_lic_ids(db_license, group)
@@ -49,11 +52,11 @@ run_dash <- function(
     }
     
     # produce metrics for all quarters
-    out <- lapply(all_quarters, function(x) run_qtr(x, group))
-    names(out) <- paste0("q", all_quarters)
+    out <- lapply(quarters_group, function(x) run_qtr(x, group))
+    names(out) <- paste0("q", quarters_group)
     
     # wrap up
-    if (write_csv) mapply(write_output, out, all_quarters, group_out)
+    if (write_csv) mapply(write_output, out, quarters_group, group_out)
     if (return_ref) out
 }
 
