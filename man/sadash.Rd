@@ -12,7 +12,8 @@ This includes a summary of the core functions grouped by task.
 
 \itemize{
   \item use \code{\link{new_dashboard}} to setup files/folders for a new state
-  or a new period
+  \item use \code{\link{update_dashboard}} to copy scripts from another time
+  period for a given state
 }
 }
 

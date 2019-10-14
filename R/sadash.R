@@ -21,7 +21,8 @@ if (getRversion() >= "2.15.1") {
 #' @section Setup Templates:
 #' \itemize{
 #'   \item use \code{\link{new_dashboard}} to setup files/folders for a new state
-#'   or a new period
+#'   \item use \code{\link{update_dashboard}} to copy scripts from another time
+#'   period for a given state
 #' }
 #' 
 #' @section Preparing License History:
