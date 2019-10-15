@@ -13,3 +13,4 @@ db_census <- file.path(dir_production, "_Shared", "census.sqlite3")
 lastyr <- as.integer(substr(period, 1, 4))
 quarter <- as.integer(substr(period, 7, 7))
 yrs <- firstyr:lastyr
+dashboard_yrs <- lastyr # focus years to be available in dashboard dropdown menu

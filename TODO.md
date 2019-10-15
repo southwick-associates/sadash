@@ -7,7 +7,6 @@
 
 - Alternatively, pack all of the above into 1 function, which is probably ideal
     + may want the ability to toggle based on dashboard_yrs, essentially recreating all of the functionality in the Tableau dashboard
-    + would need to move dashboard_yrs to params.R in template code
     
 - Probably want a make_dive() function to setup template code for producing a data dive file
     + see the old WI code to see exactly what you produced for the Tableau input

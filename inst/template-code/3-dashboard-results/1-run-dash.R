@@ -9,7 +9,6 @@ source("3-dashboard-results/functions.R") # run_dash()
 
 # define additional parameters
 all_quarters <- quarter  # quarters to be estimated
-dashboard_yrs <- lastyr  # focus years to be available in dashboard dropdown menu
 month_yrs <- c(dashboard_yrs[1]-1, dashboard_yrs) # for sales by month
 
 # pull customer, sales, & population data for state
