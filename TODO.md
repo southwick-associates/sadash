@@ -1,4 +1,17 @@
 
+## Functionality to Add
+
+- May want to include an sadash::run_visual() which can either:
+    + basically act as a wrapper for dashtemplate::run_visual(), or
+    + produce an alternative visual showing monthly sales & county chloropleth
+
+- Alternatively, pack all of the above into 1 function, which is probably ideal
+    + may want the ability to toggle based on dashboard_yrs, essentially recreating all of the functionality in the Tableau dashboard
+    + would need to move dashboard_yrs to params.R in template code
+    
+- Probably want a make_dive() function to setup template code for producing a data dive file
+    + see the old WI code to see exactly what you produced for the Tableau input
+
 ## Version 1.1.0
 
 Need tests! Making changes to code is quite a pain currently b/c it is laborious to find things like syntax errors. Although even including examples (which get run with R CMD check) would improve this.
