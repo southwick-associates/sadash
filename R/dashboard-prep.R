@@ -105,27 +105,29 @@ recode_history <- function(
 #' the current quarter (quarter argument) is behind select_quarter, in which
 #' case the most recent year is dropped.
 #' 
-#' @param history data frame that holds license history for selected permission
+#' @param df data frame that holds data (e.g., sales or license history) for 
+#' selected permission
 #' @param quarter current quarter
 #' @param select_quarter quarter to be summarized
 #' @param yrs years to summarize
 #' @family functions to prepare data for summarization
 #' @export
-quarterly_filter <- function(history, quarter, select_quarter, yrs) {
+quarterly_filter <- function(df, quarter, select_quarter, yrs) {
     # if selected quarter is ahead of current, need to drop current year
     if (select_quarter > quarter) {
-        history <- filter(history, year < max(yrs))
+        df <- filter(df, year < max(yrs))
     }
     # only want records occurring up to selected quarter
     if (select_quarter != 4) {
-        history <- filter(history, quarter <= select_quarter)
+        df <- filter(df, quarter <= select_quarter)
     }
-    select(history, -quarter)
+    select(df, -quarter)
 }
 
 #' Calculate lapse for a quarterly subset (where quarter != 4)
 #' 
 #' @inheritParams quarterly_filter
+#' @param history data frame that holds history table for selected permission
 #' @family functions to prepare data for summarization
 #' @export
 quarterly_lapse <- function(history, select_quarter, yrs) {

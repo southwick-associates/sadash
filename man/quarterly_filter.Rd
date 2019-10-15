@@ -4,10 +4,11 @@
 \alias{quarterly_filter}
 \title{Filter by quarter in prepartion for calculating metrics}
 \usage{
-quarterly_filter(history, quarter, select_quarter, yrs)
+quarterly_filter(df, quarter, select_quarter, yrs)
 }
 \arguments{
-\item{history}{data frame that holds license history for selected permission}
+\item{df}{data frame that holds data (e.g., sales or license history) for 
+selected permission}
 
 \item{quarter}{current quarter}
 

@@ -7,7 +7,7 @@
 quarterly_lapse(history, select_quarter, yrs)
 }
 \arguments{
-\item{history}{data frame that holds license history for selected permission}
+\item{history}{data frame that holds history table for selected permission}
 
 \item{select_quarter}{quarter to be summarized}
 

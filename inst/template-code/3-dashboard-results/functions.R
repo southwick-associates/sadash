@@ -23,31 +23,37 @@
 #   for the output, potentially useful (for example) in residency-specific permissions
 # - quarters_group: quarters to include for selected group, useful for permissions
 #   that are only sold for example in the second half of the year
+# - month_to_quarter: for identifying quarter by month, may vary by state (e.g.,
+#   for states that use fiscal year)
 run_dash <- function(
     group, part_ref = NULL, return_ref = FALSE, res_type = NULL, 
     write_csv = TRUE, yrs_group = yrs, group_out = group, 
-    quarters_group = all_quarters
+    quarters_group = all_quarters,
+    month_to_quarter = function(x) case_when(x <= 3 ~ 1, x <= 6 ~ 2, x <= 9 ~ 3, TRUE ~ 4)
 ) {
     # get data for permission
     lic_ids <- load_lic_ids(db_license, group)
     sale_group <- filter(sale, lic_id %in% lic_ids) %>% 
-        distinct(cust_id, year, month)
+        distinct(cust_id, year, month) %>%
+        mutate(quarter = month_to_quarter(month))
     history <- load_history(db_history, group, yrs_group) %>%
         left_join(cust, by = "cust_id") %>%
-        recode_history()
+        recode_history(month_to_quarter)
     
     # function to produce metrics for one quarter
     # - wraps run_qtr_handler() for error/warning handling on provided code
     run_qtr <- function(qtr, group) {
         run_qtr_handler(code_to_run = {
-            history %>%
+            sale_qtr <- sale_group %>%
+                quarterly_filter(quarter, qtr, yrs_group)
+            history_qtr <- history %>%
                 quarterly_filter(quarter, qtr, yrs_group) %>%
-                quarterly_lapse(qtr, yrs_group) %>%
-                calc_metrics(
-                    pop_county, sale_group, dashboard_yrs,  
-                    part_ref[[paste0("q", qtr)]], res_type, 
-                    scaleup_test = 25 # this often needs to be relaxed
-                )
+                quarterly_lapse(qtr, yrs_group)
+            calc_metrics(
+                history_qtr, pop_county, sale_qtr, dashboard_yrs,  
+                part_ref[[paste0("q", qtr)]], res_type, 
+                scaleup_test = 25
+            )
         }, qtr, group)
     }
     

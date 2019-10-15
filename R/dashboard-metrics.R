@@ -60,11 +60,12 @@ est_month <- function(
     }
     if (use_recruits) {
         history <- filter(history, R3 == "Recruit")
+        sale <- semi_join(sale, history, by = c("cust_id", "year"))
         metric = "recruits"
     } else {
         metric = "participants"
     }
-    out <- semi_join(sale, history, by = c("cust_id", "year")) %>%
+    out <- sale %>%
         count(year, month) %>%
         mutate(month = as.character(month)) %>%
         select(month, year, n)
