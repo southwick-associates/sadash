@@ -37,19 +37,22 @@ dashtemplate::run_visual(outdir)
 dat %>%
     filter(segment != "month") %>%
     count(group, year) %>%
-    spread(year, n)
+    spread(year, n) %>%
+    View()
 
 # check - month counts by year
 dat %>%
     filter(segment == "month") %>%
     count(quarter, group, year) %>%
-    spread(year, n)
+    spread(year, n) %>%
+    data.frame()
 
 # check - county counts by year
 dat %>%
     filter(segment == "County") %>%
     count(quarter, group, year) %>%
-    spread(year, n)
+    spread(year, n) %>%
+    data.frame()
 
 # Write for Tableau -------------------------------------------------------
 
@@ -73,4 +76,4 @@ dat %>%
     filter(segment == "All", metric == "participants") %>% 
     select(quarter, group, year, value) %>% 
     spread(year, value) %>%
-    write.csv(file = "out/priv-counts.csv")
+    write_csv("out/priv-counts.csv")
