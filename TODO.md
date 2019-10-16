@@ -1,12 +1,9 @@
 
-## Functionality to Add
+## Version 1.0.4
 
-- May want to include an sadash::run_visual() which can either:
-    + basically act as a wrapper for dashtemplate::run_visual(), or
-    + produce an alternative visual showing monthly sales & county chloropleth
-
-- Alternatively, pack all of the above into 1 function, which is probably ideal
-    + may want the ability to toggle based on dashboard_yrs, essentially recreating all of the functionality in the Tableau dashboard
+- Add a plot_county() function and update run_visual()
+- Generate a sample dashboard from salic (rather than the full version)
+    + This will also probably provide an opportunity to add more sample data and include examples for certain other functions
     
 - Probably want a make_dive() function to setup template code for producing a data dive file
     + see the old WI code to see exactly what you produced for the Tableau input

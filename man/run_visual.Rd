@@ -7,11 +7,11 @@
 run_visual(dashboard)
 }
 \arguments{
-\item{dashboard}{a dataframe formatted as a \code{\link[salic]{dashboard}}
-table described in salic}
+\item{dashboard}{a dataframe formatted as a \code{\link{dashboard}} table}
 }
 \description{
-Run shiny app summary of dashboard results
+The idea here is to replicate the functionality of the Tableau dashboard
+to check/explore the results prior to sending to the Tableau analyst.
 }
 \examples{
 data(dashboard)
@@ -19,5 +19,8 @@ data(dashboard)
 \dontrun{
 run_visual(dashboard)
 }
+}
+\seealso{
+Other functions to run dashboard visualization: \code{\link{plot_month}}
 }
 \concept{functions to run dashboard visualization}

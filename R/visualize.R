@@ -1,9 +1,46 @@
 # functions for visualizing results in a shiny app
 
+# Plotting Functions ------------------------------------------------------
+
+#' Make a sales by month plot
+#' 
+#' Intended to be run from \code{\link{run_visual}}. Expects a \code{\link{dashboard}} 
+#' formatted table as input filtered to include a single group & quarter.
+#' 
+#' @param df data frame with summary results
+#' @family functions to run dashboard visualization
+#' @export
+#' @examples 
+#' library(dplyr)
+#' data(dashboard)
+#' filter(dashboard, group == "all_sports", quarter == 4) %>%
+#'     plot_month()
+plot_month <- function(df) {
+    df %>%
+        filter(.data$segment == "month") %>%
+        mutate(
+            category = as.numeric(.data$category), 
+            year = as.character(.data$year)
+        ) %>%
+        ggplot(aes_string("category", "value", fill = "year")) +
+        geom_col(position = position_dodge()) +
+        facet_wrap(~ metric, scales = "free_y") +
+        scale_fill_brewer(type = "qual", palette = 7) +
+        theme(
+            axis.title = element_blank(),
+            text = element_text(size = 15)
+        ) +
+        ggtitle("Sales by Month")
+}
+
+# Shiny App Function ------------------------------------------------------
+
 #' Run shiny app summary of dashboard results
 #' 
-#' @param dashboard a dataframe formatted as a \code{\link[salic]{dashboard}}
-#' table described in salic
+#' The idea here is to replicate the functionality of the Tableau dashboard
+#' to check/explore the results prior to sending to the Tableau analyst.
+#' 
+#' @param dashboard a dataframe formatted as a \code{\link{dashboard}} table
 #' @family functions to run dashboard visualization
 #' @export
 #' @examples 
@@ -31,10 +68,15 @@ run_visual <- function(dashboard) {
             )))
         ),
         splitLayout(
-            plotOutput("allPlot"), plotOutput("agePlot"), 
+            plotOutput("allPlot", height = "350px"), 
+            plotOutput("agePlot", height = "350px"), 
             cellWidths = c("35%", "65%")
         ),
-        splitLayout(plotOutput("residencyPlot"), plotOutput("genderPlot")),
+        splitLayout(
+            plotOutput("residencyPlot", height = "350px"), 
+            plotOutput("genderPlot", height = "350px")
+        ),
+        plotOutput("monthPlot", height = "150px"),
         width = 12
     ))
     
@@ -60,6 +102,7 @@ run_visual <- function(dashboard) {
         output$agePlot <- renderPlot({ dashtemplate::plot_value(
             dataGroup(), "age", "By Age"
         )})
+        output$monthPlot <- renderPlot({ plot_month(dataGroup()) })
     }
     shinyApp(ui, server)
 }

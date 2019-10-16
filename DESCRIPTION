@@ -19,6 +19,7 @@ Imports:
     data.table (>= 1.11.4),
     DBI (>= 1.0.0),
     dplyr (>= 0.7.6),
+    ggplot2 (>= 3.0.0),
     RSQLite (>= 2.1.1),
     salic (>= 2.0.1),
     shiny (>= 1.1.0),

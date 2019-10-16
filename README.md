@@ -5,14 +5,16 @@ An R package for Southwick internal use: functions and templates to run individu
 
 ## Installation
 
-Install the necessary packages using devtools. 
+These should be installed on the server in the 'data-dashboards2' project library. Otherwise, install the necessary packages using devtools:
 
 ``` r
+# CRAN dependencies
+install.packages(c("dplyr", "data.table", "shiny", "ggplot2", "stringr", "DBI", "RSQLite"))
+
 # salic
 devtools::install_github("southwick-associates/salic")
 
 # dashtemplate - need to use server since package docs aren't included in repo
-# - sadash doesn't depend on dashtemplate, but it is used in template code for run_visual()
 devtools::install("E:/SA/Projects/R-Software/Templates/dashboard-template")
 
 # sadash

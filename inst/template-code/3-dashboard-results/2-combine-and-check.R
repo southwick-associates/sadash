@@ -15,18 +15,10 @@ dat <- list.files("3-dashboard-results/dash", full.names = TRUE) %>%
     lapply(read_csv, col_types = coltyp) %>%
     bind_rows()
 
-# save quarter-specific csv files for run_visual()
-x <- split(dat, dat$quarter)
-outdir <- "3-dashboard-results/dash-combine"
-dir.create(outdir, showWarnings = FALSE)
-for (i in names(x)) {
-    write_csv(x[[i]], file.path(outdir, paste0("qtr", i, ".csv")))
-}
-
 # Check ---------------------------------------------------------------
 
 # visualize - overall & by res/sex/age
-dashtemplate::run_visual(outdir)
+run_visual(dat)
 
 # check - row counts by group-year
 # may vary by permission, but follows some predictable patterns:

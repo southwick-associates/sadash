@@ -1,6 +1,6 @@
 # package-level documentation & imports
 
-#' @import dplyr salic shiny
+#' @import dplyr salic shiny ggplot2
 #' @importFrom utils write.csv
 #' @rawNamespace import(data.table, except = c(first, between, last))
 NULL

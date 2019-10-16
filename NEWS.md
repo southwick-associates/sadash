@@ -1,4 +1,9 @@
 
+## Version 1.0.4
+
+- Added a dashboard sample data table based on SC 2019-Q2.
+- Added plot_month() & run_visual() functions to more closely replicate the Tableau dashboard view (to check/explore before sending to Ben).
+
 ## Version 1.0.3
 
 Fixed a bug in calc_metrics() that would hit an error if R3 wasn't included in the history table (i.e., fewer than 5 years for a permission).
