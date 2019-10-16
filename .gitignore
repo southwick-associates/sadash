@@ -3,5 +3,6 @@
 .RData
 .Ruserdata
 .Rprofile
+/development/*
 snapshot-library.csv
 sadash.Rproj

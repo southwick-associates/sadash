@@ -1,7 +1,7 @@
 Package: sadash
 Type: Package
 Title: Prepare Agency Dashboard Data for state-level dashboards
-Version: 1.0.3
+Version: 1.0.4
 Authors@R: c(
     person("Dan", "Kary", , "Rsoftware@SouthwickAssociates.com", role = c("aut", "cre")),
     person("Southwick Associates", role = c("cph", "fnd"))
@@ -15,10 +15,12 @@ LazyData: FALSE
 Depends:
     R (>= 3.5)
 Imports:
+    dashtemplate,
     data.table (>= 1.11.4),
     DBI (>= 1.0.0),
     dplyr (>= 0.7.6),
     RSQLite (>= 2.1.1),
     salic (>= 2.0.1),
+    shiny (>= 1.1.0),
     stringr (>= 1.3.1)
 RoxygenNote: 6.1.0
