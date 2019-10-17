@@ -4,10 +4,12 @@
 \alias{run_visual}
 \title{Run shiny app summary of dashboard results}
 \usage{
-run_visual(dashboard)
+run_visual(dashboard, state = "SC")
 }
 \arguments{
 \item{dashboard}{a dataframe formatted as a \code{\link{dashboard}} table}
+
+\item{state}{abbreviation of state to pull}
 }
 \description{
 The idea here is to replicate the functionality of the Tableau dashboard
@@ -22,6 +24,7 @@ run_visual(dashboard)
 }
 \seealso{
 Other functions to run dashboard visualization: \code{\link{int_breaks}},
-  \code{\link{plot_month}}, \code{\link{plot_value2}}
+  \code{\link{plot_county}}, \code{\link{plot_month}},
+  \code{\link{plot_value2}}, \code{\link{pull_county_sf}}
 }
 \concept{functions to run dashboard visualization}

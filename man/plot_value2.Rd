@@ -29,6 +29,7 @@ filter(dashboard, group == "all_sports", quarter == 4) \%>\%
 }
 \seealso{
 Other functions to run dashboard visualization: \code{\link{int_breaks}},
-  \code{\link{plot_month}}, \code{\link{run_visual}}
+  \code{\link{plot_county}}, \code{\link{plot_month}},
+  \code{\link{pull_county_sf}}, \code{\link{run_visual}}
 }
 \concept{functions to run dashboard visualization}

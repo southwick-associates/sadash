@@ -70,6 +70,56 @@ plot_month <- function(df) {
         ggtitle("Sales by Month")
 }
 
+
+# County Plotting ---------------------------------------------------------
+
+#' Pull county spatial data
+#' 
+#' This uses the urbnmapr package to pull a spatial features shapefile
+#' 
+#' @param state abbreviation of state to pull
+#' @family functions to run dashboard visualization
+#' @export
+#' @examples 
+#' library(ggplot2)
+#' county_sf <- pull_county_sf("SC")
+#' ggplot(county_sf, aes()) + geom_sf(fill = "grey")
+pull_county_sf <- function(state) {
+    urbnmapr::get_urbn_map("counties", sf = TRUE) %>%
+        filter(.data$state_abbv == state) %>%
+        # "category" for joining with dashboard
+        mutate(category = stringr::str_remove(.data$county_name, " County"))
+} 
+
+#' Make a county chloropleth
+#' 
+#' @inheritParams dashtemplate::plot_bar
+#' @param county_sf spatial features dataset produced from \
+#' code{\link{pull_county_sf}}
+#' @family functions to run dashboard visualization
+#' @export
+#' @examples 
+#' library(dplyr)
+#' data(dashboard)
+#' county_sf <- pull_county_sf("SC")
+#' df <- filter(dashboard, group == "all_sports", quarter == 4)
+#' plot_county(df, c("churn", "participants"), county_sf)
+plot_county <- function(df, measure, county_sf) {
+    df <- filter(df, tolower(.data$segment) == "county")
+    out <- list()
+    for (i in measure) {
+        dat <- filter(df, .data$metric == i)
+        out[[i]] <- county_sf %>%
+            left_join(dat, by = "category") %>%
+            ggplot(aes(fill = .data$value)) +
+            geom_sf() +
+            coord_sf(datum = NA) +
+            theme(legend.position = "bottom", legend.key.width = unit(1, "cm")) +
+            ggtitle(i)
+    }
+    gridExtra::grid.arrange(grobs = out, nrow = 1)
+}
+
 # Shiny App Function ------------------------------------------------------
 
 #' Run shiny app summary of dashboard results
@@ -78,6 +128,7 @@ plot_month <- function(df) {
 #' to check/explore the results prior to sending to the Tableau analyst.
 #' 
 #' @param dashboard a dataframe formatted as a \code{\link{dashboard}} table
+#' @inheritParams pull_county_sf
 #' @family functions to run dashboard visualization
 #' @export
 #' @examples 
@@ -86,16 +137,22 @@ plot_month <- function(df) {
 #' \dontrun{
 #' run_visual(dashboard)
 #' }
-run_visual <- function(dashboard) {
-    
-    quarters <- unique(dashboard$quarter)
-    permissions <- unique(dashboard$group)
+run_visual <- function(dashboard, state = "SC") {
+    # dashboard data prep
     dashboard <- dashboard %>%
         mutate_at(c("segment", "metric", "category"), "tolower") %>%
         mutate(metric = ifelse(.data$metric == "participants", "part", .data$metric))
     
+    # county data prep
+    county_sf <- pull_county_sf(state) %>%
+        mutate(category = tolower(.data$category))
+    
+    # defining options for menu dropdowns
+    quarters <- unique(dashboard$quarter)
+    permissions <- unique(dashboard$group)
+    
     # convenience function for shiny plots    
-    plot_dash <- function(x, height = "300px", ...) {
+    plot_dash <- function(x, height = "270px", ...) {
         plotOutput(x, height = height, ...)
     }
         
@@ -117,7 +174,8 @@ run_visual <- function(dashboard) {
         splitLayout(
             plot_dash("residencyPlot"), plot_dash("genderPlot")
         ),
-        plot_dash("monthPlot", height = "150px"),
+        plot_dash("monthPlot", height = "130px"),
+        plot_dash("countyPlot", height = "250px"),
         width = 12
     ))
     
@@ -143,7 +201,12 @@ run_visual <- function(dashboard) {
         output$agePlot <- renderPlot({ 
             plot_value2(dataGroup(), "age", "By Age", n = 2)
         })
-        output$monthPlot <- renderPlot({ plot_month(dataGroup()) })
+        output$monthPlot <- renderPlot({ 
+            plot_month(dataGroup()) 
+        })
+        output$countyPlot <- renderPlot({
+            plot_county(dataGroup(), c("part", "rate", "recruits", "churn"), county_sf)
+        })
     }
     shinyApp(ui, server)
 }

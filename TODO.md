@@ -1,7 +1,15 @@
 
 ## Version 1.0.4
 
-- Add a plot_county() function and update run_visual()
+- improve the county plotting to make things quicker
+    + the county visuals slow things down quite a bit (seems to take about twice as long between selections)
+    + maybe do some data prep prior to running run_visual()
+    + also the loop in the plot_county() function is probaby slow
+    
+- improve the appearance of the county visuals (probably log scale and maybe use viridis)
+
+- add a "focus year" menu dropdown for county (and maybe sales) data
+
 - Generate a sample dashboard from salic (rather than the full version)
     + This will also probably provide an opportunity to add more sample data and include examples for certain other functions
     
