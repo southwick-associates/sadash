@@ -20,6 +20,7 @@ filter(dashboard, group == "all_sports", quarter == 4) \%>\%
     plot_month()
 }
 \seealso{
-Other functions to run dashboard visualization: \code{\link{run_visual}}
+Other functions to run dashboard visualization: \code{\link{int_breaks}},
+  \code{\link{plot_value2}}, \code{\link{run_visual}}
 }
 \concept{functions to run dashboard visualization}

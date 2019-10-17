@@ -17,7 +17,7 @@ dat <- list.files("3-dashboard-results/dash", full.names = TRUE) %>%
 
 # Check ---------------------------------------------------------------
 
-# visualize - overall & by res/sex/age
+# visualize dashboard
 run_visual(dat)
 
 # check - row counts by group-year

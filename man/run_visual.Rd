@@ -21,6 +21,7 @@ run_visual(dashboard)
 }
 }
 \seealso{
-Other functions to run dashboard visualization: \code{\link{plot_month}}
+Other functions to run dashboard visualization: \code{\link{int_breaks}},
+  \code{\link{plot_month}}, \code{\link{plot_value2}}
 }
 \concept{functions to run dashboard visualization}
