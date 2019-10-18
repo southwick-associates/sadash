@@ -203,6 +203,7 @@ run_visual <- function(dash_list) {
     # defining options for menu dropdowns
     quarters <- unique(dash_list$other$quarter)
     permissions <- unique(dash_list$other$group)
+    years <- unique(dash_list$county$year)
     
     # convenience function for shiny plots    
     plot_dash <- function(x, height = "270px", ...) {
@@ -214,6 +215,7 @@ run_visual <- function(dash_list) {
         splitLayout(
             selectInput("quarter", "Choose Quarter", quarters),
             selectInput("group", "Choose Permission Group", permissions),
+            selectInput("year", "Choose year for Counties", years),
             
             # prevent clipping: https://github.com/rstudio/shiny/issues/1531
             tags$head(tags$style(HTML(
@@ -242,7 +244,8 @@ run_visual <- function(dash_list) {
         })
         dataCounty <- reactive({
             dash_list$county %>%
-                filter(.data$group == input$group, .data$quarter == input$quarter)
+                filter(.data$group == input$group, .data$quarter == input$quarter,
+                       .data$year == input$year)
         })
         
         # plotting data

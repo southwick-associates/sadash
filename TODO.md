@@ -3,7 +3,8 @@
 
 - run_visual:
     + the lag is a bit annoying, which I think is likely caused by ggplot
-    + it's probably worth looking into plotly to see if this can be improved
+    + it's might worth looking into plotly to see if this can be improved (and this would have the benefit of providing hover over display)
+    + it could be that isolating the data filters (using separate observers for quarter/group) will improve things
     
 - county plotting:
     + maybe join on county_fips rather than county name
