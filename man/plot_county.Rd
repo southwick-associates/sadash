@@ -2,31 +2,31 @@
 % Please edit documentation in R/visualize.R
 \name{plot_county}
 \alias{plot_county}
-\title{Make a county chloropleth}
+\title{Make a county chloropleth for all metrics}
 \usage{
-plot_county(df, measure, county_sf)
+plot_county(dat)
 }
 \arguments{
-\item{df}{data frame with summary results}
-
-\item{measure}{variable to be plotted on the y axis}
-
-\item{county_sf}{spatial features dataset produced from \
-code{\link{pull_county_sf}}}
+\item{dat}{a dashboard table where segment == "County" that has a "geometry"
+column (e.g., produced from \code{\link{join_county_sf}})}
 }
 \description{
-Make a county chloropleth
+Intended to be run on the output of \code{\link{join_county_sf}} (the 
+"county" element specifically). Uses \code{\link[gridExtra]{grid.arrange}}
+to include a set of side-by-side chloropleths for every metric.
 }
 \examples{
 library(dplyr)
 data(dashboard)
 county_sf <- pull_county_sf("SC")
-df <- filter(dashboard, group == "all_sports", quarter == 4)
-plot_county(df, c("churn", "participants"), county_sf)
+df <- join_county_sf(dashboard, county_sf)
+df$county <- filter(df$county, group == "all_sports", quarter == 4)
+plot_county(df$county)
 }
 \seealso{
 Other functions to run dashboard visualization: \code{\link{int_breaks}},
-  \code{\link{plot_month}}, \code{\link{plot_value2}},
-  \code{\link{pull_county_sf}}, \code{\link{run_visual}}
+  \code{\link{join_county_sf}}, \code{\link{plot_month}},
+  \code{\link{plot_value2}}, \code{\link{pull_county_sf}},
+  \code{\link{run_visual}}
 }
 \concept{functions to run dashboard visualization}

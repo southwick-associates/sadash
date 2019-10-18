@@ -24,6 +24,7 @@ Imports:
     RSQLite (>= 2.1.1),
     salic (>= 2.0.1),
     scales (>= 0.5.0),
+    sf (>= 0.6.3),
     shiny (>= 1.1.0),
     stringr (>= 1.3.1),
     urbnmapr

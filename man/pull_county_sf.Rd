@@ -4,10 +4,13 @@
 \alias{pull_county_sf}
 \title{Pull county spatial data}
 \usage{
-pull_county_sf(state)
+pull_county_sf(state, dTolerance = 1000)
 }
 \arguments{
 \item{state}{abbreviation of state to pull}
+
+\item{dTolerance}{passed to \code{\link[sf]{st_simplify}} to reduce object
+size at the expense of detail (higher number is less detail)}
 }
 \description{
 This uses the urbnmapr package to pull a spatial features shapefile
@@ -19,7 +22,8 @@ ggplot(county_sf, aes()) + geom_sf(fill = "grey")
 }
 \seealso{
 Other functions to run dashboard visualization: \code{\link{int_breaks}},
-  \code{\link{plot_county}}, \code{\link{plot_month}},
-  \code{\link{plot_value2}}, \code{\link{run_visual}}
+  \code{\link{join_county_sf}}, \code{\link{plot_county}},
+  \code{\link{plot_month}}, \code{\link{plot_value2}},
+  \code{\link{run_visual}}
 }
 \concept{functions to run dashboard visualization}
