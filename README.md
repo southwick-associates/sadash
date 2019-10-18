@@ -8,8 +8,10 @@ An R package for Southwick internal use: functions and templates to run individu
 These should be installed on the server in the 'data-dashboards2' project library. Otherwise, install the necessary packages using devtools:
 
 ``` r
-# CRAN dependencies
-install.packages(c("dplyr", "data.table", "shiny", "ggplot2", "stringr", "DBI", "RSQLite"))
+# dependencies
+install.packages(c("tidyverse", "data.table", "shiny", "DBI", "RSQLite", 
+                 "gridExtra", "plotly", "sf", "devtools"))
+devtools::install_github("UrbanInstitute/urbnmapr")
 
 # salic
 devtools::install_github("southwick-associates/salic")
