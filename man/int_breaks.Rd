@@ -19,7 +19,7 @@ values.
 \seealso{
 Other functions to run dashboard visualization: \code{\link{join_county_sf}},
   \code{\link{plot_county}}, \code{\link{plot_month}},
-  \code{\link{plot_value2}}, \code{\link{pull_county_sf}},
-  \code{\link{run_visual}}
+  \code{\link{plot_value2}}, \code{\link{plotly_config}},
+  \code{\link{pull_county_sf}}, \code{\link{run_visual}}
 }
 \concept{functions to run dashboard visualization}

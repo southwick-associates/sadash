@@ -2,14 +2,12 @@
 % Please edit documentation in R/visualize.R
 \name{plot_value2}
 \alias{plot_value2}
-\title{Plot value by year for segment}
+\title{Plot value by year for metric-category}
 \usage{
-plot_value2(df, seg, plot_title = "", measure = "value", n = 5)
+plot_value2(df, plot_title = "", measure = "value", n = 5)
 }
 \arguments{
 \item{df}{data frame with summary results}
-
-\item{seg}{variable name of segment to include in plot}
 
 \item{plot_title}{caption to show in plot}
 
@@ -19,18 +17,19 @@ plot_value2(df, seg, plot_title = "", measure = "value", n = 5)
 }
 \description{
 Mostly a wrapper for \code{\link[dashtemplate]{plot_bar}} with some 
-additional formatting.
+additional formatting. It's expected that the input table will only contain
+a single group-quarter-segment.
 }
 \examples{
 library(dplyr)
 data(dashboard)
-filter(dashboard, group == "all_sports", quarter == 4) \%>\%
-    plot_value2("Gender", "By Gender")
+x <- filter(dashboard, group == "all_sports", quarter == 4, segment == "Gender")
+plot_value2(x)
 }
 \seealso{
 Other functions to run dashboard visualization: \code{\link{int_breaks}},
   \code{\link{join_county_sf}}, \code{\link{plot_county}},
-  \code{\link{plot_month}}, \code{\link{pull_county_sf}},
-  \code{\link{run_visual}}
+  \code{\link{plot_month}}, \code{\link{plotly_config}},
+  \code{\link{pull_county_sf}}, \code{\link{run_visual}}
 }
 \concept{functions to run dashboard visualization}

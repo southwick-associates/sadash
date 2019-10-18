@@ -4,10 +4,12 @@
 \alias{run_visual}
 \title{Run shiny app summary of dashboard results}
 \usage{
-run_visual(dash_list)
+run_visual(dash_list, include_county = FALSE)
 }
 \arguments{
 \item{dash_list}{a list produced after running \code{\link{join_county_sf}}}
+
+\item{include_county}{if TRUE, county chloropleths will also be displayed}
 }
 \description{
 The idea here is to replicate the functionality of the Tableau dashboard
@@ -20,12 +22,15 @@ dash_list <- join_county_sf(dashboard, county_sf)
 
 \dontrun{
 run_visual(dash_list)
+
+# including county makes things a bit slow currently
+run_visual(dash_list, include_county = TRUE)
 }
 }
 \seealso{
 Other functions to run dashboard visualization: \code{\link{int_breaks}},
   \code{\link{join_county_sf}}, \code{\link{plot_county}},
   \code{\link{plot_month}}, \code{\link{plot_value2}},
-  \code{\link{pull_county_sf}}
+  \code{\link{plotly_config}}, \code{\link{pull_county_sf}}
 }
 \concept{functions to run dashboard visualization}

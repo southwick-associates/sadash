@@ -1,4 +1,9 @@
 
+## Version 1.0.5
+
+- Added a plot_county() for including in run_visual()
+- Using package plotly for interactivity and slightly nicer-looking plots in run_visual()
+
 ## Version 1.0.4
 
 - Added a dashboard sample data table based on SC 2019-Q2.

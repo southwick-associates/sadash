@@ -4,10 +4,12 @@
 \alias{plot_month}
 \title{Make a sales by month plot}
 \usage{
-plot_month(df)
+plot_month(df, plot_title = "Sales by Month")
 }
 \arguments{
 \item{df}{data frame with summary results}
+
+\item{plot_title}{caption to show in plot}
 }
 \description{
 Intended to be run from \code{\link{run_visual}}. Expects a \code{\link{dashboard}} 
@@ -22,7 +24,7 @@ filter(dashboard, group == "all_sports", quarter == 4) \%>\%
 \seealso{
 Other functions to run dashboard visualization: \code{\link{int_breaks}},
   \code{\link{join_county_sf}}, \code{\link{plot_county}},
-  \code{\link{plot_value2}}, \code{\link{pull_county_sf}},
-  \code{\link{run_visual}}
+  \code{\link{plot_value2}}, \code{\link{plotly_config}},
+  \code{\link{pull_county_sf}}, \code{\link{run_visual}}
 }
 \concept{functions to run dashboard visualization}

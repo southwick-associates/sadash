@@ -13,8 +13,8 @@ join_county_sf(dashboard, county_sf)
 }
 \description{
 This takes the ouptut of  \code{\link{pull_county_sf}} and joins with 
-\code{\link{dashboard}} data. The result is a list with county results
-separated from all other results
+\code{\link{dashboard}} data. The result is a list split by segment, 
+where the county element includes an estra column: geometry
 }
 \examples{
 library(dplyr)
@@ -33,7 +33,7 @@ plot_county(df$county)
 \seealso{
 Other functions to run dashboard visualization: \code{\link{int_breaks}},
   \code{\link{plot_county}}, \code{\link{plot_month}},
-  \code{\link{plot_value2}}, \code{\link{pull_county_sf}},
-  \code{\link{run_visual}}
+  \code{\link{plot_value2}}, \code{\link{plotly_config}},
+  \code{\link{pull_county_sf}}, \code{\link{run_visual}}
 }
 \concept{functions to run dashboard visualization}

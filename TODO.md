@@ -1,18 +1,18 @@
 
-## Version 1.0.4
+## Version 1.0.6
 
 - run_visual:
     + the lag is a bit annoying, which I think is likely caused by ggplot
-    + it's might worth looking into plotly to see if this can be improved (and this would have the benefit of providing hover over display)
-    + it could be that isolating the data filters (using separate observers for quarter/group) will improve things
+    + also want nicer labelling on hover for plotly
     
 - county plotting:
     + maybe join on county_fips rather than county name
-    + add a "focus year" menu dropdown for county (and maybe sales) data
     + maybe improve the appearance of the county visuals (probably log scale and maybe use viridis)
 
 - Generate a sample dashboard from salic (rather than the full version)
     + This will also probably provide an opportunity to add more sample data and include examples for certain other functions
+
+## Version 1.0.7
     
 - Probably want a make_dive() function to setup template code for producing a data dive file
     + see the old WI code to see exactly what you produced for the Tableau input

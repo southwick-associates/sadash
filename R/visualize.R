@@ -1,6 +1,6 @@
 # functions for visualizing results in a shiny app
 
-# Plotting Functions ------------------------------------------------------
+# Bar Plotting Functions ------------------------------------------------------
 
 #' Use only integer values for a plot's axis labels
 #' 
@@ -16,10 +16,11 @@ int_breaks <- function(x, n = 5) {
     pretty(x, n)[pretty(x, n) %% 1 == 0]
 }
 
-#' Plot value by year for segment
+#' Plot value by year for metric-category
 #' 
 #' Mostly a wrapper for \code{\link[dashtemplate]{plot_bar}} with some 
-#' additional formatting.
+#' additional formatting. It's expected that the input table will only contain
+#' a single group-quarter-segment.
 #' 
 #' @inheritParams dashtemplate::plot_value
 #' @param n passed to \code{\link{int_breaks}} for x-axis labelling
@@ -28,14 +29,15 @@ int_breaks <- function(x, n = 5) {
 #' @examples 
 #' library(dplyr)
 #' data(dashboard)
-#' filter(dashboard, group == "all_sports", quarter == 4) %>%
-#'     plot_value2("Gender", "By Gender")
-plot_value2 <- function(df, seg, plot_title = "", measure = "value", n = 5) {
-    filter(df, .data$segment == seg) %>% 
+#' x <- filter(dashboard, group == "all_sports", quarter == 4, segment == "Gender")
+#' plot_value2(x)
+plot_value2 <- function(df, plot_title = "", measure = "value", n = 5) {
+    df %>% 
         dashtemplate::plot_bar(plot_title, measure) +
         scale_x_continuous(breaks = function(x) int_breaks(x, n)) +
         scale_y_continuous(breaks = scales::pretty_breaks(n = 2),
-                           labels = scales::comma)
+                           labels = scales::comma) +
+        theme(text = element_text(size = 10), plot.title = element_blank())
 }
 
 #' Make a sales by month plot
@@ -44,6 +46,7 @@ plot_value2 <- function(df, seg, plot_title = "", measure = "value", n = 5) {
 #' formatted table as input filtered to include a single group & quarter.
 #' 
 #' @param df data frame with summary results
+#' @inheritParams plot_value2
 #' @family functions to run dashboard visualization
 #' @export
 #' @examples 
@@ -51,7 +54,7 @@ plot_value2 <- function(df, seg, plot_title = "", measure = "value", n = 5) {
 #' data(dashboard)
 #' filter(dashboard, group == "all_sports", quarter == 4) %>%
 #'     plot_month()
-plot_month <- function(df) {
+plot_month <- function(df, plot_title = "Sales by Month") {
     dat <- df %>%
         filter(.data$segment == "month") %>%
         mutate(
@@ -65,11 +68,32 @@ plot_month <- function(df) {
         scale_x_continuous(breaks = int_breaks) +
         theme(
             axis.title = element_blank(),
-            text = element_text(size = 15)
+            text = element_text(size = 10)
         ) +
-        ggtitle("Sales by Month")
+        ggtitle(plot_title)
 }
 
+#' Define the modebar config for plotly
+#' 
+#' Basically I want to remove the extra cruft at the top of the plots, except 
+#' for the "save png" button.
+#' 
+#' @param plot Plot object for plotly
+#' @family functions to run dashboard visualization
+#' @export
+plotly_config <- function(plot) {
+    modebar_remove <- c(
+        "pan2d", "zoomIn2d", "sendDataToCloud", "zoomOut2d", "autoScale2d", 
+        "zoom2d", "hoverClosestCartesian", "hoverCompareCartesian", "resetScale2d",
+        "toggleSpikelines", "lasso2d", "select2d"
+    )
+    plotly::config(
+        plot,
+        modeBarButtonsToRemove = modebar_remove,  
+        collaborate = FALSE, 
+        displaylogo = FALSE
+    ) 
+}
 
 # County Plotting ---------------------------------------------------------
 
@@ -98,8 +122,8 @@ pull_county_sf <- function(state, dTolerance = 1000) {
 #' Join dashboard with county spatial data
 #' 
 #' This takes the ouptut of  \code{\link{pull_county_sf}} and joins with 
-#' \code{\link{dashboard}} data. The result is a list with county results
-#' separated from all other results
+#' \code{\link{dashboard}} data. The result is a list split by segment, 
+#' where the county element includes an estra column: geometry
 #' 
 #' @param dashboard summary \code{\link{dashboard}} data 
 #' @param county_sf data produced by \code{\link{pull_county_sf}}
@@ -119,11 +143,9 @@ pull_county_sf <- function(state, dTolerance = 1000) {
 #' df$county <- filter(df$county, group == "all_sports", quarter == 4)
 #' plot_county(df$county)
 join_county_sf <- function(dashboard, county_sf) {
-    # split dashboard into a list (only county records need joining)
-    df <- dashboard %>% mutate(
-        is_county = ifelse(.data$segment == "County", "county", "other")
-    )
-    df <- split(df, df$is_county)
+    # split dashboard by segment
+    df <- mutate(dashboard, segment = tolower(.data$segment)) 
+    df <- split(df, df$segment)
     
     # standardize category column for joining
     prep_category <- function(x) stringr::str_trim(tolower(x))
@@ -141,7 +163,7 @@ join_county_sf <- function(dashboard, county_sf) {
             "- These won't appear in run_visual() or plot_county()", call. = FALSE
         )
     }
-    lapply(df, function(x) select(x, -.data$is_county))
+    df
 }
 
 #' Make a county chloropleth for all metrics
@@ -167,12 +189,13 @@ plot_county <- function(dat) {
     plot_one <- function(dat_one, measure) {
         ggplot(dat_one, aes_string(fill = "value")) +
             geom_sf() +
-            coord_sf(datum = NA) +
+            coord_sf(datum = NA)  +
             theme(legend.position = "bottom", legend.key.width = unit(1, "cm")) +
             ggtitle(measure)
     }
     dat <- split(dat, dat$metric)
     plots <- lapply(names(dat), function(nm) plot_one(dat[[nm]], nm))
+    # plotly::subplot(plots, nrows = 1)
     gridExtra::grid.arrange(grobs = plots, nrow = 1)
 }
 
@@ -184,6 +207,7 @@ plot_county <- function(dat) {
 #' to check/explore the results prior to sending to the Tableau analyst. 
 #' 
 #' @param dash_list a list produced after running \code{\link{join_county_sf}}
+#' @param include_county if TRUE, county chloropleths will also be displayed
 #' @family functions to run dashboard visualization
 #' @export
 #' @examples 
@@ -193,21 +217,39 @@ plot_county <- function(dat) {
 #' 
 #' \dontrun{
 #' run_visual(dash_list)
+#' 
+#' # including county makes things a bit slow currently
+#' run_visual(dash_list, include_county = TRUE)
 #' }
-run_visual <- function(dash_list) {
-    # prepare dash_list$other (i.e., all summaries except those by county)
-    dash_list$other <- dash_list$other %>%
-        mutate_at(c("segment", "metric", "category"), "tolower") %>%
+run_visual <- function(dash_list, include_county = FALSE) {
+    # some minor formatting for dash_list
+    dash_prep <- function(x) {
+        mutate_at(x, c("metric", "category"), "tolower") %>%
         mutate(metric = ifelse(.data$metric == "participants", "part", .data$metric))
+    }
+    dash_list <- lapply(dash_list, dash_prep)
+    
+    # the data are separated based on their filtering needs
+    df_month <- dash_list[["month"]]
+    df_county <- dash_list[["county"]]
+    ls_other <- dash_list[setdiff(names(dash_list), c("month", "county"))]
     
     # defining options for menu dropdowns
-    quarters <- unique(dash_list$other$quarter)
-    permissions <- unique(dash_list$other$group)
-    years <- unique(dash_list$county$year)
+    quarters <- unique(ls_other$all$quarter)
+    permissions <- unique(ls_other$all$group)
+    years <- unique(df_county$year)
     
-    # convenience function for shiny plots    
-    plot_dash <- function(x, height = "270px", ...) {
-        plotOutput(x, height = height, ...)
+    # convenience functions for shiny plots    
+    # - for ui
+    plot_dash <- function(x, height = "300px", ...) {
+        plotly::plotlyOutput(x, height = height, ...)
+    }
+    # - for server
+    render_dash <- function(plot_code) {
+        plotly::renderPlotly({
+            p <- plot_code()
+            plotly::ggplotly(p) %>% plotly_config()
+        })
     }
         
     # define user interface
@@ -215,7 +257,7 @@ run_visual <- function(dash_list) {
         splitLayout(
             selectInput("quarter", "Choose Quarter", quarters),
             selectInput("group", "Choose Permission Group", permissions),
-            selectInput("year", "Choose year for Counties", years),
+            selectInput("year", "Choose year for Counties/Months", years),
             
             # prevent clipping: https://github.com/rstudio/shiny/issues/1531
             tags$head(tags$style(HTML(
@@ -223,14 +265,14 @@ run_visual <- function(dash_list) {
             )))
         ),
         splitLayout(
-            plot_dash("allPlot"), plot_dash("agePlot"), 
+            plot_dash("allPlot"), plot_dash("agePlot"),
             cellWidths = c("35%", "65%")
         ),
         splitLayout(
             plot_dash("residencyPlot"), plot_dash("genderPlot")
         ),
-        plot_dash("monthPlot", height = "130px"),
-        plot_dash("countyPlot", height = "250px"),
+        plot_dash("monthPlot", height = "150px"),
+        if (include_county) plotOutput("countyPlot", height = "250px"),
         width = 12
     ))
     
@@ -239,34 +281,45 @@ run_visual <- function(dash_list) {
         
         # filtering data
         dataGroup <- reactive({
-            dash_list$other %>%
-                filter(.data$group == input$group, .data$quarter == input$quarter)
-        })
-        dataCounty <- reactive({
-            dash_list$county %>%
-                filter(.data$group == input$group, .data$quarter == input$quarter,
-                       .data$year == input$year)
+            flt <- function(x) {
+                filter(x, .data$group == input$group, .data$quarter == input$quarter)
+            }
+            lapply(ls_other, flt)
         })
         
+        dataMonth <- reactive({
+            df_month %>%
+                filter(.data$group == input$group, .data$quarter == input$quarter,
+                       .data$year %in% c(input$year, as.numeric(input$year) - 1))
+        })
+        
+        if (include_county) {
+            dataCounty <- reactive({
+                df_county %>%
+                    filter(.data$group == input$group, .data$quarter == input$quarter,
+                           .data$year == input$year)
+            })
+        }
+        
         # plotting data
-        output$allPlot <- renderPlot({ 
-            plot_value2(dataGroup(), "all", "Overall")
+        output$allPlot <- render_dash({
+            function() plot_value2(dataGroup()[["all"]])
         })
-        output$residencyPlot <- renderPlot({ 
-            plot_value2(dataGroup(), "residency", "By Residency", n = 4)
+        output$residencyPlot <- render_dash({
+            function() plot_value2(dataGroup()[["residency"]], n = 4)
         })
-        output$genderPlot <- renderPlot({ 
-            plot_value2(dataGroup(), "gender", "By Gender", n = 4)
+        output$genderPlot <- render_dash({
+            function() plot_value2(dataGroup()[["gender"]], n = 4)
         })
-        output$agePlot <- renderPlot({ 
-            plot_value2(dataGroup(), "age", "By Age", n = 2)
+        output$agePlot <- render_dash({
+            function() plot_value2(dataGroup()[["age"]], n = 2)
         })
-        output$monthPlot <- renderPlot({ 
-            plot_month(dataGroup()) 
+        output$monthPlot <- render_dash({
+            function() plot_month(dataMonth(), "")
         })
-        output$countyPlot <- renderPlot({
-            plot_county(dataCounty())
-        })
+        if (include_county) {
+            output$countyPlot <- renderPlot({ plot_county(dataCounty()) })
+        }
     }
     shinyApp(ui, server)
 }
