@@ -18,7 +18,9 @@ dat <- list.files("3-dashboard-results/dash", full.names = TRUE) %>%
 # Check ---------------------------------------------------------------
 
 # visualize dashboard
-run_visual(dat)
+county_sf <- pull_county_sf(state)
+dash_list <- join_county_sf(dat, county_sf)
+run_visual(dash_list)
 
 # check - row counts by group-year
 # may vary by permission, but follows some predictable patterns:
