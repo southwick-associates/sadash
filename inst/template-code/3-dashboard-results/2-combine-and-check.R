@@ -4,6 +4,8 @@ library(tidyverse)
 library(salic)
 library(sadash)
 
+source("params.R")
+
 # Combine Results -----------------------------------------------------------
 
 # stack into a single table
@@ -18,9 +20,12 @@ dat <- list.files("3-dashboard-results/dash", full.names = TRUE) %>%
 # Check ---------------------------------------------------------------
 
 # visualize dashboard
-county_sf <- pull_county_sf(state)
-dash_list <- join_county_sf(dat, county_sf)
+county_sf <- pull_county_sf(state) # for joining geometry (map) data
+county_census <- load_counties(db_census, state) # for joining on county_fips
+dash_list <- join_county_sf(dat, county_sf, county_census)
+
 run_visual(dash_list)
+run_visual(dash_list, include_county = TRUE)
 
 # check - row counts by group-year
 # may vary by permission, but follows some predictable patterns:

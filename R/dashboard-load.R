@@ -40,7 +40,9 @@ load_sale <- function(db, yrs) {
 
 #' @describeIn load_sqlite Load county fips-names for attaching to cust & pop_county
 #' @export
-load_counties <- function(db, state) {
+load_counties <- function(
+    db = "E:/SA/Data-production/Data-Dashboards/_Shared/census.sqlite3", state
+) { 
     load_sqlite(db, function(con) {
         tbl(con, "county_fips") %>% 
             filter(state_abbrev == state) %>%

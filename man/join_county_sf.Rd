@@ -4,27 +4,35 @@
 \alias{join_county_sf}
 \title{Join dashboard with county spatial data}
 \usage{
-join_county_sf(dashboard, county_sf)
+join_county_sf(dashboard, county_sf, county_census)
 }
 \arguments{
 \item{dashboard}{summary \code{\link{dashboard}} data}
 
 \item{county_sf}{data produced by \code{\link{pull_county_sf}}}
+
+\item{county_census}{county names by fips, to provided more precise joining
+between dashboard results and county_sf shapefile}
 }
 \description{
 This takes the ouptut of  \code{\link{pull_county_sf}} and joins with 
 \code{\link{dashboard}} data. The result is a list split by segment, 
-where the county element includes an estra column: geometry
+where the county element includes an extra column: geometry. The 
+county_census table is used for linking on a more precise variable (county_fips
+as oppossed to county name).
 }
 \examples{
 library(dplyr)
 data(dashboard)
+
 county_sf <- pull_county_sf("SC")
-df <- join_county_sf(dashboard, county_sf)
+county_census <- load_counties(state = "SC")
+df <- join_county_sf(dashboard, county_sf, county_census)
 
 # produce a warning by using the wrong state
 county_sf <- pull_county_sf("ME")
-df <- join_county_sf(dashboard, county_sf)
+county_census <- load_counties(state = "ME")
+df <- join_county_sf(dashboard, county_sf, county_census)
 
 # Maine and South Carolina actually share one county name
 df$county <- filter(df$county, group == "all_sports", quarter == 4)

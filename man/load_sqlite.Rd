@@ -16,7 +16,9 @@ load_cust(db)
 
 load_sale(db, yrs)
 
-load_counties(db, state)
+
+  load_counties(db = "E:/SA/Data-production/Data-Dashboards/_Shared/census.sqlite3",
+  state)
 
 load_pop(db, state)
 

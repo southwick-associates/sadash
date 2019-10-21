@@ -13,7 +13,10 @@ pull_county_sf(state, dTolerance = 1000)
 size at the expense of detail (higher number is less detail)}
 }
 \description{
-This uses the urbnmapr package to pull a spatial features shapefile
+This uses the urbnmapr package to pull a spatial features table with 1 row
+per county. The geometry variable is a special type: a list of class
+"sfc_GEOMETRY". The \code{\link[ggplot2]{geom_sf}} function will recognize
+this variable for map plotting purposes.
 }
 \examples{
 library(ggplot2)

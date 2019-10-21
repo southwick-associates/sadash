@@ -19,7 +19,9 @@ to include a set of side-by-side chloropleths for every metric.
 library(dplyr)
 data(dashboard)
 county_sf <- pull_county_sf("SC")
-df <- join_county_sf(dashboard, county_sf)
+county_census <- load_counties(state = "SC")
+df <- join_county_sf(dashboard, county_sf, county_census)
+
 df$county <- filter(df$county, group == "all_sports", quarter == 4)
 plot_county(df$county)
 }

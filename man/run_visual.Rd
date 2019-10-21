@@ -18,7 +18,8 @@ to check/explore the results prior to sending to the Tableau analyst.
 \examples{
 data(dashboard)
 county_sf <- pull_county_sf("SC")
-dash_list <- join_county_sf(dashboard, county_sf)
+county_census <- load_counties(state = "SC")
+dash_list <- join_county_sf(dashboard, county_sf, county_census)
 
 \dontrun{
 run_visual(dash_list)

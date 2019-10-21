@@ -99,7 +99,10 @@ plotly_config <- function(plot) {
 
 #' Pull county spatial data
 #' 
-#' This uses the urbnmapr package to pull a spatial features shapefile
+#' This uses the urbnmapr package to pull a spatial features table with 1 row
+#' per county. The geometry variable is a special type: a list of class
+#' "sfc_GEOMETRY". The \code{\link[ggplot2]{geom_sf}} function will recognize
+#' this variable for map plotting purposes.
 #' 
 #' @param state abbreviation of state to pull
 #' @param dTolerance passed to \code{\link[sf]{st_simplify}} to reduce object
@@ -113,9 +116,8 @@ plotly_config <- function(plot) {
 pull_county_sf <- function(state, dTolerance = 1000) {
     urbnmapr::get_urbn_map("counties", sf = TRUE) %>%
         filter(.data$state_abbv == state) %>%
-        # "category" for joining with dashboard
-        mutate(category = stringr::str_remove(.data$county_name, " County")) %>%
-        select(.data$category, .data$geometry) %>%
+        select(.data$county_fips, .data$geometry) %>%
+        mutate(county_fips = as.integer(.data$county_fips)) %>%
         sf::st_simplify(preserveTopology = TRUE, dTolerance = dTolerance)
 } 
 
@@ -123,37 +125,53 @@ pull_county_sf <- function(state, dTolerance = 1000) {
 #' 
 #' This takes the ouptut of  \code{\link{pull_county_sf}} and joins with 
 #' \code{\link{dashboard}} data. The result is a list split by segment, 
-#' where the county element includes an estra column: geometry
+#' where the county element includes an extra column: geometry. The 
+#' county_census table is used for linking on a more precise variable (county_fips
+#' as oppossed to county name).
 #' 
 #' @param dashboard summary \code{\link{dashboard}} data 
 #' @param county_sf data produced by \code{\link{pull_county_sf}}
+#' @param county_census county names by fips, to provided more precise joining
+#' between dashboard results and county_sf shapefile
 #' @family functions to run dashboard visualization
 #' @export
 #' @examples 
 #' library(dplyr)
 #' data(dashboard)
+#' 
 #' county_sf <- pull_county_sf("SC")
-#' df <- join_county_sf(dashboard, county_sf)
+#' county_census <- load_counties(state = "SC")
+#' df <- join_county_sf(dashboard, county_sf, county_census)
 #' 
 #' # produce a warning by using the wrong state
 #' county_sf <- pull_county_sf("ME")
-#' df <- join_county_sf(dashboard, county_sf)
+#' county_census <- load_counties(state = "ME")
+#' df <- join_county_sf(dashboard, county_sf, county_census)
 #' 
 #' # Maine and South Carolina actually share one county name
 #' df$county <- filter(df$county, group == "all_sports", quarter == 4)
 #' plot_county(df$county)
-join_county_sf <- function(dashboard, county_sf) {
+join_county_sf <- function(dashboard, county_sf, county_census) {
+    
     # split dashboard by segment
     df <- mutate(dashboard, segment = tolower(.data$segment)) 
     df <- split(df, df$segment)
     
-    # standardize category column for joining
-    prep_category <- function(x) stringr::str_trim(tolower(x))
-    df$county$category <- prep_category(df$county$category)
-    county_sf$category <- prep_category(county_sf$category)
+    # join county_fips to dashboard data
+    county_census <- county_census %>%
+        rename(category = .data$county)
+    df$county <- left_join(df$county, county_census, by = "category")
+    if (any(is.na(df$county$county_fips))) {
+        no_fips <- sum(is.na(df$county$county_fips))
+        warning(
+            "Missing county_fips from county_census for ", no_fips, 
+            " rows in the dashboard summary data\n",
+            "- These won't appear in run_visual() or plot_county()", call. = FALSE 
+        )
+    }
     
-    # join & output
-    df$county <- left_join(df$county, county_sf, by = "category")
+    # join geometry with dashboard data
+    df$county <- left_join(df$county, county_sf, by = "county_fips")
     has_geom <- sf::st_dimension(sf::st_sfc(df$county$geometry))
     if (any(is.na(has_geom))) {
         no_county <- sum(is.na(has_geom))
@@ -181,7 +199,9 @@ join_county_sf <- function(dashboard, county_sf) {
 #' library(dplyr)
 #' data(dashboard)
 #' county_sf <- pull_county_sf("SC")
-#' df <- join_county_sf(dashboard, county_sf)
+#' county_census <- load_counties(state = "SC")
+#' df <- join_county_sf(dashboard, county_sf, county_census)
+#' 
 #' df$county <- filter(df$county, group == "all_sports", quarter == 4)
 #' plot_county(df$county)
 plot_county <- function(dat) {
@@ -213,7 +233,8 @@ plot_county <- function(dat) {
 #' @examples 
 #' data(dashboard)
 #' county_sf <- pull_county_sf("SC")
-#' dash_list <- join_county_sf(dashboard, county_sf)
+#' county_census <- load_counties(state = "SC")
+#' dash_list <- join_county_sf(dashboard, county_sf, county_census)
 #' 
 #' \dontrun{
 #' run_visual(dash_list)

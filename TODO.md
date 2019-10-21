@@ -6,7 +6,7 @@
     + also want nicer labelling on hover for plotly
     
 - county plotting:
-    + maybe join on county_fips rather than county name
+    + probably want to use plotly for hover, maybe pass each element of plotting list to a separate shiny output function (as oppossed to using grid.arrange from gridExtra)
     + maybe improve the appearance of the county visuals (probably log scale and maybe use viridis)
 
 - Generate a sample dashboard from salic (rather than the full version)
