@@ -198,25 +198,77 @@ join_county_sf <- function(dashboard, county_sf, county_census) {
 #' @examples 
 #' library(dplyr)
 #' data(dashboard)
-#' county_sf <- pull_county_sf("SC")
+#' county_map <- get_county_map("SC")
 #' county_census <- load_counties(state = "SC")
-#' df <- join_county_sf(dashboard, county_sf, county_census)
+#' df <- join_county_map(dashboard, county_map, county_census)
 #' 
-#' df$county <- filter(df$county, group == "all_sports", quarter == 4)
-#' plot_county(df$county)
-plot_county <- function(dat) {
+#' x <- filter(df$county, group == "all_sports", quarter == 4, metric == "churn")
+#' p <- plot_county(x)
+#' p$churn
+#' plotly::ggplotly(p$churn)
+plot_county <- function(dat, use_plotly = TRUE) {
     # function to plot a single metric
     plot_one <- function(dat_one, measure) {
-        ggplot(dat_one, aes_string(fill = "value")) +
-            geom_sf() +
-            coord_sf(datum = NA)  +
-            theme(legend.position = "bottom", legend.key.width = unit(1, "cm")) +
+        ggplot(dat_one) +
+            geom_polygon(aes(long, lat, group = county, fill = value)) +
+            theme_void() +
             ggtitle(measure)
     }
     dat <- split(dat, dat$metric)
-    plots <- lapply(names(dat), function(nm) plot_one(dat[[nm]], nm))
-    # plotly::subplot(plots, nrows = 1)
-    gridExtra::grid.arrange(grobs = plots, nrow = 1)
+    sapply(names(dat), function(nm) plot_one(dat[[nm]], nm), simplify = FALSE)
+}
+
+get_county_map <- function(state) {
+    # get state abbreviations
+    relate <- data.frame(
+        region = tolower(state.name), state = state.abb,  
+        stringsAsFactors = FALSE
+    )
+    relate <- relate[relate$state == state,]
+    
+    # get county fips
+    fips <- maps::county.fips %>% 
+        tidyr::separate(polyname, c("state", "county"), sep = ",") %>%
+        filter(.data$state == relate$region) %>%
+        select(county_fips = fips, .data$county)
+    
+    # get map data by county_fips for state
+    map_data("county") %>%
+        filter(region == relate$region) %>%
+        select(.data$long, .data$lat, county = subregion) %>%
+        left_join(fips, by = "county")
+}
+
+join_county_map <- function(dashboard, county_map, county_census) {
+    
+    # split dashboard by segment
+    df <- mutate(dashboard, segment = tolower(.data$segment)) 
+    df <- split(df, df$segment)
+    
+    # join county_fips to dashboard data
+    county_census <- county_census %>%
+        rename(category = .data$county)
+    df$county <- left_join(df$county, county_census, by = "category")
+    if (any(is.na(df$county$county_fips))) {
+        no_fips <- sum(is.na(df$county$county_fips))
+        warning(
+            "Missing county_fips from county_census for ", no_fips, 
+            " rows in the dashboard summary data\n",
+            "- These won't appear in run_visual() or plot_county()", call. = FALSE 
+        )
+    }
+    
+    # join map data with dashboard data
+    df$county <- left_join(df$county, county_map, by = "county_fips")
+    if (any(is.na(df$county$long))) {
+        no_geom <- df$county$county_fips[is.na(df$county$long)] %>% unique()
+        warning(
+            "Missing geometries from county_sf for ", length(no_geom), 
+            " rows in the dashboard summary data\n", 
+            "- These won't appear in run_visual() or plot_county()", call. = FALSE
+        )
+    }
+    df
 }
 
 # Shiny App Function ------------------------------------------------------
@@ -232,9 +284,9 @@ plot_county <- function(dat) {
 #' @export
 #' @examples 
 #' data(dashboard)
-#' county_sf <- pull_county_sf("SC")
+#' county_map <- get_county_map("SC")
 #' county_census <- load_counties(state = "SC")
-#' dash_list <- join_county_sf(dashboard, county_sf, county_census)
+#' dash_list <- join_county_map(dashboard, county_map, county_census)
 #' 
 #' \dontrun{
 #' run_visual(dash_list)
@@ -265,12 +317,17 @@ run_visual <- function(dash_list, include_county = FALSE) {
     plot_dash <- function(x, height = "300px", ...) {
         plotly::plotlyOutput(x, height = height, ...)
     }
+    plot_dash2 <- function(x, height = "220px", ...) plot_dash(x, height, ...)
+    
     # - for server
     render_dash <- function(plot_code) {
         plotly::renderPlotly({
-            p <- plot_code()
-            plotly::ggplotly(p) %>% plotly_config()
+            plot <- plot_code()
+            plotly::ggplotly(plot) %>% plotly_config()
         })
+    }
+    render_dash2 <- function(plot) {
+        plotly::renderPlotly({ plotly::ggplotly(plot) %>% plotly_config() })
     }
         
     # define user interface
@@ -293,7 +350,12 @@ run_visual <- function(dash_list, include_county = FALSE) {
             plot_dash("residencyPlot"), plot_dash("genderPlot")
         ),
         plot_dash("monthPlot", height = "150px"),
-        if (include_county) plotOutput("countyPlot", height = "250px"),
+        if (include_county) {
+            splitLayout(
+                plot_dash2("part"), plot_dash2("rate"),
+                plot_dash2("recruits"), plot_dash2("churn")
+            )
+        },
         width = 12
     ))
     
@@ -315,10 +377,11 @@ run_visual <- function(dash_list, include_county = FALSE) {
         })
         
         if (include_county) {
-            dataCounty <- reactive({
+            plots <- reactive({
                 df_county %>%
                     filter(.data$group == input$group, .data$quarter == input$quarter,
-                           .data$year == input$year)
+                           .data$year == input$year) %>%
+                    plot_county()
             })
         }
         
@@ -339,7 +402,10 @@ run_visual <- function(dash_list, include_county = FALSE) {
             function() plot_month(dataMonth(), "")
         })
         if (include_county) {
-            output$countyPlot <- renderPlot({ plot_county(dataCounty()) })
+            output$part <- render_dash2({ plots()$part })
+            output$rate <- render_dash2({ plots()$rate })
+            output$recruits <- render_dash2({ plots()$churn })
+            output$churn <- render_dash2({ plots()$recruits })
         }
     }
     shinyApp(ui, server)
