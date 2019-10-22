@@ -97,7 +97,8 @@ get_county_map <- function(state) {
     relate <- relate[relate$state == state,]
     
     # get county fips
-    fips <- maps::county.fips %>% 
+    utils::data("county.fips", package = "maps", envir = environment())
+    fips <- county.fips %>% 
         tidyr::separate(.data$polyname, c("state", "county"), sep = ",") %>%
         filter(.data$state == relate$region) %>%
         select(county_fips = fips, .data$county)
