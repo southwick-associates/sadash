@@ -89,25 +89,11 @@ plot_month <- function(df, plot_title = "Sales by Month") {
 #' ggplot(county_map) + 
 #'     geom_polygon(aes(long, lat, group = county))
 get_county_map <- function(state) {
-    # get state abbreviations
-    relate <- data.frame(
-        region = tolower(datasets::state.name), state = datasets::state.abb,  
-        stringsAsFactors = FALSE
-    )
-    relate <- relate[relate$state == state,]
-    
-    # get county fips
-    utils::data("county.fips", package = "maps", envir = environment())
-    fips <- county.fips %>% 
-        tidyr::separate(.data$polyname, c("state", "county"), sep = ",") %>%
-        filter(.data$state == relate$region) %>%
-        select(county_fips = fips, .data$county)
-    
-    # get map data by county_fips for state
-    ggplot2::map_data("county") %>%
-        filter(.data$region == relate$region) %>%
-        select(.data$long, .data$lat, county = .data$subregion) %>%
-        left_join(fips, by = "county")
+    utils::data("county_map_us", envir = environment())
+    county_map_us %>%
+        rename(state_abbrev = .data$state) %>%
+        filter(.data$state_abbrev == state) %>%
+        select(.data$long, .data$lat, .data$county, .data$county_fips)
 }
 
 #' Join dashboard with county spatial data

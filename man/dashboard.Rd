@@ -18,5 +18,8 @@
 This data frame holds national/regional dashboard metrics formatted for 
 dashboard input pulled from SC 2019-Q2 in Oct, 2019.
 }
+\seealso{
+Other Sample Data: \code{\link{county_map_us}}
+}
 \concept{Sample Data}
 \keyword{datasets}

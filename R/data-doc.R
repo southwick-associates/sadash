@@ -20,3 +20,24 @@
 #' }
 #' @family Sample Data
 NULL
+
+#' Sample Data: Shapefile for all counties in the US
+#' 
+#' Pulled into sadash for convenience for use in \code{\link{get_county_map}}.
+#' I was annoyed by the fact that \code{\link[ggplot2]{map_data}} attaches
+#' the maps package which was the main motivation to placing it here.
+#' 
+#' @docType data
+#' @keywords datasets
+#' @name county_map_us
+#' @format a data frame with 5 variables
+#' \describe{
+#' \item{long}{longitude}
+#' \item{lat}{latitude}
+#' \item{state}{2-letter abbreviation}
+#' \item{state_name}{name of state}
+#' \item{county_fips}{fips code}
+#' \item{county}{county name}
+#' }
+#' @family Sample Data
+NULL
