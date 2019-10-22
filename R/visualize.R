@@ -77,7 +77,8 @@ plot_month <- function(df, plot_title = "Sales by Month") {
 
 #' Load county spatial data
 #' 
-#' This uses functions from 2 packages (maps, ggplot2) to pull
+#' This uses functions from 2 packages (maps, ggplot2) to pull county spatial
+#' data for given state.
 #' 
 #' @param state abbreviation of state to pull
 #' @family functions to run dashboard visualization
@@ -110,7 +111,7 @@ get_county_map <- function(state) {
 
 #' Join dashboard with county spatial data
 #' 
-#' This takes the ouptut of  \code{\link{get_county_map}} and joins with 
+#' This takes the ouptut of \code{\link{get_county_map}} and joins with 
 #' \code{\link{dashboard}} data. The result is a list split by segment. The 
 #' county_census table is used for linking on a more precise variable (county_fips
 #' as oppossed to county name).

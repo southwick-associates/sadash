@@ -11,8 +11,8 @@
 library(tidyverse)
 source("params.R")
 
-## License Types
-lic <- tbl(db_license, "lic") %>%
-    select(lic_id, description, type, priv, subtype, basic) %>%
-    collect()
+# License Types
+db <- src_sqlite(db_license) 
+lic <- tbl(db, "lic") %>% collect()
+glimpse(lic)
 write_csv(lic, "4-methods-summary/lic-docx.csv", na = "")

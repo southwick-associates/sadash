@@ -10,7 +10,8 @@ get_county_map(state)
 \item{state}{abbreviation of state to pull}
 }
 \description{
-This uses functions from 2 packages (maps, ggplot2) to pull
+This uses functions from 2 packages (maps, ggplot2) to pull county spatial
+data for given state.
 }
 \examples{
 library(ggplot2)
