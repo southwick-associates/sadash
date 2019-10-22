@@ -14,9 +14,9 @@ Basically I want to remove the extra cruft at the top of the plots, except
 for the "save png" button.
 }
 \seealso{
-Other functions to run dashboard visualization: \code{\link{int_breaks}},
-  \code{\link{join_county_sf}}, \code{\link{plot_county}},
-  \code{\link{plot_month}}, \code{\link{plot_value2}},
-  \code{\link{pull_county_sf}}, \code{\link{run_visual}}
+Other functions to run dashboard visualization: \code{\link{get_county_map}},
+  \code{\link{int_breaks}}, \code{\link{join_county_map}},
+  \code{\link{plot_county}}, \code{\link{plot_month}},
+  \code{\link{plot_value2}}, \code{\link{run_visual}}
 }
 \concept{functions to run dashboard visualization}

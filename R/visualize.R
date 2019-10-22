@@ -73,64 +73,50 @@ plot_month <- function(df, plot_title = "Sales by Month") {
         ggtitle(plot_title)
 }
 
-#' Define the modebar config for plotly
-#' 
-#' Basically I want to remove the extra cruft at the top of the plots, except 
-#' for the "save png" button.
-#' 
-#' @param plot Plot object for plotly
-#' @family functions to run dashboard visualization
-#' @export
-plotly_config <- function(plot) {
-    modebar_remove <- c(
-        "pan2d", "zoomIn2d", "sendDataToCloud", "zoomOut2d", "autoScale2d", 
-        "zoom2d", "hoverClosestCartesian", "hoverCompareCartesian", "resetScale2d",
-        "toggleSpikelines", "lasso2d", "select2d"
-    )
-    plotly::config(
-        plot,
-        modeBarButtonsToRemove = modebar_remove,  
-        collaborate = FALSE, 
-        displaylogo = FALSE
-    ) 
-}
-
 # County Plotting ---------------------------------------------------------
 
-#' Pull county spatial data
+#' Load county spatial data
 #' 
-#' This uses the urbnmapr package to pull a spatial features table with 1 row
-#' per county. The geometry variable is a special type: a list of class
-#' "sfc_GEOMETRY". The \code{\link[ggplot2]{geom_sf}} function will recognize
-#' this variable for map plotting purposes.
+#' This uses functions from 2 packages (maps, ggplot2) to pull
 #' 
 #' @param state abbreviation of state to pull
-#' @param dTolerance passed to \code{\link[sf]{st_simplify}} to reduce object
-#' size at the expense of detail (higher number is less detail)
 #' @family functions to run dashboard visualization
 #' @export
 #' @examples 
 #' library(ggplot2)
-#' county_sf <- pull_county_sf("SC")
-#' ggplot(county_sf, aes()) + geom_sf(fill = "grey")
-pull_county_sf <- function(state, dTolerance = 1000) {
-    urbnmapr::get_urbn_map("counties", sf = TRUE) %>%
-        filter(.data$state_abbv == state) %>%
-        select(.data$county_fips, .data$geometry) %>%
-        mutate(county_fips = as.integer(.data$county_fips)) %>%
-        sf::st_simplify(preserveTopology = TRUE, dTolerance = dTolerance)
-} 
+#' county_map <- get_county_map("SC")
+#' ggplot(county_map) + 
+#'     geom_polygon(aes(long, lat, group = county))
+get_county_map <- function(state) {
+    # get state abbreviations
+    relate <- data.frame(
+        region = tolower(datasets::state.name), state = datasets::state.abb,  
+        stringsAsFactors = FALSE
+    )
+    relate <- relate[relate$state == state,]
+    
+    # get county fips
+    fips <- maps::county.fips %>% 
+        tidyr::separate(.data$polyname, c("state", "county"), sep = ",") %>%
+        filter(.data$state == relate$region) %>%
+        select(county_fips = fips, .data$county)
+    
+    # get map data by county_fips for state
+    ggplot2::map_data("county") %>%
+        filter(.data$region == relate$region) %>%
+        select(.data$long, .data$lat, county = .data$subregion) %>%
+        left_join(fips, by = "county")
+}
 
 #' Join dashboard with county spatial data
 #' 
-#' This takes the ouptut of  \code{\link{pull_county_sf}} and joins with 
-#' \code{\link{dashboard}} data. The result is a list split by segment, 
-#' where the county element includes an extra column: geometry. The 
+#' This takes the ouptut of  \code{\link{get_county_map}} and joins with 
+#' \code{\link{dashboard}} data. The result is a list split by segment. The 
 #' county_census table is used for linking on a more precise variable (county_fips
 #' as oppossed to county name).
 #' 
 #' @param dashboard summary \code{\link{dashboard}} data 
-#' @param county_sf data produced by \code{\link{pull_county_sf}}
+#' @param county_map data produced by \code{\link{get_county_map}}
 #' @param county_census county names by fips, to provided more precise joining
 #' between dashboard results and county_sf shapefile
 #' @family functions to run dashboard visualization
@@ -139,106 +125,18 @@ pull_county_sf <- function(state, dTolerance = 1000) {
 #' library(dplyr)
 #' data(dashboard)
 #' 
-#' county_sf <- pull_county_sf("SC")
-#' county_census <- load_counties(state = "SC")
-#' df <- join_county_sf(dashboard, county_sf, county_census)
-#' 
-#' # produce a warning by using the wrong state
-#' county_sf <- pull_county_sf("ME")
-#' county_census <- load_counties(state = "ME")
-#' df <- join_county_sf(dashboard, county_sf, county_census)
-#' 
-#' # Maine and South Carolina actually share one county name
-#' df$county <- filter(df$county, group == "all_sports", quarter == 4)
-#' plot_county(df$county)
-join_county_sf <- function(dashboard, county_sf, county_census) {
-    
-    # split dashboard by segment
-    df <- mutate(dashboard, segment = tolower(.data$segment)) 
-    df <- split(df, df$segment)
-    
-    # join county_fips to dashboard data
-    county_census <- county_census %>%
-        rename(category = .data$county)
-    df$county <- left_join(df$county, county_census, by = "category")
-    if (any(is.na(df$county$county_fips))) {
-        no_fips <- sum(is.na(df$county$county_fips))
-        warning(
-            "Missing county_fips from county_census for ", no_fips, 
-            " rows in the dashboard summary data\n",
-            "- These won't appear in run_visual() or plot_county()", call. = FALSE 
-        )
-    }
-    
-    # join geometry with dashboard data
-    df$county <- left_join(df$county, county_sf, by = "county_fips")
-    has_geom <- sf::st_dimension(sf::st_sfc(df$county$geometry))
-    if (any(is.na(has_geom))) {
-        no_county <- sum(is.na(has_geom))
-        warning(
-            "Missing geometries from county_sf for ", no_county, 
-            " rows in the dashboard summary data\n", 
-            "- These won't appear in run_visual() or plot_county()", call. = FALSE
-        )
-    }
-    df
-}
-
-#' Make a county chloropleth for all metrics
-#' 
-#' Intended to be run on the output of \code{\link{join_county_sf}} (the 
-#' "county" element specifically). Uses \code{\link[gridExtra]{grid.arrange}}
-#' to include a set of side-by-side chloropleths for every metric.
-#' 
-#' @inheritParams dashtemplate::plot_bar
-#' @param dat a dashboard table where segment == "County" that has a "geometry"
-#' column (e.g., produced from \code{\link{join_county_sf}})
-#' @family functions to run dashboard visualization
-#' @export
-#' @examples 
-#' library(dplyr)
-#' data(dashboard)
 #' county_map <- get_county_map("SC")
 #' county_census <- load_counties(state = "SC")
-#' df <- join_county_map(dashboard, county_map, county_census)
+#' dash_list <- join_county_map(dashboard, county_map, county_census)
 #' 
-#' x <- filter(df$county, group == "all_sports", quarter == 4, metric == "churn")
-#' p <- plot_county(x)
-#' p$churn
-#' plotly::ggplotly(p$churn)
-plot_county <- function(dat, use_plotly = TRUE) {
-    # function to plot a single metric
-    plot_one <- function(dat_one, measure) {
-        ggplot(dat_one) +
-            geom_polygon(aes(long, lat, group = county, fill = value)) +
-            theme_void() +
-            ggtitle(measure)
-    }
-    dat <- split(dat, dat$metric)
-    sapply(names(dat), function(nm) plot_one(dat[[nm]], nm), simplify = FALSE)
-}
-
-get_county_map <- function(state) {
-    # get state abbreviations
-    relate <- data.frame(
-        region = tolower(state.name), state = state.abb,  
-        stringsAsFactors = FALSE
-    )
-    relate <- relate[relate$state == state,]
-    
-    # get county fips
-    fips <- maps::county.fips %>% 
-        tidyr::separate(polyname, c("state", "county"), sep = ",") %>%
-        filter(.data$state == relate$region) %>%
-        select(county_fips = fips, .data$county)
-    
-    # get map data by county_fips for state
-    map_data("county") %>%
-        filter(region == relate$region) %>%
-        select(.data$long, .data$lat, county = subregion) %>%
-        left_join(fips, by = "county")
-}
-
+#' # produce a warning by using the wrong state
+#' county_map <- get_county_map("ME")
+#' county_census <- load_counties(state = "ME")
+#' dash_list <- join_county_map(dashboard, county_map, county_census)
+#' 
+#' # Maine and South Carolina actually share one county name
+#' x <- filter(dash_list$county, group == "all_sports", quarter == 4)
+#' plot_county(x) %>% gridExtra::grid.arrange(grobs = .)
 join_county_map <- function(dashboard, county_map, county_census) {
     
     # split dashboard by segment
@@ -263,7 +161,7 @@ join_county_map <- function(dashboard, county_map, county_census) {
     if (any(is.na(df$county$long))) {
         no_geom <- df$county$county_fips[is.na(df$county$long)] %>% unique()
         warning(
-            "Missing geometries from county_sf for ", length(no_geom), 
+            "Missing geometries from county_map for ", length(no_geom), 
             " rows in the dashboard summary data\n", 
             "- These won't appear in run_visual() or plot_county()", call. = FALSE
         )
@@ -271,14 +169,78 @@ join_county_map <- function(dashboard, county_map, county_census) {
     df
 }
 
-# Shiny App Function ------------------------------------------------------
+#' Make a county chloropleth for all metrics
+#' 
+#' Intended to be run on the output of \code{\link{join_county_map}} (the 
+#' "county" element specifically). Returns a list with one element per value 
+#' of the dat$metric variable.
+#' 
+#' @param dat a dashboard table where segment == "County" that has a "geometry"
+#' column (e.g., produced from \code{\link{join_county_map}})
+#' @family functions to run dashboard visualization
+#' @export
+#' @examples 
+#' library(dplyr)
+#' data(dashboard)
+#' county_map <- get_county_map("SC")
+#' county_census <- load_counties(state = "SC")
+#' dash_list <- join_county_map(dashboard, county_map, county_census)
+#' 
+#' x <- filter(dash_list$county, group == "all_sports", quarter == 4)
+#' p <- plot_county(x)
+#' p$churn
+#' gridExtra::grid.arrange(grobs = p)
+#' 
+#' # interactive with plotly
+#' plotly::ggplotly(p$churn)
+#' plotly::subplot(p, nrows = 2) %>% plotly::hide_colorbar()
+plot_county <- function(dat) {
+    # function to plot a single metric
+    plot_one <- function(dat_one, measure) {
+        ggplot(dat_one) +
+            geom_polygon(aes_string("long", "lat", group = "category", fill = "value")) +
+            facet_wrap(~ metric) +
+            theme(
+                axis.text = element_blank(), 
+                axis.title = element_blank(),
+                axis.ticks = element_blank()
+            )
+    }
+    dat <- split(dat, dat$metric)
+    sapply(names(dat), function(nm) plot_one(dat[[nm]], nm), simplify = FALSE)
+}
+
+# Shiny App ------------------------------------------------------
+
+#' Define the modebar config for plotly
+#' 
+#' Basically I want to remove the extra cruft at the top of the plots, except 
+#' for the "save png" button.
+#' 
+#' @param plot Plot object for plotly
+#' @family functions to run dashboard visualization
+#' @export
+plotly_config <- function(plot) {
+    modebar_remove <- c(
+        "pan2d", "zoomIn2d", "sendDataToCloud", "zoomOut2d", "autoScale2d", 
+        "zoom2d", "hoverClosestCartesian", "hoverCompareCartesian", "resetScale2d",
+        "toggleSpikelines", "lasso2d", "select2d"
+    )
+    plotly::config(
+        plot,
+        modeBarButtonsToRemove = modebar_remove,  
+        collaborate = FALSE, 
+        displaylogo = FALSE
+    ) %>%
+        plotly::layout(yaxis = list(hoverformat = ".2f"))
+}
 
 #' Run shiny app summary of dashboard results
 #' 
 #' The idea here is to replicate the functionality of the Tableau dashboard
 #' to check/explore the results prior to sending to the Tableau analyst. 
 #' 
-#' @param dash_list a list produced after running \code{\link{join_county_sf}}
+#' @param dash_list a list produced after running \code{\link{join_county_map}}
 #' @param include_county if TRUE, county chloropleths will also be displayed
 #' @family functions to run dashboard visualization
 #' @export
@@ -314,22 +276,17 @@ run_visual <- function(dash_list, include_county = FALSE) {
     
     # convenience functions for shiny plots    
     # - for ui
-    plot_dash <- function(x, height = "300px", ...) {
+    plot_dash <- function(x, height = "320px", ...) {
         plotly::plotlyOutput(x, height = height, ...)
     }
-    plot_dash2 <- function(x, height = "220px", ...) plot_dash(x, height, ...)
-    
     # - for server
     render_dash <- function(plot_code) {
         plotly::renderPlotly({
-            plot <- plot_code()
-            plotly::ggplotly(plot) %>% plotly_config()
+            p <- plot_code()
+            plotly::ggplotly(p) %>% plotly_config()
         })
     }
-    render_dash2 <- function(plot) {
-        plotly::renderPlotly({ plotly::ggplotly(plot) %>% plotly_config() })
-    }
-        
+
     # define user interface
     ui <- fluidPage(mainPanel(
         splitLayout(
@@ -351,10 +308,7 @@ run_visual <- function(dash_list, include_county = FALSE) {
         ),
         plot_dash("monthPlot", height = "150px"),
         if (include_county) {
-            splitLayout(
-                plot_dash2("part"), plot_dash2("rate"),
-                plot_dash2("recruits"), plot_dash2("churn")
-            )
+            plot_dash("countyPlot", height = "250px")
         },
         width = 12
     ))
@@ -376,16 +330,7 @@ run_visual <- function(dash_list, include_county = FALSE) {
                        .data$year %in% c(input$year, as.numeric(input$year) - 1))
         })
         
-        if (include_county) {
-            plots <- reactive({
-                df_county %>%
-                    filter(.data$group == input$group, .data$quarter == input$quarter,
-                           .data$year == input$year) %>%
-                    plot_county()
-            })
-        }
-        
-        # plotting data
+        # bar plots
         output$allPlot <- render_dash({
             function() plot_value2(dataGroup()[["all"]])
         })
@@ -401,11 +346,19 @@ run_visual <- function(dash_list, include_county = FALSE) {
         output$monthPlot <- render_dash({
             function() plot_month(dataMonth(), "")
         })
+        
+        # county plots
         if (include_county) {
-            output$part <- render_dash2({ plots()$part })
-            output$rate <- render_dash2({ plots()$rate })
-            output$recruits <- render_dash2({ plots()$churn })
-            output$churn <- render_dash2({ plots()$recruits })
+            dataCounty <- reactive({
+                filter(df_county, .data$group == input$group, 
+                       .data$quarter == input$quarter, .data$year == input$year)
+            })
+            output$countyPlot <- plotly::renderPlotly({
+                p <- plot_county(dataCounty())
+                plotly::subplot(p, nrows = 1) %>% 
+                    plotly::hide_colorbar() %>%
+                    plotly_config()
+            })
         }
     }
     shinyApp(ui, server)

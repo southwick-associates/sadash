@@ -8,27 +8,33 @@ plot_county(dat)
 }
 \arguments{
 \item{dat}{a dashboard table where segment == "County" that has a "geometry"
-column (e.g., produced from \code{\link{join_county_sf}})}
+column (e.g., produced from \code{\link{join_county_map}})}
 }
 \description{
-Intended to be run on the output of \code{\link{join_county_sf}} (the 
-"county" element specifically). Uses \code{\link[gridExtra]{grid.arrange}}
-to include a set of side-by-side chloropleths for every metric.
+Intended to be run on the output of \code{\link{join_county_map}} (the 
+"county" element specifically). Returns a list with one element per value 
+of the dat$metric variable.
 }
 \examples{
 library(dplyr)
 data(dashboard)
-county_sf <- pull_county_sf("SC")
+county_map <- get_county_map("SC")
 county_census <- load_counties(state = "SC")
-df <- join_county_sf(dashboard, county_sf, county_census)
+dash_list <- join_county_map(dashboard, county_map, county_census)
 
-df$county <- filter(df$county, group == "all_sports", quarter == 4)
-plot_county(df$county)
+x <- filter(dash_list$county, group == "all_sports", quarter == 4)
+p <- plot_county(x)
+p$churn
+gridExtra::grid.arrange(grobs = p)
+
+# interactive with plotly
+plotly::ggplotly(p$churn)
+plotly::subplot(p, nrows = 2) \%>\% plotly::hide_colorbar()
 }
 \seealso{
-Other functions to run dashboard visualization: \code{\link{int_breaks}},
-  \code{\link{join_county_sf}}, \code{\link{plot_month}},
-  \code{\link{plot_value2}}, \code{\link{plotly_config}},
-  \code{\link{pull_county_sf}}, \code{\link{run_visual}}
+Other functions to run dashboard visualization: \code{\link{get_county_map}},
+  \code{\link{int_breaks}}, \code{\link{join_county_map}},
+  \code{\link{plot_month}}, \code{\link{plot_value2}},
+  \code{\link{plotly_config}}, \code{\link{run_visual}}
 }
 \concept{functions to run dashboard visualization}

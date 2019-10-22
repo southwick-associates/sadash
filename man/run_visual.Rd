@@ -7,7 +7,7 @@
 run_visual(dash_list, include_county = FALSE)
 }
 \arguments{
-\item{dash_list}{a list produced after running \code{\link{join_county_sf}}}
+\item{dash_list}{a list produced after running \code{\link{join_county_map}}}
 
 \item{include_county}{if TRUE, county chloropleths will also be displayed}
 }
@@ -17,9 +17,9 @@ to check/explore the results prior to sending to the Tableau analyst.
 }
 \examples{
 data(dashboard)
-county_sf <- pull_county_sf("SC")
+county_map <- get_county_map("SC")
 county_census <- load_counties(state = "SC")
-dash_list <- join_county_sf(dashboard, county_sf, county_census)
+dash_list <- join_county_map(dashboard, county_map, county_census)
 
 \dontrun{
 run_visual(dash_list)
@@ -29,9 +29,9 @@ run_visual(dash_list, include_county = TRUE)
 }
 }
 \seealso{
-Other functions to run dashboard visualization: \code{\link{int_breaks}},
-  \code{\link{join_county_sf}}, \code{\link{plot_county}},
-  \code{\link{plot_month}}, \code{\link{plot_value2}},
-  \code{\link{plotly_config}}, \code{\link{pull_county_sf}}
+Other functions to run dashboard visualization: \code{\link{get_county_map}},
+  \code{\link{int_breaks}}, \code{\link{join_county_map}},
+  \code{\link{plot_county}}, \code{\link{plot_month}},
+  \code{\link{plot_value2}}, \code{\link{plotly_config}}
 }
 \concept{functions to run dashboard visualization}

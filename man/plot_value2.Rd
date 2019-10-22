@@ -27,9 +27,9 @@ x <- filter(dashboard, group == "all_sports", quarter == 4, segment == "Gender")
 plot_value2(x)
 }
 \seealso{
-Other functions to run dashboard visualization: \code{\link{int_breaks}},
-  \code{\link{join_county_sf}}, \code{\link{plot_county}},
-  \code{\link{plot_month}}, \code{\link{plotly_config}},
-  \code{\link{pull_county_sf}}, \code{\link{run_visual}}
+Other functions to run dashboard visualization: \code{\link{get_county_map}},
+  \code{\link{int_breaks}}, \code{\link{join_county_map}},
+  \code{\link{plot_county}}, \code{\link{plot_month}},
+  \code{\link{plotly_config}}, \code{\link{run_visual}}
 }
 \concept{functions to run dashboard visualization}

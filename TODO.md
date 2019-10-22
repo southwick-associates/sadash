@@ -1,16 +1,11 @@
 
 ## Version 1.0.6
 
-- run_visual:
-    + the lag is a bit annoying, which I think is likely caused by ggplot
+- run_visual() performance, etc.:
+    + probably subsetting by lists would speed things up
+    + also taking ggplot out of the loop would probably help (i.e., using plotly directly)
     + also want nicer labelling on hover for plotly
     
-- county plotly:
-    + fix the non-updating issue with plotly county plots. This is starting to feel like more trouble than it's worth
-    + seems like the way to use plotly is to use the ggplot2 map_data approach. Using map_data("county") however doesn't include county_fips, so I'll probably need to pull it from maps::county.fips https://stackoverflow.com/questions/55982379/using-ggplot2-to-fill-in-counties-based-on-fips-code
-    + this will require changing pull_county_sf & join_county_sf to use the map_data approach. One benefit is that it will reduce the dependencies (no urbnmapr needed), which honestly is probably for the best anyway
-    + maybe improve the appearance of the county visuals (probably log scale and maybe use viridis)
-
 - Generate a sample dashboard from salic (rather than the full version)
     + This will also probably provide an opportunity to add more sample data and include examples for certain other functions
 

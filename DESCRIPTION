@@ -21,6 +21,7 @@ Imports:
     dplyr (>= 0.7.6),
     ggplot2 (>= 3.0.0),
     gridExtra,
+    maps,
     plotly,
     RSQLite (>= 2.1.1),
     salic (>= 2.0.1),
@@ -28,5 +29,5 @@ Imports:
     sf (>= 0.6.3),
     shiny (>= 1.1.0),
     stringr (>= 1.3.1),
-    urbnmapr
+    tidyr
 RoxygenNote: 6.1.0
