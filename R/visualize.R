@@ -75,10 +75,7 @@ plot_month <- function(df, plot_title = "Sales by Month") {
 
 # County Plotting ---------------------------------------------------------
 
-#' Load county spatial data
-#' 
-#' This uses functions from 2 packages (maps, ggplot2) to pull county spatial
-#' data for given state.
+#' Load county spatial data for selected state
 #' 
 #' @param state abbreviation of state to pull
 #' @family functions to run dashboard visualization
@@ -98,7 +95,7 @@ get_county_map <- function(state) {
 
 #' Join dashboard with county spatial data
 #' 
-#' This takes the ouptut of \code{\link{get_county_map}} and joins with 
+#' This takes the output of \code{\link{get_county_map}} and joins with 
 #' \code{\link{dashboard}} data. The result is a list split by segment. The 
 #' county_census table is used for linking on a more precise variable (county_fips
 #' as oppossed to county name).
@@ -200,12 +197,15 @@ plot_county <- function(dat) {
 
 # Shiny App ------------------------------------------------------
 
-#' Define the modebar config for plotly
+#' Convenience functions for shiny plots
 #' 
-#' Basically I want to remove the extra cruft at the top of the plots, except 
-#' for the "save png" button.
+#' Use plotly_config() to remove extra plotly buttons. Use plot_dash() and
+#' render_dash() for the shiny UI and Server respectively.
 #' 
 #' @param plot Plot object for plotly
+#' @param plot_code Code passed to \code{\link[plotly]{renderPlotly}}
+#' @param height passed to \code{\link[plotly]{plotlyOutput}}
+#' @param ... other arguments passed to \code{\link[plotly]{plotlyOutput}}
 #' @family functions to run dashboard visualization
 #' @export
 plotly_config <- function(plot) {
@@ -221,6 +221,21 @@ plotly_config <- function(plot) {
         displaylogo = FALSE
     ) %>%
         plotly::layout(yaxis = list(hoverformat = ".2f"))
+}
+
+#' @rdname plotly_config
+#' @export
+plot_dash <- function(plot, height = "320px", ...) {
+    plotly::plotlyOutput(plot, height = height, ...)
+}
+
+#' @rdname plotly_config
+#' @export
+render_dash <- function(plot_code) {
+    plotly::renderPlotly({
+        p <- plot_code()
+        plotly::ggplotly(p) %>% plotly_config()
+    })
 }
 
 #' Run shiny app summary of dashboard results
@@ -245,6 +260,8 @@ plotly_config <- function(plot) {
 #' run_visual(dash_list, include_county = TRUE)
 #' }
 run_visual <- function(dash_list, include_county = FALSE) {
+    
+    ### A. Prepare Data
     # some minor formatting for dash_list
     dash_prep <- function(x) {
         mutate_at(x, c("metric", "category"), "tolower") %>%
@@ -262,20 +279,7 @@ run_visual <- function(dash_list, include_county = FALSE) {
     permissions <- unique(ls_other$all$group)
     years <- unique(df_county$year)
     
-    # convenience functions for shiny plots    
-    # - for ui
-    plot_dash <- function(x, height = "320px", ...) {
-        plotly::plotlyOutput(x, height = height, ...)
-    }
-    # - for server
-    render_dash <- function(plot_code) {
-        plotly::renderPlotly({
-            p <- plot_code()
-            plotly::ggplotly(p) %>% plotly_config()
-        })
-    }
-
-    # define user interface
+    ### B. define user interface
     ui <- fluidPage(mainPanel(
         splitLayout(
             selectInput("quarter", "Choose Quarter", quarters),
@@ -301,7 +305,7 @@ run_visual <- function(dash_list, include_county = FALSE) {
         width = 12
     ))
     
-    # define data selection & plotting
+    ### C. Define data selection & plotting
     server <- function(input, output, session) {
         
         # filtering data

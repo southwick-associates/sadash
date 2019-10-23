@@ -2,16 +2,28 @@
 % Please edit documentation in R/visualize.R
 \name{plotly_config}
 \alias{plotly_config}
-\title{Define the modebar config for plotly}
+\alias{plot_dash}
+\alias{render_dash}
+\title{Convenience functions for shiny plots}
 \usage{
 plotly_config(plot)
+
+plot_dash(plot, height = "320px", ...)
+
+render_dash(plot_code)
 }
 \arguments{
 \item{plot}{Plot object for plotly}
+
+\item{height}{passed to \code{\link[plotly]{plotlyOutput}}}
+
+\item{...}{other arguments passed to \code{\link[plotly]{plotlyOutput}}}
+
+\item{plot_code}{Code passed to \code{\link[plotly]{renderPlotly}}}
 }
 \description{
-Basically I want to remove the extra cruft at the top of the plots, except 
-for the "save png" button.
+Use plotly_config() to remove extra plotly buttons. Use plot_dash() and
+render_dash() for the shiny UI and Server respectively.
 }
 \seealso{
 Other functions to run dashboard visualization: \code{\link{get_county_map}},

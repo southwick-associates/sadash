@@ -15,7 +15,7 @@ join_county_map(dashboard, county_map, county_census)
 between dashboard results and county_sf shapefile}
 }
 \description{
-This takes the ouptut of \code{\link{get_county_map}} and joins with 
+This takes the output of \code{\link{get_county_map}} and joins with 
 \code{\link{dashboard}} data. The result is a list split by segment. The 
 county_census table is used for linking on a more precise variable (county_fips
 as oppossed to county name).

@@ -2,7 +2,7 @@
 % Please edit documentation in R/visualize.R
 \name{get_county_map}
 \alias{get_county_map}
-\title{Load county spatial data}
+\title{Load county spatial data for selected state}
 \usage{
 get_county_map(state)
 }
@@ -10,8 +10,7 @@ get_county_map(state)
 \item{state}{abbreviation of state to pull}
 }
 \description{
-This uses functions from 2 packages (maps, ggplot2) to pull county spatial
-data for given state.
+Load county spatial data for selected state
 }
 \examples{
 library(ggplot2)
