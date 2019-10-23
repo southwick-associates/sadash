@@ -3,7 +3,6 @@
 
 - run_visual():
     + want nicer labelling on hover for plotly
-    + might want to use a separate run_visual() to view counties (and maybe monthly sales). Could potentially go back to the geom_sf() for a simpler (faster?) workflow, but that is low priority
     
 - Generate a sample dashboard from salic (rather than the full version)
     + This will also probably provide an opportunity to add more sample data and include examples for certain other functions

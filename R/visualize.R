@@ -255,7 +255,7 @@ ui_button_layout <- function(dash_list) {
     splitLayout(
         selectInput("quarter", "Choose Quarter", quarters),
         selectInput("group", "Choose Permission Group", permissions),
-        selectInput("year", "Choose Year (for monthly sales)", years),
+        selectInput("year", "Choose Year (for month/county)", years),
         
         # prevent clipping: https://github.com/rstudio/shiny/issues/1531
         tags$head(tags$style(HTML(
@@ -264,7 +264,7 @@ ui_button_layout <- function(dash_list) {
     )
 }
 
-# Shiny run_visual() ------------------------------------------------------
+# Shiny App ------------------------------------------------------
 
 #' @rdname run_visual
 #' @export
