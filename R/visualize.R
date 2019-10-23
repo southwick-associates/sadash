@@ -1,6 +1,6 @@
 # functions for visualizing results in a shiny app
 
-# Bar Plotting Functions ------------------------------------------------------
+# Bar Plotting ------------------------------------------------------
 
 #' Use only integer values for a plot's axis labels
 #' 
@@ -195,7 +195,7 @@ plot_county <- function(dat) {
     sapply(names(dat), function(nm) plot_one(dat[[nm]], nm), simplify = FALSE)
 }
 
-# Shiny App ------------------------------------------------------
+# Shiny Convenience ---------------------------------------------------
 
 #' Convenience functions for shiny plots
 #' 
@@ -225,7 +225,7 @@ plotly_config <- function(plot) {
 
 #' @rdname plotly_config
 #' @export
-plot_dash <- function(plot, height = "320px", ...) {
+plot_dash <- function(plot, height = "350px", ...) {
     plotly::plotlyOutput(plot, height = height, ...)
 }
 
@@ -238,13 +238,64 @@ render_dash <- function(plot_code) {
     })
 }
 
+#' Define UI layout for run_visual()
+#' 
+#' A convenience function run from \code{\link{run_visual}} and
+#' \code{\link{run_visual_county}}
+#' 
+#' @inheritParams run_visual
+#' @family functions to run dashboard visualization
+#' @export
+ui_button_layout <- function(dash_list) {
+    # defining options for menu dropdowns
+    quarters <- unique(dash_list$all$quarter)
+    permissions <- unique(dash_list$all$group)
+    years <- unique(dash_list$county$year)
+    
+    splitLayout(
+        selectInput("quarter", "Choose Quarter", quarters),
+        selectInput("group", "Choose Permission Group", permissions),
+        selectInput("year", "Choose Year (for monthly sales)", years),
+        
+        # prevent clipping: https://github.com/rstudio/shiny/issues/1531
+        tags$head(tags$style(HTML(
+            ".shiny-split-layout > div {overflow: visible;}"
+        )))
+    )
+}
+
+# Shiny run_visual() ------------------------------------------------------
+
+#' @rdname run_visual
+#' @export
+run_visual_county <- function(dash_list) {
+    ui <- fluidPage(mainPanel(
+        ui_button_layout(dash_list),
+        plot_dash("countyPlot", height = "650px"),
+        width = 12
+    ))
+    
+    server <- function(input, output, session) {
+        dataCounty <- reactive({
+            filter(dash_list$county, .data$group == input$group, 
+                   .data$quarter == input$quarter, .data$year == input$year)
+        })
+        output$countyPlot <- plotly::renderPlotly({
+            p <- plot_county(dataCounty())
+            plotly::subplot(p, nrows = 2) %>% 
+                plotly::hide_colorbar() %>%
+                plotly_config()
+        })
+    }
+    shinyApp(ui, server)
+}
+
 #' Run shiny app summary of dashboard results
 #' 
 #' The idea here is to replicate the functionality of the Tableau dashboard
 #' to check/explore the results prior to sending to the Tableau analyst. 
 #' 
 #' @param dash_list a list produced after running \code{\link{join_county_map}}
-#' @param include_county if TRUE, county chloropleths will also be displayed
 #' @family functions to run dashboard visualization
 #' @export
 #' @examples 
@@ -257,11 +308,11 @@ render_dash <- function(plot_code) {
 #' run_visual(dash_list)
 #' 
 #' # including county makes things a bit slow currently
-#' run_visual(dash_list, include_county = TRUE)
+#' run_visual_county(dash_list)
 #' }
-run_visual <- function(dash_list, include_county = FALSE) {
+run_visual <- function(dash_list) {
     
-    ### A. Prepare Data
+    ### Prepare Data
     # some minor formatting for dash_list
     dash_prep <- function(x) {
         mutate_at(x, c("metric", "category"), "tolower") %>%
@@ -269,28 +320,9 @@ run_visual <- function(dash_list, include_county = FALSE) {
     }
     dash_list <- lapply(dash_list, dash_prep)
     
-    # the data are separated based on their filtering needs
-    df_month <- dash_list[["month"]]
-    df_county <- dash_list[["county"]]
-    ls_other <- dash_list[setdiff(names(dash_list), c("month", "county"))]
-    
-    # defining options for menu dropdowns
-    quarters <- unique(ls_other$all$quarter)
-    permissions <- unique(ls_other$all$group)
-    years <- unique(df_county$year)
-    
-    ### B. define user interface
+    ### Define user interface
     ui <- fluidPage(mainPanel(
-        splitLayout(
-            selectInput("quarter", "Choose Quarter", quarters),
-            selectInput("group", "Choose Permission Group", permissions),
-            selectInput("year", "Choose year for Counties/Months", years),
-            
-            # prevent clipping: https://github.com/rstudio/shiny/issues/1531
-            tags$head(tags$style(HTML(
-                ".shiny-split-layout > div {overflow: visible;}"
-            )))
-        ),
+        ui_button_layout(dash_list),
         splitLayout(
             plot_dash("allPlot"), plot_dash("agePlot"),
             cellWidths = c("35%", "65%")
@@ -298,31 +330,21 @@ run_visual <- function(dash_list, include_county = FALSE) {
         splitLayout(
             plot_dash("residencyPlot"), plot_dash("genderPlot")
         ),
-        plot_dash("monthPlot", height = "150px"),
-        if (include_county) {
-            plot_dash("countyPlot", height = "250px")
-        },
+        plot_dash("monthPlot", height = "170px"),
         width = 12
     ))
     
-    ### C. Define data selection & plotting
+    ### Define data selection & plotting
     server <- function(input, output, session) {
         
-        # filtering data
+        # By gender, age, etc.
         dataGroup <- reactive({
             flt <- function(x) {
                 filter(x, .data$group == input$group, .data$quarter == input$quarter)
             }
-            lapply(ls_other, flt)
+            lapply(dash_list, flt)
         })
         
-        dataMonth <- reactive({
-            df_month %>%
-                filter(.data$group == input$group, .data$quarter == input$quarter,
-                       .data$year %in% c(input$year, as.numeric(input$year) - 1))
-        })
-        
-        # bar plots
         output$allPlot <- render_dash({
             function() plot_value2(dataGroup()[["all"]])
         })
@@ -335,23 +357,16 @@ run_visual <- function(dash_list, include_county = FALSE) {
         output$agePlot <- render_dash({
             function() plot_value2(dataGroup()[["age"]], n = 2)
         })
+        
+        # Sales by month
+        dataMonth <- reactive({
+            dash_list$month %>%
+                filter(.data$group == input$group, .data$quarter == input$quarter,
+                       .data$year %in% c(input$year, as.numeric(input$year) - 1))
+        })
         output$monthPlot <- render_dash({
             function() plot_month(dataMonth(), "")
         })
-        
-        # county plots
-        if (include_county) {
-            dataCounty <- reactive({
-                filter(df_county, .data$group == input$group, 
-                       .data$quarter == input$quarter, .data$year == input$year)
-            })
-            output$countyPlot <- plotly::renderPlotly({
-                p <- plot_county(dataCounty())
-                plotly::subplot(p, nrows = 1) %>% 
-                    plotly::hide_colorbar() %>%
-                    plotly_config()
-            })
-        }
     }
     shinyApp(ui, server)
 }

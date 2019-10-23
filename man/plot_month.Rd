@@ -25,6 +25,8 @@ filter(dashboard, group == "all_sports", quarter == 4) \%>\%
 Other functions to run dashboard visualization: \code{\link{get_county_map}},
   \code{\link{int_breaks}}, \code{\link{join_county_map}},
   \code{\link{plot_county}}, \code{\link{plot_value2}},
-  \code{\link{plotly_config}}, \code{\link{run_visual}}
+  \code{\link{plotly_config}},
+  \code{\link{run_visual_county}},
+  \code{\link{ui_button_layout}}
 }
 \concept{functions to run dashboard visualization}

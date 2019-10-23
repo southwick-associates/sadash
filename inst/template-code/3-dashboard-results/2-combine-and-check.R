@@ -25,7 +25,7 @@ county_census <- load_counties(db_census, state) # for joining on county_fips
 dash_list <- join_county_map(dat, county_map, county_census)
 
 run_visual(dash_list)
-run_visual(dash_list, include_county = TRUE)
+run_visual_county(dash_list)
 
 # check - row counts by group-year
 # may vary by permission, but follows some predictable patterns:
