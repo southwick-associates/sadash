@@ -1,4 +1,4 @@
-# work on the data dive workflow
+# producing data dive input for Tableau
 
 #' Setup data dive template
 #' 
@@ -20,20 +20,20 @@ setup_data_dive <- function(state = NULL, time_period = NULL) {
     
 }
 
-#' Load history data for a 10 percent customer sample
+#' Load a 10 percent sample all sportspersons
 #' 
-#' Pulls in all history data for a particular permission (group) for a 
-#' randomly-selected 10 percent sample of customers.
+#' Every customer who holds a hunting or fishing permission at some point over
+#' the timeframe has an equal change of being selected.
 #' 
 #' @inheritParams load_sqlite
+#' @param pct Sample size to draw, in whole percentage point (defaults to 10
+#' percent)
 #' @family data dive functions
-#' @seealso \code{\link{load_history}}
+#' @seealso \code{\link{new_dashboard}}
 #' @export
 #' @examples 
 #' # include examps
-load_history_10pct <- function(db, group) {
-    # pull distinct cust_ids & take 10% sample
-    
-    # pull remaining history data
-    # - alternatively pull in all data first & then filter
+load_cust_sample <- function(db, yrs, pct = 10, group = "all_sports") {
+    # Need to make sure only anglers & hunters are included
+    # - which means filtering by sale$lic_id
 }

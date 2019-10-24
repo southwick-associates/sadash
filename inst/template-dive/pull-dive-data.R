@@ -4,6 +4,7 @@ library(tidyverse)
 library(sadash)
 
 source("params.R")
+samp_pct <- 10
 
 ### Temporary
 library(tidyverse)
@@ -24,11 +25,51 @@ quarter <- as.integer(substr(period, 7, 7))
 yrs <- firstyr:lastyr
 dashboard_yrs <- lastyr # focus years to be available in dashboard dropdown menu
 
-# Prepare license data ----------------------------------------------------
-# we only need a 10% sample (of customers) for each permission
+# Pull License Histories ----------------------------------------------------
+# we only need a 10% sample of customers
 
+# pull data into a list (one data frame for each permission)
+cust_samp <- load_cust_sample(db_history, yrs, samp_pct)
 permissions <- load_sqlite(db_history, function(con) DBI::dbListTables(con))
-hist <- lapply(permissions, samp_history_10pct) %>% bind_rows()
-cust <- load_cust(db_license)
-hist <- left_join(hist, cust, by = "cust_id")
-load_history()
+hist_samp <- lapply(permissions, function(x) {
+    load_history(db_history, x, yrs) %>% inner_join(cust_samp, by = "cust_id") 
+})
+
+# Check Summaries ---------------------------------------------------------
+# check using dashboard visual - sample & total should roughly align
+
+county_map <- get_county_map(state) # for joining geometry (map) data
+county_census <- load_counties(db_census, state) # for joining on county_fips
+dash_list <- join_county_map(dat, county_map, county_census)
+
+# sample
+dash_samp <- lapply(permissions, function(x) {
+    dashtemplate::calc_metrics(hist_samp[[x]]) %>%
+        dashtemplate::format_metrics("full-year", x) %>%
+        mutate(value = ifelse(metric == "churn", value, value * samp_pct))
+}) %>% 
+    bind_rows() %>%
+    join_county_map(county_map, county_census)
+run_visual(dash_samp)
+run_visual_county(dash_samp)
+
+# total 
+coltyp <- cols(
+    .default = col_character(), quarter = col_integer(), year = col_integer(), 
+    value = col_double() 
+)
+dash_all <- list.files("3-dashboard-results/dash", full.names = TRUE) %>%
+    lapply(read_csv, col_types = coltyp) %>%
+    bind_rows() %>%
+    join_county_map(county_map, county_census)
+run_visual(dash_all)
+run_visual_county(dash_all)
+
+# Formatting & Save -------------------------------------------------------
+
+# prepare
+# - age categories, etc. (probably the same as dashboard production)
+# - dealing with counties & nonresidents
+# - missing data for demographics?
+
+# scale 10% to totals (unless Nick did this on his end)

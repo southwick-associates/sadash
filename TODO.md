@@ -1,7 +1,12 @@
 
 ## Version 1.0.6
 
-Adding data dive functionality (in progress)
+Adding data dive functionality (in progress):
+
+- pulling license data
+    + scaling up based on 10%, probably also want a function to check this (or a test)
+- pulling county-level demographic data
+- populating template code
     
 - May also want vignettes rather than so much detail in the readme. Shouldn't be too difficult to basically transfer the existing example code (no need to get fancy)
     + intro (overview & template code setup)
