@@ -1,17 +1,22 @@
 
 ## Version 1.0.6
 
+Adding data dive functionality (in progress)
+    
+- May also want vignettes rather than so much detail in the readme. Shouldn't be too difficult to basically transfer the existing example code (no need to get fancy)
+    + intro (overview & template code setup)
+    + history
+    + dashboard
+    + dive
+
+- Generate a sample dashboard from salic (rather than the full version)
+    + This will also probably provide an opportunity to add more sample data and include examples for certain other functions
+    
+## Version 1.0.7
+
 - run_visual():
     + want nicer labelling on hover for plotly
     
-- Generate a sample dashboard from salic (rather than the full version)
-    + This will also probably provide an opportunity to add more sample data and include examples for certain other functions
-
-## Version 1.0.7
-    
-- Probably want a make_dive() function to setup template code for producing a data dive file
-    + see the old WI code to see exactly what you produced for the Tableau input
-
 ## Version 1.1.0
 
 Need tests! Making changes to code is quite a pain currently b/c it is laborious to find things like syntax errors. Although even including examples (which get run with R CMD check) would improve this.
