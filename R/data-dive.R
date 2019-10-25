@@ -23,7 +23,7 @@ setup_data_dive <- function(state = NULL, time_period = NULL) {
 #' Load a 10 percent sample all sportspersons
 #' 
 #' Every customer who holds a hunting or fishing permission at some point over
-#' the timeframe has an equal change of being selected.
+#' the timeframe has an equal chance of being selected.
 #' 
 #' @inheritParams load_sqlite
 #' @param pct Sample size to draw, in whole percentage points (defaults to 10
@@ -45,13 +45,13 @@ load_cust_samp <- function(db, yrs, pct = 10, group = "all_sports") {
 
 #' Set county_fips to missing if not resident
 #' 
-#' Just a convenience function to ensure county_fips isn't populated where
-#' res == 0 or is.na(res) b/c we wouldn't want these showing up in the data dive
+#' A convenience function to ensure county_fips isn't populated where
+#' res == 0 or is.na(res). We wouldn't want these showing up in the data dive.
 #' 
 #' @param x license history with county_fips & res variables
 #' @family data dive functions
 #' @export
-nonres_county_to_na <- function(x) {
+set_nonres_county_na <- function(x) {
     # TODO: maybe include a summary here as well
     x$county_fips <- ifelse(is.na(x$res) | x$res == 0, NA_integer_, x$county_fips)
     x

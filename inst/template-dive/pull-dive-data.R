@@ -38,7 +38,7 @@ permissions <- load_sqlite(db_history, function(con) DBI::dbListTables(con))
 hist_samp <- lapply(permissions, function(x) {
     load_history(db_history, x, yrs) %>% 
         inner_join(cust_samp, by = "cust_id") %>%
-        nonres_county_to_na() %>%
+        set_nonres_county_na() %>%
         salic::recode_agecat() %>%
         mutate(priv = x) %>%
         select(priv, cust_id, year, lapse, R3, res, sex, fips = county_fips, age)

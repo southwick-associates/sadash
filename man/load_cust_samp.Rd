@@ -18,7 +18,7 @@ percent)}
 }
 \description{
 Every customer who holds a hunting or fishing permission at some point over
-the timeframe has an equal change of being selected.
+the timeframe has an equal chance of being selected.
 }
 \examples{
 \dontrun{
@@ -30,8 +30,8 @@ dplyr::glimpse(cust_samp)
 \seealso{
 \code{\link{new_dashboard}}
 
-Other data dive functions: \code{\link{nonres_county_to_na}},
-  \code{\link{run_visual_dive}},
+Other data dive functions: \code{\link{run_visual_dive}},
+  \code{\link{set_nonres_county_na}},
   \code{\link{setup_data_dive}}
 }
 \concept{data dive functions}

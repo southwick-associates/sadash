@@ -27,7 +27,7 @@ run_visual_dive(hist_samp)
 \code{\link{run_visual}}
 
 Other data dive functions: \code{\link{load_cust_samp}},
-  \code{\link{nonres_county_to_na}},
+  \code{\link{set_nonres_county_na}},
   \code{\link{setup_data_dive}}
 }
 \concept{data dive functions}
