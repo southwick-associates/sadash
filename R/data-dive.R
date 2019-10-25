@@ -79,75 +79,106 @@ set_nonres_county_na <- function(x) {
 #' }
 run_visual_dive <- function(hist_samp, pct = 10) {
     
-    # prepare filtering variables
-    lapse_lab <- c("Lapsed", "Renewed")
-    R3_lab <- c("Carry", "Retain", "Reactivate", "Recruit")
-    sex_lab <- c("Male", "Female")
-    res_lab <- c("Resident", "NonResident")
-    age_lab <- c("0-17", "18-24", "25-34", "35-44", "45-54", "55-64", "65+")
-    privs <- unique(hist_samp$priv)
-    
-    check_filter <- function(inputId, selected) {
+    # prepare demographic filter checkboxes
+    demos <- c("res", "sex", "R3", "age")
+    check_filter <- function(var, selected = levels(hist_samp[[var]])) {
         checkboxGroupInput(
-            inputId, inputId, selected = selected, 
+            inputId = var, label = var, selected = selected, 
             choiceNames = as.list(selected), choiceValues = as.list(selected)
+        )
+    }
+    # prepare plot facetting selections (down or across)
+    check_plot_facet <- function(direction) {
+        selectInput(
+            inputId = direction, label = paste("Compare", direction),  
+            choices = as.list(c("None", demos)), selected = "None"
         )
     }
     
     ui <- fluidPage(mainPanel(
         splitLayout(
-            selectInput("priv", "Choose Permission", privs),
-            # Metric, Compare Down, Compare Across
+            selectInput("priv", "Choose Permission", unique(hist_samp$priv)),
+            check_plot_facet("down"), check_plot_facet("across"),
             ui_prevent_clipping()
         ),
         splitLayout(
             actionButton("button", "APPLY FILTER"),
-            check_filter("res", res_lab), check_filter("sex", sex_lab), 
-            check_filter("R3", R3_lab), check_filter("age", age_lab)
+            check_filter("res"), check_filter("sex"), 
+            check_filter("R3"), check_filter("age")
         ),
         plotly::plotlyOutput("trendPlot"),
         width = 12
     ))
     
     server <- function(input, output, session) {
+        ### Data Filtering
         dataPriv <- reactive({
             filter(hist_samp, .data$priv == input$priv)
         })
         # demographic filtering: function to run for each variable in dataInput
-        filter_var <- function(priv, var, var_lab) {
+        filter_var <- function(priv, var, var_lab = levels(hist_samp[[var]])) {
             if (identical(input[[var]], var_lab)) {
-                priv # no filter if all options are checked
-            } else {
-                if (var == "R3") {
-                    # R3 will only be NA for the first 5 years
-                    # so NA values should be removed if R3 filter is applied
-                    return(filter(priv, .data[[var]] %in% input[[var]]))
-                }
-                filter(priv, .data[[var]] %in% c(input[[var]], NA))
+                return(priv) # no filter if all options are checked
             }
+            if (var == "R3") {
+                # R3 will only be NA for the first 5 years
+                # so NA values should be removed if R3 filter is applied
+                return(filter(priv, .data[[var]] %in% input[[var]]))
+            }
+            # we want to keep NA values for demographic variables
+            # - does obscure NAs, but not obvious how to make that work (low priority)
+            filter(priv, .data[[var]] %in% c(input[[var]], NA))
         }
         dataInput <- reactive({
-            input$button # so the re-filter is only run after the button is pressed
+            # isolate ensures filter only runs after the button is pressed
+            input$button
             priv <- dataPriv()
             isolate({
-                priv <- filter_var(priv, "res", res_lab)
-                priv <- filter_var(priv, "sex", sex_lab)
-                priv <- filter_var(priv, "R3", R3_lab)
-                priv <- filter_var(priv, "age", age_lab)
+                for (var in demos) priv <- filter_var(priv, var)
                 priv
             })
         })
+        
+        ### Grouping (for plot facets) & participants by year
+        # - use NULL where no group is selected (for dplyr filters to work properly)
+        downInput <- reactive({
+            if (input$down == "None") NULL else input$down
+        })
+        acrossInput <- reactive({
+            if (input$across == "None") NULL else input$across
+        })
+        # - get counts by year (and selected groups if applicable)
+        tblInput <- reactive({
+            x <- dataInput()
+            
+            # drop NAs for group variables
+            if (!is.null(downInput())) x <- x[!is.na(x[[downInput()]]), ]
+            if (!is.null(acrossInput())) x <- x[!is.na(x[[acrossInput()]]), ]
+            
+            x %>% 
+                group_by_(.dots = c(downInput(), acrossInput(), "year")) %>%
+                summarize(n = n()) %>%
+                ungroup() %>%
+                mutate(n = n / (pct / 100)) 
+        })
+        
+        ### Plotting
         output$trendPlot <- plotly::renderPlotly({
-            p <- count(dataInput(), year) %>%
-                mutate(n = n / (pct / 100)) %>%
+            p <- tblInput() %>%
                 ggplot(aes(year, n)) +
                 geom_line()
+            if (!is.null(downInput()) || !is.null(acrossInput())) {
+                # add facetting as needed
+                grp1 <- downInput()
+                grp2 <- acrossInput()
+                if (is.null(grp1)) grp1 <- "."
+                if (is.null(grp2)) grp2 <- "."
+                p <- p + 
+                    facet_grid(stats::as.formula(paste(grp1, "~", grp2)), 
+                               scales = "free")
+            }
             plotly::ggplotly(p) %>% plotly_config()
         })
-        # TODO:
-        # 2. add side-panel distributions & county chloropleth
-        # 3. add compare down/across facet options
-        # 4. add metric select options (participants, churn)
     }
     shinyApp(ui, server)
 }

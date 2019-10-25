@@ -68,15 +68,13 @@ ggplot(cnt, aes(year, n, fill = grp)) +
     geom_col(position = position_dodge()) +
     facet_wrap(~ priv, scales = "free_y")
 
-# TODO: run_visual_dive()?
-# - to use as a rough exploration/validation step instead of dashboard summaries
-# - would probably be worth testing on WI 2015
+# visualize data dive
+# county_map <- get_county_map(state) # for joining geometry (map) data
+# county_census <- load_counties(db_census, state) # for joining on county_fips
 
-# pull map data
-county_map <- get_county_map(state) # for joining geometry (map) data
-county_census <- load_counties(db_census, state) # for joining on county_fips
-
-run_visual_dive(hist_samp, samp_pct)
+salic::label_categories(hist_samp) %>% 
+    df_factor_age() %>%
+    run_visual_dive(samp_pct)
 
 # Formatting & Save -------------------------------------------------------
 
