@@ -30,6 +30,7 @@ dplyr::glimpse(cust_samp)
 \seealso{
 \code{\link{new_dashboard}}
 
-Other data dive functions: \code{\link{setup_data_dive}}
+Other data dive functions: \code{\link{run_visual_dive}},
+  \code{\link{setup_data_dive}}
 }
 \concept{data dive functions}

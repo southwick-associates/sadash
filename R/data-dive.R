@@ -42,3 +42,48 @@ load_cust_samp <- function(db, yrs, pct = 10, group = "all_sports") {
         distinct(cust_id) %>%
         sample_frac(pct / 100)
 }
+
+#' Run shiny app version of data dive
+#' 
+#' This is a rough mock-up, intended to ensure (1) no surprises on the Tableau
+#' end and (2) results look correct. 
+#' 
+#' @param hist_samp data frame with a sample of license history for all privileges 
+#' containing 9 variables: priv, cust_id, year, lapse, R3, res, sex, fips, age
+#' @param pct sample size (in whole percentage points) for hist_samp
+#' @family data dive functions
+#' @seealso \code{\link{run_visual}}
+#' @export
+#' @examples 
+#' \dontrun{
+#' # pull WI data dive for testing
+#' f <- "E:/SA/Data-production/Data-Dashboards/WI/2015-q4/WI-data-dive-10pct-2015q4/priv-WI-10pct.csv"
+#' hist_samp <- readr::read_csv(f, progress = FALSE)
+#' run_visual_dive(hist_samp)
+#' }
+run_visual_dive <- function(hist_samp, pct = 10) {
+    privs <- unique(hist_samp$priv)
+    
+    ui <- fluidPage(mainPanel(
+        selectInput("priv", "Choose Permission", privs),
+        plotly::plotlyOutput("trendPlot")
+    ))
+    
+    server <- function(input, output, session) {
+        dataPriv <- reactive({
+            filter(hist_samp, .data$priv == input$priv)
+        })
+        output$trendPlot <- plotly::renderPlotly({
+            p <- count(dataPriv(), year) %>%
+                mutate(n = n / (pct / 100)) %>%
+                ggplot(aes(year, n)) +
+                geom_line()
+            plotly::ggplotly(p) %>% plotly_config()
+        })
+        # TODO:
+        # 1. add filtering options (sex, age, etc.)
+        # 2. add side-panel distributions & county chloropleth
+        # 3. add compare down/across facet options
+    }
+    shinyApp(ui, server)
+}
