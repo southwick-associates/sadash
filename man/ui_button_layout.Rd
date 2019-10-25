@@ -2,16 +2,21 @@
 % Please edit documentation in R/visualize.R
 \name{ui_button_layout}
 \alias{ui_button_layout}
+\alias{ui_prevent_clipping}
 \title{Define UI layout for run_visual()}
 \usage{
 ui_button_layout(dash_list)
+
+ui_prevent_clipping()
 }
 \arguments{
 \item{dash_list}{a list produced after running \code{\link{join_county_map}}}
 }
 \description{
 A convenience function run from \code{\link{run_visual}} and
-\code{\link{run_visual_county}}
+\code{\link{run_visual_county}}. The ui_prevent_clipping() function is used
+to prevent the menu drop downs from getting messed up, see
+\url{https://github.com/rstudio/shiny/issues/1531} for details.
 }
 \seealso{
 Other functions to run dashboard visualization: \code{\link{get_county_map}},

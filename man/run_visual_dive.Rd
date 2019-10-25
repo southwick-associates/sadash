@@ -20,6 +20,8 @@ end and (2) results look correct.
 \dontrun{
 f <- "E:/SA/Data-production/Data-Dashboards/WI/2015-q4/WI-data-dive-10pct-2015q4/priv-WI-10pct.csv"
 hist_samp <- readr::read_csv(f, progress = FALSE)
+hist_samp <- salic::label_categories(hist_samp)
+hist_samp <- salic::df_factor_age(hist_samp)
 run_visual_dive(hist_samp)
 }
 }

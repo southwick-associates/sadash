@@ -241,7 +241,9 @@ render_dash <- function(plot_code) {
 #' Define UI layout for run_visual()
 #' 
 #' A convenience function run from \code{\link{run_visual}} and
-#' \code{\link{run_visual_county}}
+#' \code{\link{run_visual_county}}. The ui_prevent_clipping() function is used
+#' to prevent the menu drop downs from getting messed up, see
+#' \url{https://github.com/rstudio/shiny/issues/1531} for details.
 #' 
 #' @inheritParams run_visual
 #' @family functions to run dashboard visualization
@@ -256,12 +258,16 @@ ui_button_layout <- function(dash_list) {
         selectInput("quarter", "Choose Quarter", quarters),
         selectInput("group", "Choose Permission Group", permissions),
         selectInput("year", "Choose Year (for month/county)", years),
-        
-        # prevent clipping: https://github.com/rstudio/shiny/issues/1531
-        tags$head(tags$style(HTML(
-            ".shiny-split-layout > div {overflow: visible;}"
-        )))
+        ui_prevent_clipping()
     )
+}
+
+#' @rdname ui_button_layout
+#' @export
+ui_prevent_clipping <- function() {
+    tags$head(tags$style(HTML(
+        ".shiny-split-layout > div {overflow: visible;}"
+    )))
 }
 
 # Shiny App ------------------------------------------------------

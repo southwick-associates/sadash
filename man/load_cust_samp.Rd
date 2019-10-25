@@ -18,7 +18,8 @@ percent)}
 }
 \description{
 Every customer who holds a hunting or fishing permission at some point over
-the timeframe has an equal chance of being selected.
+the timeframe has an equal chance of being selected. We use a sample for the
+data dive to ensure a usable file size & sufficient responsiveness.
 }
 \examples{
 \dontrun{

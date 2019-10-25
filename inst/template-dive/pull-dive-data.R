@@ -4,7 +4,11 @@ library(tidyverse)
 library(sadash)
 
 source("params.R")
-samp_pct <- 10 # sample size (fraction) to pull in whole percentage points
+
+if (quarter != 4) lastyr <- lastyr - 1 # we don't want partial years
+yrs <- firstyr:lastyr
+samp_pct <- 10 # sample size (fraction) to pull (in whole percentage points)
+
 
 ### Temporary
 library(tidyverse)
@@ -25,6 +29,8 @@ lastyr <- as.integer(substr(period, 1, 4))
 quarter <- as.integer(substr(period, 7, 7))
 yrs <- firstyr:lastyr
 dashboard_yrs <- lastyr # focus years to be available in dashboard dropdown menu
+###
+
 
 # Pull License Histories ----------------------------------------------------
 # we only need a 10% sample of customers
@@ -44,16 +50,15 @@ hist_samp <- lapply(permissions, function(x) {
         select(priv, cust_id, year, lapse, R3, res, sex, fips = county_fips, age)
 }) %>% bind_rows()
 
-# Check Summaries ---------------------------------------------------------
-# check using dashboard visual - sample & total should roughly align
+# Check & Visualize ---------------------------------------------------------
 
 # pull all history data for comparison
 hist <- lapply(permissions, function(x) {
     load_history(db_history, x, yrs) %>% mutate(priv = x)
 }) %>% bind_rows()
 
-# compare
-# - the full vs. samp bars shoul be nearly identical
+# compare - the full vs. samp values should be nearly identical
+# (i.e., the sample is representative of the total)
 cnt <- bind_rows(
     count(hist, priv, year) %>% mutate(grp = "full"),
     count(hist_samp, priv, year) %>% 
@@ -71,6 +76,7 @@ ggplot(cnt, aes(year, n, fill = grp)) +
 county_map <- get_county_map(state) # for joining geometry (map) data
 county_census <- load_counties(db_census, state) # for joining on county_fips
 
+run_visual_dive(hist_samp, samp_pct)
 
 # Formatting & Save -------------------------------------------------------
 

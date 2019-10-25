@@ -10,8 +10,8 @@ set_nonres_county_na(x)
 \item{x}{license history with county_fips & res variables}
 }
 \description{
-A convenience function to ensure county_fips isn't populated where
-res == 0 or is.na(res). We wouldn't want these showing up in the data dive.
+Ensure county_fips isn't populated where res == 0 or is.na(res). There are
+typically a few of these and we don't want them showing up in the data dive.
 }
 \seealso{
 Other data dive functions: \code{\link{load_cust_samp}},
