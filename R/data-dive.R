@@ -43,6 +43,20 @@ load_cust_samp <- function(db, yrs, pct = 10, group = "all_sports") {
         sample_frac(pct / 100)
 }
 
+#' Set county_fips to missing if not resident
+#' 
+#' Just a convenience function to ensure county_fips isn't populated where
+#' res == 0 or is.na(res) b/c we wouldn't want these showing up in the data dive
+#' 
+#' @param x license history with county_fips & res variables
+#' @family data dive functions
+#' @export
+nonres_county_to_na <- function(x) {
+    # TODO: maybe include a summary here as well
+    x$county_fips <- ifelse(is.na(x$res) | x$res == 0, NA_integer_, x$county_fips)
+    x
+}
+
 #' Run shiny app version of data dive
 #' 
 #' This is a rough mock-up, intended to ensure (1) no surprises on the Tableau
@@ -56,7 +70,6 @@ load_cust_samp <- function(db, yrs, pct = 10, group = "all_sports") {
 #' @export
 #' @examples 
 #' \dontrun{
-#' # pull WI data dive for testing
 #' f <- "E:/SA/Data-production/Data-Dashboards/WI/2015-q4/WI-data-dive-10pct-2015q4/priv-WI-10pct.csv"
 #' hist_samp <- readr::read_csv(f, progress = FALSE)
 #' run_visual_dive(hist_samp)
@@ -65,7 +78,11 @@ run_visual_dive <- function(hist_samp, pct = 10) {
     privs <- unique(hist_samp$priv)
     
     ui <- fluidPage(mainPanel(
-        selectInput("priv", "Choose Permission", privs),
+        splitLayout(
+            selectInput("priv", "Choose Permission", privs)
+            # filtering options (sex, age, etc.)
+        ),
+        # splitLayout() # Metric, Compare Down, Compare Across
         plotly::plotlyOutput("trendPlot")
     ))
     
@@ -84,6 +101,7 @@ run_visual_dive <- function(hist_samp, pct = 10) {
         # 1. add filtering options (sex, age, etc.)
         # 2. add side-panel distributions & county chloropleth
         # 3. add compare down/across facet options
+        # 4. add metric select options (participants, churn)
     }
     shinyApp(ui, server)
 }

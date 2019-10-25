@@ -18,7 +18,6 @@ end and (2) results look correct.
 }
 \examples{
 \dontrun{
-# pull WI data dive for testing
 f <- "E:/SA/Data-production/Data-Dashboards/WI/2015-q4/WI-data-dive-10pct-2015q4/priv-WI-10pct.csv"
 hist_samp <- readr::read_csv(f, progress = FALSE)
 run_visual_dive(hist_samp)
@@ -28,6 +27,7 @@ run_visual_dive(hist_samp)
 \code{\link{run_visual}}
 
 Other data dive functions: \code{\link{load_cust_samp}},
+  \code{\link{nonres_county_to_na}},
   \code{\link{setup_data_dive}}
 }
 \concept{data dive functions}

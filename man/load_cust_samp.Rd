@@ -30,7 +30,8 @@ dplyr::glimpse(cust_samp)
 \seealso{
 \code{\link{new_dashboard}}
 
-Other data dive functions: \code{\link{run_visual_dive}},
+Other data dive functions: \code{\link{nonres_county_to_na}},
+  \code{\link{run_visual_dive}},
   \code{\link{setup_data_dive}}
 }
 \concept{data dive functions}

@@ -38,11 +38,9 @@ permissions <- load_sqlite(db_history, function(con) DBI::dbListTables(con))
 hist_samp <- lapply(permissions, function(x) {
     load_history(db_history, x, yrs) %>% 
         inner_join(cust_samp, by = "cust_id") %>%
-        mutate(
-            priv = x,
-            county_fips = ifelse(is.na(res) | res == 0, NA_integer_, county_fips)
-        ) %>%
+        nonres_county_to_na() %>%
         salic::recode_agecat() %>%
+        mutate(priv = x) %>%
         select(priv, cust_id, year, lapse, R3, res, sex, fips = county_fips, age)
 }) %>% bind_rows()
 
@@ -76,9 +74,5 @@ county_census <- load_counties(db_census, state) # for joining on county_fips
 
 # Formatting & Save -------------------------------------------------------
 
-# prepare
-# - age categories, etc. (probably the same as dashboard production)
-# - dealing with counties & nonresidents
-# - missing data for demographics?
-
-# scale 10% to totals (unless Nick did this on his end)
+# probably no additional formatting needed
+# maybe include county-level pop data though

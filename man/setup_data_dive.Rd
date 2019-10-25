@@ -24,6 +24,7 @@ It creates a "5-data-dive" folder with template code.
 \code{\link{new_dashboard}}
 
 Other data dive functions: \code{\link{load_cust_samp}},
+  \code{\link{nonres_county_to_na}},
   \code{\link{run_visual_dive}}
 }
 \concept{data dive functions}
