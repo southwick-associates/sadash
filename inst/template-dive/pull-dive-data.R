@@ -4,12 +4,13 @@ library(tidyverse)
 library(sadash)
 
 source("params.R")
-samp_pct <- 10
+samp_pct <- 10 # sample size (fraction) to pull in whole percentage points
 
 ### Temporary
 library(tidyverse)
 devtools::load_all()
 
+samp_pct <- 10
 state <- "IA"
 period <- "2018-q4"
 firstyr <- 2006 # first year to include in dashboard results
@@ -29,41 +30,49 @@ dashboard_yrs <- lastyr # focus years to be available in dashboard dropdown menu
 # we only need a 10% sample of customers
 
 # pull data into a list (one data frame for each permission)
-cust_samp <- load_cust_sample(db_history, yrs, samp_pct)
+cust_samp <- left_join(
+    load_cust_samp(db_history, yrs, samp_pct),
+    load_cust(db_license)
+)
 permissions <- load_sqlite(db_history, function(con) DBI::dbListTables(con))
 hist_samp <- lapply(permissions, function(x) {
-    load_history(db_history, x, yrs) %>% inner_join(cust_samp, by = "cust_id") 
-})
+    load_history(db_history, x, yrs) %>% 
+        inner_join(cust_samp, by = "cust_id") %>%
+        mutate(
+            priv = x,
+            county_fips = ifelse(is.na(res) | res == 0, NA_integer_, county_fips)
+        ) %>%
+        salic::recode_agecat() %>%
+        select(priv, cust_id, year, lapse, R3, res, sex, fips = county_fips, age)
+}) %>% bind_rows()
 
 # Check Summaries ---------------------------------------------------------
 # check using dashboard visual - sample & total should roughly align
 
+# pull all history data for comparison
+hist <- lapply(permissions, function(x) {
+    load_history(db_history, x, yrs) %>% mutate(priv = x)
+}) %>% bind_rows()
+
+# compare
+# - the full vs. samp bars shoul be nearly identical
+cnt <- bind_rows(
+    count(hist, priv, year) %>% mutate(grp = "full"),
+    count(hist_samp, priv, year) %>% 
+        mutate(grp = "samp", n = n / (samp_pct / 100))
+)
+ggplot(cnt, aes(year, n, fill = grp)) +
+    geom_col(position = position_dodge()) +
+    facet_wrap(~ priv, scales = "free_y")
+
+# TODO: run_visual_dive()?
+# - to use as a rough exploration/validation step instead of dashboard summaries
+# - would probably be worth testing on WI 2015
+
+# pull map data
 county_map <- get_county_map(state) # for joining geometry (map) data
 county_census <- load_counties(db_census, state) # for joining on county_fips
-dash_list <- join_county_map(dat, county_map, county_census)
 
-# sample
-dash_samp <- lapply(permissions, function(x) {
-    dashtemplate::calc_metrics(hist_samp[[x]]) %>%
-        dashtemplate::format_metrics("full-year", x) %>%
-        mutate(value = ifelse(metric == "churn", value, value * samp_pct))
-}) %>% 
-    bind_rows() %>%
-    join_county_map(county_map, county_census)
-run_visual(dash_samp)
-run_visual_county(dash_samp)
-
-# total 
-coltyp <- cols(
-    .default = col_character(), quarter = col_integer(), year = col_integer(), 
-    value = col_double() 
-)
-dash_all <- list.files("3-dashboard-results/dash", full.names = TRUE) %>%
-    lapply(read_csv, col_types = coltyp) %>%
-    bind_rows() %>%
-    join_county_map(county_map, county_census)
-run_visual(dash_all)
-run_visual_county(dash_all)
 
 # Formatting & Save -------------------------------------------------------
 

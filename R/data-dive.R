@@ -26,14 +26,19 @@ setup_data_dive <- function(state = NULL, time_period = NULL) {
 #' the timeframe has an equal change of being selected.
 #' 
 #' @inheritParams load_sqlite
-#' @param pct Sample size to draw, in whole percentage point (defaults to 10
+#' @param pct Sample size to draw, in whole percentage points (defaults to 10
 #' percent)
 #' @family data dive functions
 #' @seealso \code{\link{new_dashboard}}
 #' @export
 #' @examples 
-#' # include examps
-load_cust_sample <- function(db, yrs, pct = 10, group = "all_sports") {
-    # Need to make sure only anglers & hunters are included
-    # - which means filtering by sale$lic_id
+#' \dontrun{
+#' db_history <- "E:/SA/Data-production/Data-Dashboards/IA/history.sqlite3"
+#' cust_samp <- load_cust_samp(db_history, 2006:2018)
+#' dplyr::glimpse(cust_samp)
+#' }
+load_cust_samp <- function(db, yrs, pct = 10, group = "all_sports") {
+    load_history(db, group, yrs) %>%
+        distinct(cust_id) %>%
+        sample_frac(pct / 100)
 }

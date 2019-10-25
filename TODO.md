@@ -5,7 +5,12 @@ Adding data dive functionality (in progress):
 
 - pulling license data
     + scaling up based on 10%, probably also want a function to check this (or a test)
-- pulling county-level demographic data
+- pulling county-level population data
+    + I don't think this functionality is currently included (i.e., participation rate in dive)
+    + probably will pull just in case to be consistent with WI data
+- missing values in demographic vars (sex, res, age, county)
+    + there will be some (of course)
+    + ideally will want to be consistent with WI
 - populating template code
     
 - May also want vignettes rather than so much detail in the readme. Shouldn't be too difficult to basically transfer the existing example code (no need to get fancy)

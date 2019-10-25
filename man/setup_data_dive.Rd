@@ -23,6 +23,6 @@ It creates a "5-data-dive" folder with template code.
 \seealso{
 \code{\link{new_dashboard}}
 
-Other data dive functions: \code{\link{load_cust_sample}}
+Other data dive functions: \code{\link{load_cust_samp}}
 }
 \concept{data dive functions}
