@@ -5,7 +5,6 @@ Adding data dive functionality (in progress):
 
 - run_visual_dive()
     + (maybe) add county chloropleth
-    + (maybe) add metric select options (participants, churn)
 
 - May also want vignettes rather than so much detail in the readme. Shouldn't be too difficult to basically transfer the existing example code (no need to get fancy)
     + intro (overview & template code setup)

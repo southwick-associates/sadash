@@ -263,6 +263,8 @@ run_visual_dive <- function(hist_samp, pct = 10) {
     ui <- fluidPage(mainPanel(
         splitLayout(
             selectInput("priv", "Choose Permission", unique(hist_samp$priv)),
+            selectInput("metric", "Choose Metric", choices = c("participants", "churn"),
+                        selected = "participants"),
             ui_check_facet("down"), ui_check_facet("across"),
             ui_prevent_clipping()
         ),
@@ -305,7 +307,8 @@ run_visual_dive <- function(hist_samp, pct = 10) {
         ### Plotting
         # - participants by year
         output$trendPlot <- render_dash({ function() {
-            summarize_trend(dataInput(), input$down, input$across, "participants", pct) %>% 
+            dataInput() %>%
+                summarize_trend(input$down, input$across, input$metric, pct) %>% 
                 plot_trend(input$down, input$across)
         }})
         
