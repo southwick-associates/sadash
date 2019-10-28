@@ -5,10 +5,9 @@ Adding data dive functionality (in progress):
 
 - setup_data_dive() and complete template code
 
-- run_visual_dive()
-    + (maybe) add county chloropleth
+## Version 1.0.7
 
-- May also want vignettes rather than so much detail in the readme. Shouldn't be too difficult to basically transfer the existing example code (no need to get fancy)
+- May want vignettes rather than so much detail in the readme. Shouldn't be too difficult to basically transfer the existing example code (no need to get fancy)
     + intro (overview & template code setup)
     + history
     + dashboard
@@ -17,9 +16,7 @@ Adding data dive functionality (in progress):
 - Generate a sample dashboard from salic (rather than the full version)
     + This will also probably provide an opportunity to add more sample data and include examples for certain other functions
     
-## Version 1.0.7
-
-- run_visual():
+- run_visual(), etc.:
     + want nicer labelling on hover for plotly
     
 ## Version 1.1.0

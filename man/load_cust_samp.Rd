@@ -32,8 +32,9 @@ dplyr::glimpse(cust_samp)
 \code{\link{new_dashboard}}
 
 Other data dive functions: \code{\link{filter_demo}},
-  \code{\link{plot_dist}}, \code{\link{plot_trend}},
-  \code{\link{run_visual_dive}},
+  \code{\link{get_county_map_dive}},
+  \code{\link{plot_county_dive}}, \code{\link{plot_dist}},
+  \code{\link{plot_trend}}, \code{\link{run_visual_dive}},
   \code{\link{set_nonres_county_na}},
   \code{\link{setup_data_dive}},
   \code{\link{summarize_trend}}

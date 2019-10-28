@@ -217,6 +217,63 @@ plot_dist <- function(priv, var = "sex") {
         )
 }
 
+#' Load county spatial data for data dive
+#' 
+#' Mostly a wrapper for \code{\link{get_county_map}} with some formatting used
+#' in data dive.
+#' 
+#' @inheritParams get_county_map
+#' @family data dive functions
+#' @export
+#' @examples 
+#' get_county_map_dive("WI")
+get_county_map_dive <- function(state) {
+    get_county_map("WI") %>%
+        mutate(fips = stringr::str_sub(.data$county_fips, start = 3) %>% as.integer()) %>%
+        select(.data$fips, .data$county, .data$long, .data$lat)
+}
+
+#' Chloropleth county plot for data dive
+#' 
+#' @inheritParams filter_demo
+#' @inheritParams summarize_trend
+#' @inheritParams run_visual_dive
+#' @param county_map spatial table produced by \code{\link{get_county_map_dive}}
+#' @family data dive functions
+#' @export
+#' @examples 
+#' library(dplyr)
+#' data(hist_samp)
+#' priv <- filter(hist_samp, priv == "all_sports", year == 2014)
+#' county_map <- get_county_map_dive("WI")
+#' plot_county_dive(priv, county_map, pct = 1)
+#' plot_county_dive(priv, county_map, "churn")
+plot_county_dive <- function(priv, county_map, metric = "participants", pct = 10) {
+    priv <- priv %>%
+        filter(!is.na(.data$fips)) %>%
+        group_by(.data$fips)
+    
+    if (metric == "participants") {
+        tbl <- priv %>%
+            summarize(value = n()) %>%
+            ungroup() %>%
+            mutate(value = .data$value / (pct / 100))
+    } else {
+        tbl <- priv %>%
+            summarise(value = round(mean(lapse) * 100), 3) %>%
+            ungroup()
+    }
+    
+    left_join(tbl, county_map, by = "fips") %>%
+        ggplot() +
+        geom_polygon(aes_string("long", "lat", group = "county", fill = "value")) +
+        theme(
+            axis.text = element_blank(), 
+            axis.title = element_blank(),
+            axis.ticks = element_blank()
+        )
+}
+
 #' Run shiny app version of data dive
 #' 
 #' This is a rough mock-up, intended to ensure (1) no surprises on the Tableau
@@ -225,15 +282,18 @@ plot_dist <- function(priv, var = "sex") {
 #' @param hist_samp data frame with a sample of license history for all privileges 
 #' containing at least 9 variables: priv, cust_id, year, lapse, R3, res, sex, fips, age
 #' @param pct sample size (in whole percentage points) for hist_samp
+#' @inheritParams plot_county_dive
 #' @family data dive functions
 #' @seealso \code{\link{run_visual}}
 #' @export
 #' @examples 
 #' data(hist_samp)
+#' county_map <- get_county_map_dive("WI")
+#' 
 #' \dontrun{
-#' run_visual_dive(hist_samp, pct = 1)
+#' run_visual_dive(hist_samp, county_map, pct = 1)
 #' }
-run_visual_dive <- function(hist_samp, pct = 10) {
+run_visual_dive <- function(hist_samp, county_map, pct = 10) {
     
     # define some ui menu selection options
     demos <- c("res", "sex", "R3", "age")
@@ -272,9 +332,13 @@ run_visual_dive <- function(hist_samp, pct = 10) {
             ui_check_filter("res"), ui_check_filter("sex"), 
             ui_check_filter("R3"), ui_check_filter("age")
         ),
-        plotly::plotlyOutput("trendPlot"),
-        selectInput("year", "Select year for distributions", 
+        selectInput("year", "Select Year (for Distributions & County)", 
                     choices = years, selected = years[1]),
+        splitLayout(
+            plotly::plotlyOutput("trendPlot", height = "400px"), 
+            plotly::plotlyOutput("countyPlot", height = "300px"),
+            cellWidths = c("70%", "30%")
+        ),
         splitLayout(
             ui_plot_dist("sexPlot"), ui_plot_dist("resPlot"),
             ui_plot_dist("agePlot"), ui_plot_dist("R3Plot"),
@@ -326,6 +390,15 @@ run_visual_dive <- function(hist_samp, pct = 10) {
         })
         output$R3Plot <- render_dash({
             function() plot_dist(dataDist(), "R3")
+        })
+        
+        # - county plot for year
+        dataCounty <- reactive({
+            filter_year = as.numeric(input$year) - 1
+            filter(dataInput(), .data$year == filter_year)
+        })
+        output$countyPlot <- render_dash({
+            function() plot_county_dive(dataCounty(), county_map, input$metric, pct)
         })
     }
     shinyApp(ui, server)

@@ -4,11 +4,13 @@
 \alias{run_visual_dive}
 \title{Run shiny app version of data dive}
 \usage{
-run_visual_dive(hist_samp, pct = 10)
+run_visual_dive(hist_samp, county_map, pct = 10)
 }
 \arguments{
 \item{hist_samp}{data frame with a sample of license history for all privileges 
 containing at least 9 variables: priv, cust_id, year, lapse, R3, res, sex, fips, age}
+
+\item{county_map}{spatial table produced by \code{\link{get_county_map_dive}}}
 
 \item{pct}{sample size (in whole percentage points) for hist_samp}
 }
@@ -18,15 +20,19 @@ end and (2) results look correct.
 }
 \examples{
 data(hist_samp)
+county_map <- get_county_map_dive("WI")
+
 \dontrun{
-run_visual_dive(hist_samp, pct = 1)
+run_visual_dive(hist_samp, county_map, pct = 1)
 }
 }
 \seealso{
 \code{\link{run_visual}}
 
 Other data dive functions: \code{\link{filter_demo}},
-  \code{\link{load_cust_samp}}, \code{\link{plot_dist}},
+  \code{\link{get_county_map_dive}},
+  \code{\link{load_cust_samp}},
+  \code{\link{plot_county_dive}}, \code{\link{plot_dist}},
   \code{\link{plot_trend}},
   \code{\link{set_nonres_county_na}},
   \code{\link{setup_data_dive}},
