@@ -48,3 +48,11 @@ This includes a summary of the core functions grouped by task.
 }
 }
 
+\section{Preparing Data Dive}{
+
+\itemize{
+\item use \code{\link{setup_data_dive}} to initialize template files
+\item use \code{\link{run_visual_dive}} to check/explore interactively with shiny
+}
+}
+

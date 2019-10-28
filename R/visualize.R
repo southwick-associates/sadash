@@ -102,8 +102,8 @@ get_county_map <- function(state) {
 #' 
 #' @param dashboard summary \code{\link{dashboard}} data 
 #' @param county_map data produced by \code{\link{get_county_map}}
-#' @param county_census county names by fips, to provided more precise joining
-#' between dashboard results and county_sf shapefile
+#' @param county_census county names by fips, to provide more precise joining
+#' between dashboard results and county_map shapefile
 #' @family functions to run dashboard visualization
 #' @export
 #' @examples 

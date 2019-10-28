@@ -24,6 +24,14 @@ This will plot a count of participants, optionally facetted down and/or across
 by additional variables. If facetting (i.e., grouping) missing values will
 be removed from the corresponding variables before plotting.
 }
+\examples{
+library(dplyr)
+data(hist_samp)
+priv <- filter(hist_samp, priv == "all_sports")
+plot_trend(priv, pct = 1)
+plot_trend(priv, down = "sex", pct = 1)
+plot_trend(priv, down = "sex", across = "age", pct = 1)
+}
 \seealso{
 Other data dive functions: \code{\link{filter_demo}},
   \code{\link{load_cust_samp}}, \code{\link{plot_dist}},

@@ -19,7 +19,8 @@ I was annoyed by the fact that \code{\link[ggplot2]{map_data}} attaches
 the maps package which was the main motivation to placing it here.
 }
 \seealso{
-Other Sample Data: \code{\link{dashboard}}
+Other Sample Data: \code{\link{dashboard}},
+  \code{\link{hist_samp}}
 }
 \concept{Sample Data}
 \keyword{datasets}

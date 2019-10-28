@@ -11,8 +11,8 @@ join_county_map(dashboard, county_map, county_census)
 
 \item{county_map}{data produced by \code{\link{get_county_map}}}
 
-\item{county_census}{county names by fips, to provided more precise joining
-between dashboard results and county_sf shapefile}
+\item{county_census}{county names by fips, to provide more precise joining
+between dashboard results and county_map shapefile}
 }
 \description{
 This takes the output of \code{\link{get_county_map}} and joins with 

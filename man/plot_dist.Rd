@@ -12,7 +12,13 @@ plot_dist(priv, var = "sex")
 \item{var}{name of variable to be plotted}
 }
 \description{
-To be run from \code{\link{run_visual_dive}}. Showing a bar plot distribution.
+To be run from \code{\link{run_visual_dive}} to show a bar plot distribution.
+}
+\examples{
+library(dplyr)
+data(hist_samp)
+priv <- filter(hist_samp, priv == "all_sports", year == 2015)
+plot_dist(priv, "age")
 }
 \seealso{
 Other data dive functions: \code{\link{filter_demo}},

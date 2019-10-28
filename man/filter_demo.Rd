@@ -18,7 +18,17 @@ filter_demo(priv, var = "sex", var_select = c("Male", "Female"),
 }
 \description{
 To be run from \code{\link{run_visual_dive}}. Applies a filter as needed
-based on the checked categories.
+based on the checked categories. R3 gets special treatment since it should
+only be missing in the first 5 years of data.
+}
+\examples{
+library(dplyr)
+data(hist_samp)
+priv <- filter(hist_samp, priv == "all_sports")
+count(priv, R3, year) \%>\% tidyr::spread(year, n)
+
+priv <- filter_demo(priv, "R3", c("Renew", "Reactivate"))
+count(priv, R3, year) \%>\% tidyr::spread(year, n)
 }
 \seealso{
 Other data dive functions: \code{\link{load_cust_samp}},

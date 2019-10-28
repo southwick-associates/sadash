@@ -75,6 +75,13 @@ set_nonres_county_na <- function(x) {
 #' @inheritParams run_visual_dive
 #' @family data dive functions
 #' @export
+#' @examples 
+#' library(dplyr)
+#' data(hist_samp)
+#' priv <- filter(hist_samp, priv == "all_sports")
+#' plot_trend(priv, pct = 1)
+#' plot_trend(priv, down = "sex", pct = 1)
+#' plot_trend(priv, down = "sex", across = "age", pct = 1)
 plot_trend <- function(hist_samp, down = "None", across = "None", pct = 10) {
     # Using NULL when no facetting is to be performed
     down <- if(down == "None") NULL else down
@@ -111,12 +118,17 @@ plot_trend <- function(hist_samp, down = "None", across = "None", pct = 10) {
 
 #' Plot distribution for selected variable-year
 #' 
-#' To be run from \code{\link{run_visual_dive}}. Showing a bar plot distribution.
+#' To be run from \code{\link{run_visual_dive}} to show a bar plot distribution.
 #' 
 #' @inheritParams filter_demo
 #' @param var name of variable to be plotted
 #' @family data dive functions
 #' @export
+#' @examples 
+#' library(dplyr)
+#' data(hist_samp)
+#' priv <- filter(hist_samp, priv == "all_sports", year == 2015)
+#' plot_dist(priv, "age")
 plot_dist <- function(priv, var = "sex") {
     dist <- priv %>%
         dplyr::count(.data[[var]]) %>%
@@ -133,7 +145,8 @@ plot_dist <- function(priv, var = "sex") {
 #' Filter data for given variable
 #' 
 #' To be run from \code{\link{run_visual_dive}}. Applies a filter as needed
-#' based on the checked categories.
+#' based on the checked categories. R3 gets special treatment since it should
+#' only be missing in the first 5 years of data.
 #' 
 #' @param priv data for one permission
 #' @param var name of variable for filtering
@@ -141,6 +154,14 @@ plot_dist <- function(priv, var = "sex") {
 #' @param var_all set of values that var can take
 #' @family data dive functions
 #' @export
+#' @examples 
+#' library(dplyr)
+#' data(hist_samp)
+#' priv <- filter(hist_samp, priv == "all_sports")
+#' count(priv, R3, year) %>% tidyr::spread(year, n)
+#' 
+#' priv <- filter_demo(priv, "R3", c("Renew", "Reactivate"))
+#' count(priv, R3, year) %>% tidyr::spread(year, n)
 filter_demo <- function(
     priv, var = "sex", var_select = c("Male", "Female"), 
     var_all = c("Male", "Female")
@@ -172,33 +193,32 @@ filter_demo <- function(
 #' @seealso \code{\link{run_visual}}
 #' @export
 #' @examples 
+#' data(hist_samp)
 #' \dontrun{
-#' f <- "E:/SA/Data-production/Data-Dashboards/WI/2015-q4/WI-data-dive-10pct-2015q4/priv-WI-10pct.csv"
-#' hist_samp <- readr::read_csv(f, progress = FALSE)
-#' hist_samp <- salic::label_categories(hist_samp)
-#' hist_samp <- salic::df_factor_age(hist_samp)
-#' run_visual_dive(hist_samp)
+#' run_visual_dive(hist_samp, pct = 1)
 #' }
 run_visual_dive <- function(hist_samp, pct = 10) {
     
+    # define some ui menu selection options
     demos <- c("res", "sex", "R3", "age")
     years <- sort(unique(hist_samp$year), decreasing = TRUE)
     
-    # to prepare demographic filter checkboxes for given variable ("sex", etc.)
+    # define convenience functions for ui elements
+    # - to prepare demographic filter checkboxes for given variable ("sex", etc.)
     ui_check_filter <- function(var = "sex", selected = levels(hist_samp[[var]])) {
         checkboxGroupInput(
             inputId = var, label = var, selected = selected, 
             choiceNames = as.list(selected), choiceValues = as.list(selected)
         )
     }
-    # to prepare plot facetting selections for given direction (down or across) 
+    # - to prepare plot facetting selections for given direction (down or across) 
     ui_check_facet <- function(direction = "down") {
         selectInput(
             inputId = direction, label = paste("Compare", direction),  
             choices = as.list(c("None", demos)), selected = "None"
         )
     }
-    # to  display distributions plot for given variable
+    # - to  display distribution plot for given variable
     ui_plot_dist <- function(varPlot = "sexPlot") {
         plotly::plotlyOutput(varPlot, height = "200px")
     }
@@ -248,7 +268,7 @@ run_visual_dive <- function(hist_samp, pct = 10) {
         ### Plotting
         # - participants by year
         output$trendPlot <- render_dash({
-            function() plot_trend(dataInput(), input$down, input$across)
+            function() plot_trend(dataInput(), input$down, input$across, pct)
         })
         
         # - distributions for selected year

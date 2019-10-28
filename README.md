@@ -10,8 +10,7 @@ These should be installed on the server in the 'data-dashboards2' project librar
 ``` r
 # dependencies
 install.packages(c("tidyverse", "data.table", "shiny", "DBI", "RSQLite", 
-                 "gridExtra", "plotly", "sf", "devtools"))
-devtools::install_github("UrbanInstitute/urbnmapr")
+                 "gridExtra", "plotly", "devtools"))
 
 # salic
 devtools::install_github("southwick-associates/salic")
@@ -138,8 +137,10 @@ dashtemplate::run_visual(tempdir())
 
 ### Building Data Dive
 
-To be included here
+Fairly straightforward: use `setup_data_dive()` to get template code. You can make use of `hist_samp` sample data to see an example data dive:
 
 ``` r
-
+library(sadash)
+data(hist_samp)
+run_visual_dive(hist_samp, pct = 1)
 ```

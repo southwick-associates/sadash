@@ -41,3 +41,24 @@ NULL
 #' }
 #' @family Sample Data
 NULL
+
+#' Sample Data: Permission data for use in \code{\link{run_visual_dive}}
+#' 
+#' A 1 percent sample of one state's permission dynamics
+#' 
+#' @docType data
+#' @keywords datasets
+#' @name hist_samp
+#' @format a data frame with 8 variables and approx. 560K observations
+#' \describe{
+#' \item{priv}{name of permission}
+#' \item{cust_id}{customer ID}
+#' \item{year}{license year}
+#' \item{lapse}{lapsed next year (1 = TRUE, 0 = FALSE)}
+#' \item{R3}{R3 category}
+#' \item{res}{state residency}
+#' \item{sex}{gender}
+#' \item{age}{age category}
+#' }
+#' @family Sample Data
+NULL

@@ -52,6 +52,12 @@ if (getRversion() >= "2.15.1") {
 #'   \item use dashtemplate::run_visual() to check results
 #' }
 #' 
+#' @section Preparing Data Dive:
+#' \itemize{
+#' \item use \code{\link{setup_data_dive}} to initialize template files
+#' \item use \code{\link{run_visual_dive}} to check/explore interactively with shiny
+#' }
+#' 
 #' @docType package
 #' @name sadash
 NULL
