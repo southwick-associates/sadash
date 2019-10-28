@@ -26,6 +26,7 @@ It creates a "5-data-dive" folder with template code.
 Other data dive functions: \code{\link{filter_demo}},
   \code{\link{load_cust_samp}}, \code{\link{plot_dist}},
   \code{\link{plot_trend}}, \code{\link{run_visual_dive}},
-  \code{\link{set_nonres_county_na}}
+  \code{\link{set_nonres_county_na}},
+  \code{\link{summarize_trend}}
 }
 \concept{data dive functions}

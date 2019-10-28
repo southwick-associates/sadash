@@ -4,19 +4,16 @@
 \alias{plot_trend}
 \title{Plot trendline for run_visual_dive()}
 \usage{
-plot_trend(hist_samp, down = "None", across = "None", pct = 10)
+plot_trend(tbl, down = "None", across = "None")
 }
 \arguments{
-\item{hist_samp}{data frame with a sample of license history for all privileges 
-containing at least 9 variables: priv, cust_id, year, lapse, R3, res, sex, fips, age}
+\item{tbl}{data frame holding table produced by \code{\link{summarize_trend}}}
 
 \item{down}{variable name for optional facetting down. If "None", no facetting
 will be done.}
 
 \item{across}{variable name for optional facetting across. If "None", no facetting
 will be done.}
-
-\item{pct}{sample size (in whole percentage points) for hist_samp}
 }
 \description{
 To be run from \code{\link{run_visual_dive}}. 
@@ -28,15 +25,20 @@ be removed from the corresponding variables before plotting.
 library(dplyr)
 data(hist_samp)
 priv <- filter(hist_samp, priv == "all_sports")
-plot_trend(priv, pct = 1)
-plot_trend(priv, down = "sex", pct = 1)
-plot_trend(priv, down = "sex", across = "age", pct = 1)
+
+summarize_trend(priv, pct = 1) \%>\% plot_trend()
+summarize_trend(priv, "sex", pct = 1) \%>\% plot_trend("sex")
+summarize_trend(priv, "sex", "age", pct = 1) \%>\% plot_trend("sex", "age")
+
+summarize_trend(priv, pct = 1, metric = "churn") \%>\% plot_trend()
+summarize_trend(priv, "sex", pct = 1, metric = "churn") \%>\% plot_trend("sex")
 }
 \seealso{
 Other data dive functions: \code{\link{filter_demo}},
   \code{\link{load_cust_samp}}, \code{\link{plot_dist}},
   \code{\link{run_visual_dive}},
   \code{\link{set_nonres_county_na}},
-  \code{\link{setup_data_dive}}
+  \code{\link{setup_data_dive}},
+  \code{\link{summarize_trend}}
 }
 \concept{data dive functions}

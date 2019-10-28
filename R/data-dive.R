@@ -61,87 +61,6 @@ set_nonres_county_na <- function(x) {
 
 # Shiny App ---------------------------------------------------------------
 
-#' Plot trendline for run_visual_dive()
-#' 
-#' To be run from \code{\link{run_visual_dive}}. 
-#' This will plot a count of participants, optionally facetted down and/or across
-#' by additional variables. If facetting (i.e., grouping) missing values will
-#' be removed from the corresponding variables before plotting.
-#' 
-#' @param down variable name for optional facetting down. If "None", no facetting
-#' will be done.
-#' @param across variable name for optional facetting across. If "None", no facetting
-#' will be done.
-#' @inheritParams run_visual_dive
-#' @family data dive functions
-#' @export
-#' @examples 
-#' library(dplyr)
-#' data(hist_samp)
-#' priv <- filter(hist_samp, priv == "all_sports")
-#' plot_trend(priv, pct = 1)
-#' plot_trend(priv, down = "sex", pct = 1)
-#' plot_trend(priv, down = "sex", across = "age", pct = 1)
-plot_trend <- function(hist_samp, down = "None", across = "None", pct = 10) {
-    # Using NULL when no facetting is to be performed
-    down <- if(down == "None") NULL else down
-    across <- if(across == "None") NULL else across
-    
-    # drop NAs for group (facet direction) variables
-    drop_na <- function(df, var) {
-        if (is.null(var)) return(df)
-        filter(df, !is.na(.data[[var]]))
-    }
-    hist_samp <- hist_samp %>% drop_na(down) %>% drop_na(across)
-    
-    # produce a count using dplyr
-    cnt <- hist_samp %>% 
-        group_by_(.dots = c(down, across, "year")) %>%
-        summarize(n = n()) %>%
-        ungroup() %>%
-        mutate(n = n / (pct / 100)) 
-    
-    # plot using ggplot
-    p <- cnt %>%
-        ggplot(aes(year, n)) +
-        geom_line()
-    if (!is.null(down) || !is.null(across)) {
-        # add facetting as needed
-        # - dot values in ggplot indicate no facetting in corresponding direction
-        if (is.null(down)) down <- "."
-        if (is.null(across)) across <- "."
-        p <- p + 
-            facet_grid(stats::as.formula(paste(down, "~", across)), scales = "free")
-    }
-    p
-}
-
-#' Plot distribution for selected variable-year
-#' 
-#' To be run from \code{\link{run_visual_dive}} to show a bar plot distribution.
-#' 
-#' @inheritParams filter_demo
-#' @param var name of variable to be plotted
-#' @family data dive functions
-#' @export
-#' @examples 
-#' library(dplyr)
-#' data(hist_samp)
-#' priv <- filter(hist_samp, priv == "all_sports", year == 2015)
-#' plot_dist(priv, "age")
-plot_dist <- function(priv, var = "sex") {
-    dist <- priv %>%
-        dplyr::count(.data[[var]]) %>%
-        mutate(pct = n / sum(n) * 100)
-        
-    ggplot(dist, aes_string("var", "pct")) +
-        geom_col() +
-        theme(
-            axis.title = element_blank(),
-            axis.text.x = element_text(angle = 30, hjust = 1)
-        )
-}
-
 #' Filter data for given variable
 #' 
 #' To be run from \code{\link{run_visual_dive}}. Applies a filter as needed
@@ -180,6 +99,124 @@ filter_demo <- function(
     # - does obscure NAs, but not obvious how to make that work (low priority)
     filter(priv, .data[[var]] %in% c(var_select, NA))
 }
+
+#' Summarize trend for either participants or churn
+#' 
+#' To be run from \code{\link{run_visual_dive}} for preparing data for 
+#' \code{\link{plot_trend}}
+#' 
+#' @param metric name of metric to summarize, either "participants" or "churn"
+#' @param down variable name for optional facetting down. If "None", no facetting
+#' will be done.
+#' @param across variable name for optional facetting across. If "None", no facetting
+#' will be done.
+#' @inheritParams run_visual_dive
+#' @inheritParams filter_demo
+#' @family data dive functions
+#' @export
+#' @examples 
+#' data(hist_samp)
+#' priv <- dplyr::filter(hist_samp, priv == "all_sports")
+#' summarize_trend(priv, pct = 1)
+#' summarize_trend(priv, "sex", "age", pct = 1)
+#' 
+#' summarize_trend(priv, metric = "churn")
+#' summarize_trend(priv, "age", metric = "churn")
+summarize_trend <- function(
+    priv, down = "None", across = "None", metric = "participants", pct = 10
+) {
+    # Using NULL when no facetting is to be performed
+    down <- if(down == "None") NULL else down
+    across <- if(across == "None") NULL else across
+    
+    # drop NAs for group (facet direction) variables
+    drop_na <- function(df, var) {
+        if (is.null(var)) return(df)
+        filter(df, !is.na(.data[[var]]))
+    }
+    priv <- priv %>% drop_na(down) %>% drop_na(across)
+    
+    # make summary table
+    priv <- group_by_(priv, .dots = c(down, across, "year"))
+    
+    if (metric == "participants") {
+        priv %>% 
+            summarize(value = n()) %>%
+            ungroup() %>%
+            mutate(value = .data$value / (pct / 100))
+    } else {
+        priv %>% 
+            summarize(value = mean(.data$lapse) * 100) %>%
+            ungroup() %>%
+            mutate(year = .data$year + 1) %>%
+            filter(!is.na(.data$value))
+    }
+}
+    
+#' Plot trendline for run_visual_dive()
+#' 
+#' To be run from \code{\link{run_visual_dive}}. 
+#' This will plot a count of participants, optionally facetted down and/or across
+#' by additional variables. If facetting (i.e., grouping) missing values will
+#' be removed from the corresponding variables before plotting.
+#' 
+#' @param tbl data frame holding table produced by \code{\link{summarize_trend}}
+#' @inheritParams summarize_trend
+#' @family data dive functions
+#' @export
+#' @examples 
+#' library(dplyr)
+#' data(hist_samp)
+#' priv <- filter(hist_samp, priv == "all_sports")
+#' 
+#' summarize_trend(priv, pct = 1) %>% plot_trend()
+#' summarize_trend(priv, "sex", pct = 1) %>% plot_trend("sex")
+#' summarize_trend(priv, "sex", "age", pct = 1) %>% plot_trend("sex", "age")
+#' 
+#' summarize_trend(priv, pct = 1, metric = "churn") %>% plot_trend()
+#' summarize_trend(priv, "sex", pct = 1, metric = "churn") %>% plot_trend("sex")
+plot_trend <- function(tbl, down = "None", across = "None") {
+    p <- tbl %>%
+        ggplot(aes_string("year", "value")) +
+        geom_line()
+    
+    # facetting will be needed if there are more than 2 variables in tbl
+    if (ncol(tbl) > 2) {
+        # dot values in ggplot indicate no facetting in corresponding direction
+        if (down == "None") down <- "."
+        if (across == "None") across <- "."
+        p <- p + 
+            facet_grid(stats::as.formula(paste(down, "~", across)), scales = "free")
+    }
+    p
+}
+
+#' Plot distribution for selected variable-year
+#' 
+#' To be run from \code{\link{run_visual_dive}} to show a bar plot distribution.
+#' 
+#' @inheritParams filter_demo
+#' @param var name of variable to be plotted
+#' @family data dive functions
+#' @export
+#' @examples 
+#' library(dplyr)
+#' data(hist_samp)
+#' priv <- filter(hist_samp, priv == "all_sports", year == 2015)
+#' plot_dist(priv, "age")
+plot_dist <- function(priv, var = "sex") {
+    dist <- priv %>%
+        dplyr::count(.data[[var]]) %>%
+        mutate(pct = n / sum(n) * 100)
+        
+    ggplot(dist, aes_string("var", "pct")) +
+        geom_col() +
+        theme(
+            axis.title = element_blank(),
+            axis.text.x = element_text(angle = 30, hjust = 1)
+        )
+}
+
 
 #' Run shiny app version of data dive
 #' 
@@ -267,9 +304,10 @@ run_visual_dive <- function(hist_samp, pct = 10) {
         
         ### Plotting
         # - participants by year
-        output$trendPlot <- render_dash({
-            function() plot_trend(dataInput(), input$down, input$across, pct)
-        })
+        output$trendPlot <- render_dash({ function() {
+            summarize_trend(dataInput(), input$down, input$across, "participants", pct) %>% 
+                plot_trend(input$down, input$across)
+        }})
         
         # - distributions for selected year
         dataDist <- reactive({
