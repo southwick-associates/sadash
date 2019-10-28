@@ -226,7 +226,8 @@ summarize_trend <- function(
 plot_trend <- function(tbl, down = "None", across = "None") {
     p <- tbl %>%
         ggplot(aes_string("year", "value")) +
-        geom_line()
+        geom_line() +
+        theme(axis.title = element_blank())
     
     # facetting will be needed if there are more than 2 variables in tbl
     if (ncol(tbl) > 2) {
@@ -260,8 +261,8 @@ plot_dist <- function(priv, var = "sex") {
     ggplot(dist, aes_string("var", "pct")) +
         geom_col() +
         theme(
-            axis.title = element_blank(),
-            axis.text.x = element_text(angle = 30, hjust = 1)
+            # axis.text.x = element_text(angle = 20, hjust = 1),
+            axis.title = element_blank()
         )
 }
 
@@ -330,7 +331,8 @@ plot_county_dive <- function(priv, county_map, metric = "participants", pct = 10
             axis.text = element_blank(), 
             axis.title = element_blank(),
             axis.ticks = element_blank()
-        )
+        ) +
+        guides(fill = FALSE)
 }
 
 # Shiny App ---------------------------------------------------------------
@@ -377,10 +379,17 @@ run_visual_dive <- function(hist_samp, county_map, pct = 10) {
     }
     # - to display distribution plot for given variable
     ui_plot_dist <- function(varPlot = "sexPlot") {
-        plotly::plotlyOutput(varPlot, height = "200px")
+        plotly::plotlyOutput(varPlot, height = "150px")
     }
     
     ui <- fluidPage(mainPanel(
+        # data filtering
+        splitLayout(
+            actionButton("button", "APPLY FILTERS"),
+            ui_check_filter("res"), ui_check_filter("sex"), 
+            ui_check_filter("R3"), ui_check_filter("age")
+        ),
+        
         # menu drop-downs
         splitLayout(
             selectInput("priv", "Choose Permission", unique(hist_samp$priv)),
@@ -389,25 +398,20 @@ run_visual_dive <- function(hist_samp, county_map, pct = 10) {
             ui_check_facet("down"), ui_check_facet("across"),
             ui_prevent_clipping()
         ),
-        # data filtering
-        splitLayout(
-            actionButton("button", "APPLY FILTER"),
-            ui_check_filter("res"), ui_check_filter("sex"), 
-            ui_check_filter("R3"), ui_check_filter("age")
+        
+        # plotting
+        plotly::plotlyOutput("trendPlot", height = "400px"), 
+        
+        column(4, 
+            selectInput("year", "Year (Distributions & County)",  
+                        choices = years, selected = years[1]),
+            plotly::plotlyOutput("countyPlot", height = "220px")
         ),
-        # trend & county plotting
-        selectInput("year", "Select Year (for Distributions & County)", 
-                    choices = years, selected = years[1]),
-        splitLayout(
-            plotly::plotlyOutput("trendPlot", height = "400px"), 
-            plotly::plotlyOutput("countyPlot", height = "300px"),
-            cellWidths = c("70%", "30%")
-        ),
-        # distribution plotting
-        splitLayout(
-            ui_plot_dist("sexPlot"), ui_plot_dist("resPlot"),
-            ui_plot_dist("agePlot"), ui_plot_dist("R3Plot"),
-            cellWidths = c("20%", "20%", "40%", "20%")
+        column(8,
+            splitLayout(ui_plot_dist("sexPlot"), ui_plot_dist("agePlot"),
+                        cellWidths = c("35%", "65%")),
+            splitLayout(ui_plot_dist("resPlot"), ui_plot_dist("R3Plot"),
+                        cellWidths = c("48%", "52%"))
         ),
         width = 12
     ))

@@ -3,7 +3,10 @@
 
 Adding data dive functionality (in progress):
 
-- setup_data_dive() and complete template code
+- setup_data_dive()
+    
+- include a function to output county pop data (as done in WI)
+    + might move this to next version
 
 ## Version 1.0.7
 
