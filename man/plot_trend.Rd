@@ -26,7 +26,7 @@ be removed from the corresponding variables before plotting.
 }
 \seealso{
 Other data dive functions: \code{\link{filter_demo}},
-  \code{\link{load_cust_samp}},
+  \code{\link{load_cust_samp}}, \code{\link{plot_dist}},
   \code{\link{run_visual_dive}},
   \code{\link{set_nonres_county_na}},
   \code{\link{setup_data_dive}}

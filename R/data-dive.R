@@ -109,6 +109,27 @@ plot_trend <- function(hist_samp, down = "None", across = "None", pct = 10) {
     p
 }
 
+#' Plot distribution for selected variable-year
+#' 
+#' To be run from \code{\link{run_visual_dive}}. Showing a bar plot distribution.
+#' 
+#' @inheritParams filter_demo
+#' @param var name of variable to be plotted
+#' @family data dive functions
+#' @export
+plot_dist <- function(priv, var = "sex") {
+    dist <- priv %>%
+        dplyr::count(.data[[var]]) %>%
+        mutate(pct = n / sum(n) * 100)
+        
+    ggplot(dist, aes_string("var", "pct")) +
+        geom_col() +
+        theme(
+            axis.title = element_blank(),
+            axis.text.x = element_text(angle = 30, hjust = 1)
+        )
+}
+
 #' Filter data for given variable
 #' 
 #' To be run from \code{\link{run_visual_dive}}. Applies a filter as needed
@@ -160,34 +181,47 @@ filter_demo <- function(
 #' }
 run_visual_dive <- function(hist_samp, pct = 10) {
     
-    # prepare demographic filter checkboxes for given variable ("sex", etc.)
-    check_filter <- function(var, selected = levels(hist_samp[[var]])) {
+    demos <- c("res", "sex", "R3", "age")
+    years <- sort(unique(hist_samp$year), decreasing = TRUE)
+    
+    # to prepare demographic filter checkboxes for given variable ("sex", etc.)
+    ui_check_filter <- function(var = "sex", selected = levels(hist_samp[[var]])) {
         checkboxGroupInput(
             inputId = var, label = var, selected = selected, 
             choiceNames = as.list(selected), choiceValues = as.list(selected)
         )
     }
-    # prepare plot facetting selections for given direction (down or across) 
-    demos <- c("res", "sex", "R3", "age")
-    check_plot_facet <- function(direction) {
+    # to prepare plot facetting selections for given direction (down or across) 
+    ui_check_facet <- function(direction = "down") {
         selectInput(
             inputId = direction, label = paste("Compare", direction),  
             choices = as.list(c("None", demos)), selected = "None"
         )
     }
+    # to  display distributions plot for given variable
+    ui_plot_dist <- function(varPlot = "sexPlot") {
+        plotly::plotlyOutput(varPlot, height = "200px")
+    }
     
     ui <- fluidPage(mainPanel(
         splitLayout(
             selectInput("priv", "Choose Permission", unique(hist_samp$priv)),
-            check_plot_facet("down"), check_plot_facet("across"),
+            ui_check_facet("down"), ui_check_facet("across"),
             ui_prevent_clipping()
         ),
         splitLayout(
             actionButton("button", "APPLY FILTER"),
-            check_filter("res"), check_filter("sex"), 
-            check_filter("R3"), check_filter("age")
+            ui_check_filter("res"), ui_check_filter("sex"), 
+            ui_check_filter("R3"), ui_check_filter("age")
         ),
         plotly::plotlyOutput("trendPlot"),
+        selectInput("year", "Select year for distributions", 
+                    choices = years, selected = years[1]),
+        splitLayout(
+            ui_plot_dist("sexPlot"), ui_plot_dist("resPlot"),
+            ui_plot_dist("agePlot"), ui_plot_dist("R3Plot"),
+            cellWidths = c("20%", "20%", "40%", "20%")
+        ),
         width = 12
     ))
     
@@ -211,10 +245,27 @@ run_visual_dive <- function(hist_samp, pct = 10) {
             })
         })
         
-        ### Plotting participants by year
-        output$trendPlot <- plotly::renderPlotly({
-            p <- plot_trend(dataInput(), input$down, input$across)
-            plotly::ggplotly(p) %>% plotly_config()
+        ### Plotting
+        # - participants by year
+        output$trendPlot <- render_dash({
+            function() plot_trend(dataInput(), input$down, input$across)
+        })
+        
+        # - distributions for selected year
+        dataDist <- reactive({
+            filter(dataInput(), .data$year == input$year)
+        })
+        output$sexPlot <- render_dash({
+            function() plot_dist(dataDist(), "sex")
+        })
+        output$resPlot <- render_dash({
+            function() plot_dist(dataDist(), "res")
+        })
+        output$agePlot <- render_dash({
+            function() plot_dist(dataDist(), "age")
+        })
+        output$R3Plot <- render_dash({
+            function() plot_dist(dataDist(), "R3")
         })
     }
     shinyApp(ui, server)
