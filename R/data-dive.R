@@ -217,7 +217,6 @@ plot_dist <- function(priv, var = "sex") {
         )
 }
 
-
 #' Run shiny app version of data dive
 #' 
 #' This is a rough mock-up, intended to ensure (1) no surprises on the Tableau

@@ -3,6 +3,8 @@
 
 Adding data dive functionality (in progress):
 
+- setup_data_dive() and complete template code
+
 - run_visual_dive()
     + (maybe) add county chloropleth
 

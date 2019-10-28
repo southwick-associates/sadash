@@ -1,4 +1,8 @@
 
+## Version 1.0.6
+
+Added functionality for producing data dive: setup_data_dive(), run_visual_dive(), etc.
+
 ## Version 1.0.5
 
 - Added a plot_county() for including in run_visual()
