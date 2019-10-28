@@ -4,7 +4,7 @@
 \name{hist_samp}
 \alias{hist_samp}
 \title{Sample Data: Permission data for use in \code{\link{run_visual_dive}}}
-\format{a data frame with 8 variables and approx. 560K observations
+\format{a data frame with 9 variables and approximately 550K observations
 \describe{
 \item{priv}{name of permission}
 \item{cust_id}{customer ID}
@@ -13,6 +13,7 @@
 \item{R3}{R3 category}
 \item{res}{state residency}
 \item{sex}{gender}
+\item{fips}{county fips code (without state portion of code)}
 \item{age}{age category}
 }}
 \description{

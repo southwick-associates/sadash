@@ -2,7 +2,7 @@
 % Please edit documentation in R/data-dive.R
 \name{set_nonres_county_na}
 \alias{set_nonres_county_na}
-\title{Set county_fips to missing if not resident}
+\title{Set county_fips to missing if nonresident}
 \usage{
 set_nonres_county_na(x)
 }
@@ -19,6 +19,7 @@ Other data dive functions: \code{\link{filter_demo}},
   \code{\link{load_cust_samp}},
   \code{\link{plot_county_dive}}, \code{\link{plot_dist}},
   \code{\link{plot_trend}}, \code{\link{run_visual_dive}},
+  \code{\link{set_other_county_na}},
   \code{\link{setup_data_dive}},
   \code{\link{summarize_trend}}
 }

@@ -31,15 +31,16 @@ yrs <- firstyr:lastyr
 dashboard_yrs <- lastyr # focus years to be available in dashboard dropdown menu
 ###
 
-
 # Pull License Histories ----------------------------------------------------
 # we only need a 10% sample of customers
 
 # pull data into a list (one data frame for each permission)
-cust_samp <- left_join(
-    load_cust_samp(db_history, yrs, samp_pct),
-    load_cust(db_license)
-)
+cust <- load_cust(db_license)
+cust_samp <- db_history %>%
+    load_cust_samp(yrs, samp_pct) %>%
+    left_join(cust, by = "cust_id") %>%
+    set_other_county_na(state)
+    
 permissions <- load_sqlite(db_history, function(con) DBI::dbListTables(con))
 hist_samp <- lapply(permissions, function(x) {
     load_history(db_history, x, yrs) %>% 
@@ -72,9 +73,16 @@ ggplot(cnt, aes(year, n, fill = grp)) +
 # county_map <- get_county_map(state) # for joining geometry (map) data
 # county_census <- load_counties(db_census, state) # for joining on county_fips
 
+# TODO: find out what went wrong with IA counties
+# - may want to include some sort of check (e.g., in plot_county_dive())
+
+county_map <- get_county_map(state)
+x <- salic::label_categories(hist_samp) %>% salic::df_factor_age()
+
+
 salic::label_categories(hist_samp) %>% 
-    df_factor_age() %>%
-    run_visual_dive(samp_pct)
+    salic::df_factor_age() %>%
+    run_visual_dive(county_map, pct = samp_pct)
 
 # Formatting & Save -------------------------------------------------------
 

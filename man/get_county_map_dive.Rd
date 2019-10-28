@@ -4,10 +4,14 @@
 \alias{get_county_map_dive}
 \title{Load county spatial data for data dive}
 \usage{
-get_county_map_dive(state)
+get_county_map_dive(state, drop_state_code = TRUE)
 }
 \arguments{
 \item{state}{abbreviation of state to pull}
+
+\item{drop_state_code}{If TRUE, the 2-digit state code will be stripped. This
+may be necessary depending on how the county_fips is stored in the license
+data.}
 }
 \description{
 Mostly a wrapper for \code{\link{get_county_map}} with some formatting used
@@ -22,6 +26,7 @@ Other data dive functions: \code{\link{filter_demo}},
   \code{\link{plot_county_dive}}, \code{\link{plot_dist}},
   \code{\link{plot_trend}}, \code{\link{run_visual_dive}},
   \code{\link{set_nonres_county_na}},
+  \code{\link{set_other_county_na}},
   \code{\link{setup_data_dive}},
   \code{\link{summarize_trend}}
 }

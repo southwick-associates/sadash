@@ -44,10 +44,57 @@ load_cust_samp <- function(db, yrs, pct = 10, group = "all_sports") {
         sample_frac(pct / 100)
 }
 
-#' Set county_fips to missing if not resident
+#' Set cust$county_fips to missing if from another state
+#' 
+#' We may have counties from entirely different states attached to the customer
+#' table and we don't want these in the data dive
+#' 
+#' @param cust customer table
+#' @param state 2-character state abbreviation
+#' @param county_map function to use for pulling a list of counties in state
+#' @family data dive functions
+#' @export
+#' @examples 
+#' library(dplyr)
+#' 
+#' \dontrun{
+#' db_history <- "E:/SA/Data-production/Data-Dashboards/IA/history.sqlite3"  
+#' db_license <- "E:/SA/Data-production/Data-Dashboards/IA/license.sqlite3"
+#' cust_samp <- left_join(
+#'     load_cust_samp(db_history, 2006:2018),
+#'     load_cust(db_license)
+#' )
+#' count(cust_samp, county_fips)
+#' set_other_county_na(cust_samp, "IA") %>% count(county_fips)
+#' }
+set_other_county_na <- function(
+    cust, state, county_map = function() get_county_map_dive(state, FALSE)
+) {
+    counties <- county_map() %>% 
+        pull(.data$fips) %>% 
+        unique()
+    
+    # check for counties from other states
+    x <- filter(cust, !is.na(.data$county_fips))
+    if (all(x$county_fips %in% counties)) {
+        return(cust)
+    }
+    other_states <- filter(x, !.data$county_fips %in% counties)
+    message("There were ", nrow(other_states), " cust$county_fips from ",
+            "other states set to missing.")
+    
+    cust %>% mutate(
+        county_fips = case_when(
+            county_fips %in% counties ~ .data$county_fips,
+            TRUE ~ NA_integer_
+        )
+    )
+}
+
+#' Set county_fips to missing if nonresident
 #' 
 #' Ensure county_fips isn't populated where res == 0 or is.na(res). There are
-#' typically a few of these and we don't want them showing up in the data dive.
+#' typically a few of these and we don't want them showing up in the data dive. 
 #' 
 #' @param x license history with county_fips & res variables
 #' @family data dive functions
@@ -224,14 +271,24 @@ plot_dist <- function(priv, var = "sex") {
 #' in data dive.
 #' 
 #' @inheritParams get_county_map
+#' @param drop_state_code If TRUE, the 2-digit state code will be stripped. This
+#' may be necessary depending on how the county_fips is stored in the license
+#' data.
 #' @family data dive functions
 #' @export
 #' @examples 
 #' get_county_map_dive("WI")
-get_county_map_dive <- function(state) {
-    get_county_map("WI") %>%
-        mutate(fips = stringr::str_sub(.data$county_fips, start = 3) %>% as.integer()) %>%
-        select(.data$fips, .data$county, .data$long, .data$lat)
+get_county_map_dive <- function(state, drop_state_code = TRUE) {
+    x <- get_county_map(state)
+    
+    if (drop_state_code) {
+        x <- x %>% mutate(
+            fips = stringr::str_sub(.data$county_fips, start = 3) %>% as.integer()
+        )
+    } else {
+        x <- rename(x, fips = .data$county_fips)
+    }
+    select(x, .data$fips, .data$county, .data$long, .data$lat)
 }
 
 #' Chloropleth county plot for data dive
