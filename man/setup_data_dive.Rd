@@ -23,7 +23,8 @@ It creates a "5-data-dive" folder with template code.
 \seealso{
 \code{\link{new_dashboard}}
 
-Other data dive functions: \code{\link{load_cust_samp}},
+Other data dive functions: \code{\link{filter_demo}},
+  \code{\link{load_cust_samp}}, \code{\link{plot_trend}},
   \code{\link{run_visual_dive}},
   \code{\link{set_nonres_county_na}}
 }

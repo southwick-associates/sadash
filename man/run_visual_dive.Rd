@@ -8,7 +8,7 @@ run_visual_dive(hist_samp, pct = 10)
 }
 \arguments{
 \item{hist_samp}{data frame with a sample of license history for all privileges 
-containing 9 variables: priv, cust_id, year, lapse, R3, res, sex, fips, age}
+containing at least 9 variables: priv, cust_id, year, lapse, R3, res, sex, fips, age}
 
 \item{pct}{sample size (in whole percentage points) for hist_samp}
 }
@@ -28,7 +28,8 @@ run_visual_dive(hist_samp)
 \seealso{
 \code{\link{run_visual}}
 
-Other data dive functions: \code{\link{load_cust_samp}},
+Other data dive functions: \code{\link{filter_demo}},
+  \code{\link{load_cust_samp}}, \code{\link{plot_trend}},
   \code{\link{set_nonres_county_na}},
   \code{\link{setup_data_dive}}
 }

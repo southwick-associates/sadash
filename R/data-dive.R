@@ -58,13 +58,94 @@ set_nonres_county_na <- function(x) {
     x
 }
 
+
+# Shiny App ---------------------------------------------------------------
+
+#' Plot trendline for run_visual_dive()
+#' 
+#' To be run from \code{\link{run_visual_dive}}. 
+#' This will plot a count of participants, optionally facetted down and/or across
+#' by additional variables. If facetting (i.e., grouping) missing values will
+#' be removed from the corresponding variables before plotting.
+#' 
+#' @param down variable name for optional facetting down. If "None", no facetting
+#' will be done.
+#' @param across variable name for optional facetting across. If "None", no facetting
+#' will be done.
+#' @inheritParams run_visual_dive
+#' @family data dive functions
+#' @export
+plot_trend <- function(hist_samp, down = "None", across = "None", pct = 10) {
+    # Using NULL when no facetting is to be performed
+    down <- if(down == "None") NULL else down
+    across <- if(across == "None") NULL else across
+    
+    # drop NAs for group (facet direction) variables
+    drop_na <- function(df, var) {
+        if (is.null(var)) return(df)
+        filter(df, !is.na(.data[[var]]))
+    }
+    hist_samp <- hist_samp %>% drop_na(down) %>% drop_na(across)
+    
+    # produce a count using dplyr
+    cnt <- hist_samp %>% 
+        group_by_(.dots = c(down, across, "year")) %>%
+        summarize(n = n()) %>%
+        ungroup() %>%
+        mutate(n = n / (pct / 100)) 
+    
+    # plot using ggplot
+    p <- cnt %>%
+        ggplot(aes(year, n)) +
+        geom_line()
+    if (!is.null(down) || !is.null(across)) {
+        # add facetting as needed
+        # - dot values in ggplot indicate no facetting in corresponding direction
+        if (is.null(down)) down <- "."
+        if (is.null(across)) across <- "."
+        p <- p + 
+            facet_grid(stats::as.formula(paste(down, "~", across)), scales = "free")
+    }
+    p
+}
+
+#' Filter data for given variable
+#' 
+#' To be run from \code{\link{run_visual_dive}}. Applies a filter as needed
+#' based on the checked categories.
+#' 
+#' @param priv data for one permission
+#' @param var name of variable for filtering
+#' @param var_select currently selted values of var
+#' @param var_all set of values that var can take
+#' @family data dive functions
+#' @export
+filter_demo <- function(
+    priv, var = "sex", var_select = c("Male", "Female"), 
+    var_all = c("Male", "Female")
+) {
+    # no filter should be applied if all options are checked
+    if (identical(var_select, var_all)) {
+        return(priv) 
+    }
+    
+    # R3 will only be NA for the first 5 years
+    if (var == "R3") {
+        return(filter(priv, .data[[var]] %in% var_select))
+    }
+    
+    # We do want to keep NA values for demographic variables
+    # - does obscure NAs, but not obvious how to make that work (low priority)
+    filter(priv, .data[[var]] %in% c(var_select, NA))
+}
+
 #' Run shiny app version of data dive
 #' 
 #' This is a rough mock-up, intended to ensure (1) no surprises on the Tableau
 #' end and (2) results look correct. 
 #' 
 #' @param hist_samp data frame with a sample of license history for all privileges 
-#' containing 9 variables: priv, cust_id, year, lapse, R3, res, sex, fips, age
+#' containing at least 9 variables: priv, cust_id, year, lapse, R3, res, sex, fips, age
 #' @param pct sample size (in whole percentage points) for hist_samp
 #' @family data dive functions
 #' @seealso \code{\link{run_visual}}
@@ -79,15 +160,15 @@ set_nonres_county_na <- function(x) {
 #' }
 run_visual_dive <- function(hist_samp, pct = 10) {
     
-    # prepare demographic filter checkboxes
-    demos <- c("res", "sex", "R3", "age")
+    # prepare demographic filter checkboxes for given variable ("sex", etc.)
     check_filter <- function(var, selected = levels(hist_samp[[var]])) {
         checkboxGroupInput(
             inputId = var, label = var, selected = selected, 
             choiceNames = as.list(selected), choiceValues = as.list(selected)
         )
     }
-    # prepare plot facetting selections (down or across)
+    # prepare plot facetting selections for given direction (down or across) 
+    demos <- c("res", "sex", "R3", "age")
     check_plot_facet <- function(direction) {
         selectInput(
             inputId = direction, label = paste("Compare", direction),  
@@ -112,71 +193,27 @@ run_visual_dive <- function(hist_samp, pct = 10) {
     
     server <- function(input, output, session) {
         ### Data Filtering
+        # - by permission
         dataPriv <- reactive({
             filter(hist_samp, .data$priv == input$priv)
         })
-        # demographic filtering: function to run for each variable in dataInput
-        filter_var <- function(priv, var, var_lab = levels(hist_samp[[var]])) {
-            if (identical(input[[var]], var_lab)) {
-                return(priv) # no filter if all options are checked
-            }
-            if (var == "R3") {
-                # R3 will only be NA for the first 5 years
-                # so NA values should be removed if R3 filter is applied
-                return(filter(priv, .data[[var]] %in% input[[var]]))
-            }
-            # we want to keep NA values for demographic variables
-            # - does obscure NAs, but not obvious how to make that work (low priority)
-            filter(priv, .data[[var]] %in% c(input[[var]], NA))
-        }
+        
+        # - by variable in checkboxes (sex, age, etc.)
         dataInput <- reactive({
             # isolate ensures filter only runs after the button is pressed
             input$button
             priv <- dataPriv()
             isolate({
-                for (var in demos) priv <- filter_var(priv, var)
+                for (var in demos) {
+                    priv <- filter_demo(priv, var, input[[var]], levels(hist_samp[[var]]))
+                }
                 priv
             })
         })
         
-        ### Grouping (for plot facets) & participants by year
-        # - use NULL where no group is selected (for dplyr filters to work properly)
-        downInput <- reactive({
-            if (input$down == "None") NULL else input$down
-        })
-        acrossInput <- reactive({
-            if (input$across == "None") NULL else input$across
-        })
-        # - get counts by year (and selected groups if applicable)
-        tblInput <- reactive({
-            x <- dataInput()
-            
-            # drop NAs for group variables
-            if (!is.null(downInput())) x <- x[!is.na(x[[downInput()]]), ]
-            if (!is.null(acrossInput())) x <- x[!is.na(x[[acrossInput()]]), ]
-            
-            x %>% 
-                group_by_(.dots = c(downInput(), acrossInput(), "year")) %>%
-                summarize(n = n()) %>%
-                ungroup() %>%
-                mutate(n = n / (pct / 100)) 
-        })
-        
-        ### Plotting
+        ### Plotting participants by year
         output$trendPlot <- plotly::renderPlotly({
-            p <- tblInput() %>%
-                ggplot(aes(year, n)) +
-                geom_line()
-            if (!is.null(downInput()) || !is.null(acrossInput())) {
-                # add facetting as needed
-                grp1 <- downInput()
-                grp2 <- acrossInput()
-                if (is.null(grp1)) grp1 <- "."
-                if (is.null(grp2)) grp2 <- "."
-                p <- p + 
-                    facet_grid(stats::as.formula(paste(grp1, "~", grp2)), 
-                               scales = "free")
-            }
+            p <- plot_trend(dataInput(), input$down, input$across)
             plotly::ggplotly(p) %>% plotly_config()
         })
     }

@@ -3,6 +3,8 @@
 
 Adding data dive functionality (in progress):
 
+- add sample data for hist_samp
+
 - run_visual_dive()
     + add side-panel distributions
     + (maybe) add county chloropleth

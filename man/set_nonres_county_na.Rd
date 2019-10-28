@@ -14,7 +14,8 @@ Ensure county_fips isn't populated where res == 0 or is.na(res). There are
 typically a few of these and we don't want them showing up in the data dive.
 }
 \seealso{
-Other data dive functions: \code{\link{load_cust_samp}},
+Other data dive functions: \code{\link{filter_demo}},
+  \code{\link{load_cust_samp}}, \code{\link{plot_trend}},
   \code{\link{run_visual_dive}},
   \code{\link{setup_data_dive}}
 }
