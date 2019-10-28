@@ -20,7 +20,7 @@ setup_data_dive <- function(state = NULL, time_period = NULL) {
     
 }
 
-#' Load a 10 percent sample all sportspersons
+#' Load a 10 percent sample of all sportspersons
 #' 
 #' Every customer who holds a hunting or fishing permission at some point over
 #' the timeframe has an equal chance of being selected. We use a sample for the
@@ -58,8 +58,7 @@ set_nonres_county_na <- function(x) {
     x
 }
 
-
-# Shiny App ---------------------------------------------------------------
+# App Prep/Plotting ---------------------------------------------------------
 
 #' Filter data for given variable
 #' 
@@ -96,7 +95,8 @@ filter_demo <- function(
     }
     
     # We do want to keep NA values for demographic variables
-    # - does obscure NAs, but not obvious how to make that work (low priority)
+    # - Note that this does obscure NAs from appearing in the checkboxes
+    #   but not obvious how to (easily) make that work with filtering (low priority)
     filter(priv, .data[[var]] %in% c(var_select, NA))
 }
 
@@ -145,6 +145,7 @@ summarize_trend <- function(
             ungroup() %>%
             mutate(value = .data$value / (pct / 100))
     } else {
+        # churn
         priv %>% 
             summarize(value = mean(.data$lapse) * 100) %>%
             ungroup() %>%
@@ -259,6 +260,7 @@ plot_county_dive <- function(priv, county_map, metric = "participants", pct = 10
             ungroup() %>%
             mutate(value = .data$value / (pct / 100))
     } else {
+        # churn
         tbl <- priv %>%
             summarise(value = round(mean(lapse) * 100), 3) %>%
             ungroup()
@@ -273,6 +275,8 @@ plot_county_dive <- function(priv, county_map, metric = "participants", pct = 10
             axis.ticks = element_blank()
         )
 }
+
+# Shiny App ---------------------------------------------------------------
 
 #' Run shiny app version of data dive
 #' 
@@ -314,12 +318,13 @@ run_visual_dive <- function(hist_samp, county_map, pct = 10) {
             choices = as.list(c("None", demos)), selected = "None"
         )
     }
-    # - to  display distribution plot for given variable
+    # - to display distribution plot for given variable
     ui_plot_dist <- function(varPlot = "sexPlot") {
         plotly::plotlyOutput(varPlot, height = "200px")
     }
     
     ui <- fluidPage(mainPanel(
+        # menu drop-downs
         splitLayout(
             selectInput("priv", "Choose Permission", unique(hist_samp$priv)),
             selectInput("metric", "Choose Metric", choices = c("participants", "churn"),
@@ -327,11 +332,13 @@ run_visual_dive <- function(hist_samp, county_map, pct = 10) {
             ui_check_facet("down"), ui_check_facet("across"),
             ui_prevent_clipping()
         ),
+        # data filtering
         splitLayout(
             actionButton("button", "APPLY FILTER"),
             ui_check_filter("res"), ui_check_filter("sex"), 
             ui_check_filter("R3"), ui_check_filter("age")
         ),
+        # trend & county plotting
         selectInput("year", "Select Year (for Distributions & County)", 
                     choices = years, selected = years[1]),
         splitLayout(
@@ -339,6 +346,7 @@ run_visual_dive <- function(hist_samp, county_map, pct = 10) {
             plotly::plotlyOutput("countyPlot", height = "300px"),
             cellWidths = c("70%", "30%")
         ),
+        # distribution plotting
         splitLayout(
             ui_plot_dist("sexPlot"), ui_plot_dist("resPlot"),
             ui_plot_dist("agePlot"), ui_plot_dist("R3Plot"),
@@ -392,10 +400,15 @@ run_visual_dive <- function(hist_samp, county_map, pct = 10) {
             function() plot_dist(dataDist(), "R3")
         })
         
-        # - county plot for year
+        # - county plot for selected year
         dataCounty <- reactive({
-            filter_year = as.numeric(input$year) - 1
-            filter(dataInput(), .data$year == filter_year)
+            # churn lags by one year
+            if (input$metric == "churn") {
+                filter_year = as.numeric(input$year) - 1 
+                filter(dataInput(), .data$year == filter_year)
+            } else {
+                dataDist()
+            }
         })
         output$countyPlot <- render_dash({
             function() plot_county_dive(dataCounty(), county_map, input$metric, pct)

@@ -142,5 +142,7 @@ Fairly straightforward: use `setup_data_dive()` to get template code. You can ma
 ``` r
 library(sadash)
 data(hist_samp)
-run_visual_dive(hist_samp, pct = 1)
+county_map <- get_county_map_dive("WI")
+
+run_visual_dive(hist_samp, county_map, pct = 1)
 ```

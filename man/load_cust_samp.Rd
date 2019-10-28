@@ -2,7 +2,7 @@
 % Please edit documentation in R/data-dive.R
 \name{load_cust_samp}
 \alias{load_cust_samp}
-\title{Load a 10 percent sample all sportspersons}
+\title{Load a 10 percent sample of all sportspersons}
 \usage{
 load_cust_samp(db, yrs, pct = 10, group = "all_sports")
 }
