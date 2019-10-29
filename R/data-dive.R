@@ -255,7 +255,7 @@ summarize_trend <- function(
 plot_trend <- function(tbl, down = "None", across = "None") {
     p <- tbl %>%
         ggplot(aes_string("year", "value")) +
-        geom_line() +
+        geom_col() +
         theme(axis.title = element_blank())
     
     # facetting will be needed if there are more than 2 variables in tbl
