@@ -4,7 +4,8 @@
 \alias{setup_data_dive}
 \title{Setup data dive template}
 \usage{
-setup_data_dive(state = NULL, time_period = NULL, sa_path = "E:/SA",
+setup_data_dive(state = NULL, time_period = NULL,
+  analysis_dir = getwd(), sa_path = "E:/SA",
   dive_dir = "5-data-dive")
 }
 \arguments{
@@ -12,6 +13,9 @@ setup_data_dive(state = NULL, time_period = NULL, sa_path = "E:/SA",
 
 \item{time_period}{character: Time period for the first dashboard 
 (e.g., "2015", "2016-q1", etc.)}
+
+\item{analysis_dir}{full path name for analysis directory (only used if state
+and time_period are NULL)}
 
 \item{sa_path}{character: File path to the Southwick main folder 
 (for analysis and data, etc.)}

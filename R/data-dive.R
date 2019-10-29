@@ -7,6 +7,8 @@
 #' folder in the working directory (i.e., when state and time_period are NULL).
 #' 
 #' @inheritParams new_dashboard
+#' @param analysis_dir full path name for analysis directory (only used if state
+#' and time_period are NULL)
 #' @param dive_dir folder for data dive code
 #' @family data dive functions
 #' @seealso \code{\link{new_dashboard}}
@@ -14,12 +16,11 @@
 #' @examples 
 #' # setup_data_dive()
 setup_data_dive <- function(
-    state = NULL, time_period = NULL, sa_path = "E:/SA", dive_dir = "5-data-dive"
+    state = NULL, time_period = NULL, analysis_dir = getwd(), 
+    sa_path = "E:/SA", dive_dir = "5-data-dive"
 ) {
     # identify analysis_dir
-    if (is.null(state) && is.null(time_period)) {
-        analysis_dir <- ""
-    } else {
+    if (!(is.null(state) && is.null(time_period))) {
         if (is.null(state) || is.null(time_period)) {
             stop("The state & time_period arguments must both be NULL (or neither)",
                  call. = FALSE)
@@ -34,7 +35,7 @@ setup_data_dive <- function(
     dive_dir <- file.path(analysis_dir, dive_dir)
     dir.create(dive_dir)
     
-    # copy project template files to analysis_dir
+    # copy template files to dive_dir
     template_dir <- system.file("template-dive", package = "sadash")
     template_files <- list.files(template_dir)
     
@@ -45,7 +46,7 @@ setup_data_dive <- function(
             overwrite = FALSE
         )
     }
-    message("A data dive folder has been initialized:\n", dive_dir)
+    message("A data dive folder has been initialized:\n  ", dive_dir)
 }
 
 #' Load a 10 percent sample of all sportspersons

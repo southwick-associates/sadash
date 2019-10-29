@@ -1,11 +1,4 @@
 
-## Version 1.0.6
-
-Adding data dive functionality (in progress):
-
-- include a function to output county pop data (as done in WI)
-    + might move this to next version
-
 ## Version 1.0.7
 
 - May want vignettes rather than so much detail in the readme. Shouldn't be too difficult to basically transfer the existing example code (no need to get fancy)
@@ -18,7 +11,7 @@ Adding data dive functionality (in progress):
     + This will also probably provide an opportunity to add more sample data and include examples for certain other functions
     
 - run_visual(), etc.:
-    + want nicer labelling on hover for plotly
+    + may want nicer labelling on hover for plotly
     
 ## Version 1.1.0
 

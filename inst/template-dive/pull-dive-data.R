@@ -52,11 +52,40 @@ county_map <- get_county_map_dive(state, drop_state_code = FALSE)
 x <- salic::label_categories(hist_samp) %>% salic::df_factor_age()
 run_visual_dive(x, county_map, pct = samp_pct)
 
-# Write to CSV -------------------------------------------------------
+# Pull County Pop Data ----------------------------------------------------
 
+counties <- distinct(county_map, fips, county)
+
+pop_county <- load_pop(db_census, state) %>% 
+    prep_pop(yrs) %>%
+    mutate_at(c("sex", "agecat"), "as.integer") %>%
+    rename(fips = county_fips, age = agecat)
+
+# this join assumes drop_state_code = FALSE in get_county_map_dive() above
+pop_county <- pop_county %>%
+    left_join(counties, by = "fips") %>%
+    select(year, fips, county, sex, age, pop)
+
+# Write Output Files -------------------------------------------------------
+# store 3 output files in the dir_out directory with an adjacent zip file
+
+# initiate directory
 dir_out <- file.path(dir_production, state, "data-dive", lastyr)
 dir.create(dir_out, showWarnings = FALSE, recursive = TRUE)
 
+# write population data
+out_file <- paste0("pop-cnty-", firstyr, "-to-", lastyr, ".csv")
+write_csv(pop_county, file.path(dir_out, out_file))
+glimpse(pop_county)
+
+# write permission data
 out_file <- paste0("dive-", lastyr, "-", samp_pct, "pct", ".csv")
 write_csv(hist_samp, file.path(dir_out, out_file))
 glimpse(hist_samp)
+
+# write CODEBOOK
+file.copy("5-data-dive/CODEBOOK.txt", file.path(dir_out, "CODEBOOK.txt"))
+
+# zip for easy download by Tableau analyst
+setwd(dir_out) # a bit hacky, but prevents a bunch of extra folders in zip
+zip(dir_out, list.files())
