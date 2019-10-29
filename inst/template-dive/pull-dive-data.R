@@ -87,5 +87,5 @@ glimpse(hist_samp)
 file.copy("5-data-dive/CODEBOOK.txt", file.path(dir_out, "CODEBOOK.txt"))
 
 # zip for easy download by Tableau analyst
-setwd(dir_out) # a bit hacky, but prevents a bunch of extra folders in zip
-zip(dir_out, list.files())
+# setwd(dir_out) # a bit hacky, but prevents a bunch of extra folders in zip
+# zip(dir_out, list.files())
