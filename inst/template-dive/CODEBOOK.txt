@@ -1,0 +1,29 @@
+# Data Dive Codebook
+
+
+## dive...csv
+
+Sample of permissions (10% of customers), containing the following variables:
+
+- priv (string) permission name
+- cust_id (int) customer ID
+- year (int) priv year
+- lapse (int) (1,0) (Lapsed, Renewed)
+- R3 (int) (1-4) (Carry, Retain, Reactivate, Recruit)
+- res (int) (1,0) (Resident, Nonresident)
+- sex (int) (1,2) (Male, Female)
+- fips (int) county fips code
+- age (int) (1-7) (0-17, 18-24, 25-34, 35-44, 45-54, 55-64, 65+)
+
+
+## pop_cnty_all.csv
+
+State population by 4 dimensions:
+
+- year (int) population year
+- fips (int) county fips code
+- county (string) county name
+- sex (int) (1,2) (Male, Female)
+- age (int) (1-7) (0-17, 18-24, 25-34, 35-44, 45-54, 55-64, 65+)
+- pop (num) total population
+

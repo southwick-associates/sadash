@@ -54,8 +54,8 @@ run_visual_dive(x, county_map, pct = samp_pct)
 
 # Write to CSV -------------------------------------------------------
 
-dir_out <- file.path(dir_production, state, "data-dive")
-dir.create(dir_out, showWarnings = FALSE)
+dir_out <- file.path(dir_production, state, "data-dive", lastyr)
+dir.create(dir_out, showWarnings = FALSE, recursive = TRUE)
 
 out_file <- paste0("dive-", lastyr, "-", samp_pct, "pct", ".csv")
 write_csv(hist_samp, file.path(dir_out, out_file))

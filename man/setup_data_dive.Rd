@@ -4,21 +4,27 @@
 \alias{setup_data_dive}
 \title{Setup data dive template}
 \usage{
-setup_data_dive(state = NULL, time_period = NULL)
+setup_data_dive(state = NULL, time_period = NULL, sa_path = "E:/SA",
+  dive_dir = "5-data-dive")
 }
 \arguments{
-\item{state}{character: Two letter state designation. If NULL, uses the 
-working directory}
+\item{state}{character: Two letter state designation}
 
-\item{time_period}{character: Most recent time period ("2018-q4", etc.). If
-NULL, uses the working directory}
+\item{time_period}{character: Time period for the first dashboard 
+(e.g., "2015", "2016-q1", etc.)}
+
+\item{sa_path}{character: File path to the Southwick main folder 
+(for analysis and data, etc.)}
+
+\item{dive_dir}{folder for data dive code}
 }
 \description{
 This is to be run for an existing state-time_period dashboard project. 
-It creates a "5-data-dive" folder with template code.
+It creates a new folder with template code. Defaults to placing a "5-data-dive"
+folder in the working directory (i.e., when state and time_period are NULL).
 }
 \examples{
-# include examps
+# setup_data_dive()
 }
 \seealso{
 \code{\link{new_dashboard}}
