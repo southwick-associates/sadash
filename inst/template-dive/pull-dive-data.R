@@ -62,12 +62,11 @@ counties <- distinct(county_map, fips, county)
 pop_county <- load_pop(db_census, state) %>% 
     prep_pop(yrs) %>%
     mutate_at(c("sex", "agecat"), "as.integer") %>%
-    rename(fips = county_fips, age = agecat)
+    mutate(fips = drop_state_code(county_fips))
 
-# this join assumes drop_state_code = FALSE in get_county_map_dive() above
 pop_county <- pop_county %>%
     left_join(counties, by = "fips") %>%
-    select(year, fips, county, sex, age, pop)
+    select(year, fips, county, sex, age = agecat, pop)
 
 # Write Output Files -------------------------------------------------------
 # store 4 output files in the dir_out directory with an adjacent zip file
@@ -82,8 +81,7 @@ write_csv(pop_county, file.path(dir_out, out_file))
 glimpse(pop_county)
 
 # write county relation table
-distinct(county_map, fips, county) %>%
-    write_csv(file.path(dir_out, paste0("fips-to-county-", state, ".csv")))
+write_csv(counties, file.path(dir_out, paste0("fips-to-county-", state, ".csv")))
 
 # write permission data
 out_file <- paste0("dive-", lastyr, "-", samp_pct, "pct", ".csv")
