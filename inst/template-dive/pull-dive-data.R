@@ -32,7 +32,7 @@ hist_samp <- lapply(permissions, function(x) {
         select(priv, cust_id, year, lapse, R3, res, sex, fips, age)
 }) %>% bind_rows()
 
-# Check & Visualize ---------------------------------------------------------
+# Check Sample ---------------------------------------------------------
 
 # pull all history data for comparison
 hist <- lapply(permissions, function(x) {
@@ -50,7 +50,8 @@ ggplot(cnt, aes(year, n, fill = grp)) +
     geom_col(position = position_dodge()) +
     facet_wrap(~ priv, scales = "free_y")
 
-# visualize data dive
+# Visualize Data Dive -----------------------------------------------------
+
 county_map <- get_county_map_dive(state)
 x <- salic::label_categories(hist_samp) %>% salic::df_factor_age()
 run_visual_dive(x, county_map, pct = samp_pct)
