@@ -18,11 +18,12 @@ Mostly a wrapper for \code{\link{get_county_map}} with some formatting used
 in data dive.
 }
 \examples{
-get_county_map_dive("WI")
+get_county_map_dive("AL")
+get_county_map_dive("AL", drop_state_code = FALSE)
 }
 \seealso{
-Other data dive functions: \code{\link{filter_demo}},
-  \code{\link{load_cust_samp}},
+Other data dive functions: \code{\link{drop_state_code}},
+  \code{\link{filter_demo}}, \code{\link{load_cust_samp}},
   \code{\link{plot_county_dive}}, \code{\link{plot_dist}},
   \code{\link{plot_trend}}, \code{\link{run_visual_dive}},
   \code{\link{set_nonres_county_na}},

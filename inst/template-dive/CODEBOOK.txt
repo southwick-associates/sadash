@@ -9,16 +9,22 @@ Sample of permissions (10% of customers), containing the following variables:
 - cust_id (int) customer ID
 - year (int) priv year
 - lapse (int) (1,0) (Lapsed, Renewed)
-- R3 (int) (1-4) (Carry, Retain, Reactivate, Recruit)
+- R3 (int) (1-4) (Carry, Renew, Reactivate, Recruit)
 - res (int) (1,0) (Resident, Nonresident)
 - sex (int) (1,2) (Male, Female)
 - fips (int) county fips code
 - age (int) (1-7) (0-17, 18-24, 25-34, 35-44, 45-54, 55-64, 65+)
 
+## fips-to-county...csv
+
+A relation table for county names to fips codes
+
+# - fips (int)
+# - county (string) county name
 
 ## pop-cnty...csv
 
-State population by 4 dimensions:
+State population by 4 dimensions
 
 - year (int) population year
 - fips (int) county fips code
@@ -26,4 +32,3 @@ State population by 4 dimensions:
 - sex (int) (1,2) (Male, Female)
 - age (int) (1-7) (0-17, 18-24, 25-34, 35-44, 45-54, 55-64, 65+)
 - pop (num) total population
-

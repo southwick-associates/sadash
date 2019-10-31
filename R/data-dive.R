@@ -295,6 +295,41 @@ plot_dist <- function(priv, var = "sex") {
         )
 }
 
+#' Remove the state portion of county fips
+#' 
+#' Tableau seems to require just the county portion of the code for a given state.
+#' 
+#' @param x vector that holds the 5-digit fips code (e.g., 19001 for Iowa 
+#' Adair county)
+#' @family data dive functions
+#' @export
+#' @examples 
+#' \dontrun{
+#' db_license <- f <- "E:/SA/Data-production/Data-Dashboards/IA/license.sqlite3"
+#' fips <- load_cust(db_license) %>% pull(county_fips)
+#' fips_new <- drop_state_code(fips)
+#' df <- data.frame(fips, fips_new, stringsAsFactors = FALSE)
+#' head(df)
+#' filter(df, nchar(fips) == 4) %>% tail()
+#' 
+#' # stop with error
+#' drop_state_code(fips_new)
+#' }
+drop_state_code <- function(x) {
+    # full fips codes (state + county) will be length 5
+    # (or 4 if the leading zero for a state like AL is stripped)
+    fips_nchar <- unique(nchar(x[!is.na(x)]))
+    if (any(!fips_nchar %in% c(4,5))) {
+        stop("Running drop_state_code() likely won't produce correct results ",
+             "because some of the codes have < 4 characters (or > 5)", call. = FALSE)
+    }
+    
+    # we just want the last 3 digits
+    # - these should have leading zeroes, but we want these stripped in the output
+    start_point <- nchar(x) - 2
+    stringr::str_sub(x, start = start_point) %>% as.integer()
+}
+
 #' Load county spatial data for data dive
 #' 
 #' Mostly a wrapper for \code{\link{get_county_map}} with some formatting used
@@ -307,14 +342,13 @@ plot_dist <- function(priv, var = "sex") {
 #' @family data dive functions
 #' @export
 #' @examples 
-#' get_county_map_dive("WI")
+#' get_county_map_dive("AL")
+#' get_county_map_dive("AL", drop_state_code = FALSE)
 get_county_map_dive <- function(state, drop_state_code = TRUE) {
     x <- get_county_map(state)
     
     if (drop_state_code) {
-        x <- x %>% mutate(
-            fips = stringr::str_sub(.data$county_fips, start = 3) %>% as.integer()
-        )
+        x <- mutate(x, fips = drop_state_code(.data$county_fips))
     } else {
         x <- rename(x, fips = .data$county_fips)
     }

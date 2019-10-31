@@ -34,7 +34,8 @@ summarize_trend(priv, metric = "churn")
 summarize_trend(priv, "age", metric = "churn")
 }
 \seealso{
-Other data dive functions: \code{\link{filter_demo}},
+Other data dive functions: \code{\link{drop_state_code}},
+  \code{\link{filter_demo}},
   \code{\link{get_county_map_dive}},
   \code{\link{load_cust_samp}},
   \code{\link{plot_county_dive}}, \code{\link{plot_dist}},

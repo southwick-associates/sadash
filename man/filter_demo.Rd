@@ -31,7 +31,8 @@ priv <- filter_demo(priv, "R3", c("Renew", "Reactivate"))
 count(priv, R3, year) \%>\% tidyr::spread(year, n)
 }
 \seealso{
-Other data dive functions: \code{\link{get_county_map_dive}},
+Other data dive functions: \code{\link{drop_state_code}},
+  \code{\link{get_county_map_dive}},
   \code{\link{load_cust_samp}},
   \code{\link{plot_county_dive}}, \code{\link{plot_dist}},
   \code{\link{plot_trend}}, \code{\link{run_visual_dive}},

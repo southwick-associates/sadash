@@ -17,7 +17,7 @@ cust_samp <- db_history %>%
     load_cust_samp(yrs, samp_pct) %>%
     left_join(cust, by = "cust_id") %>%
     set_other_county_na(state)
-    
+
 # pull history data into one data frame
 permissions <- load_sqlite(db_history, function(con) DBI::dbListTables(con))
 hist_samp <- lapply(permissions, function(x) {
@@ -25,8 +25,11 @@ hist_samp <- lapply(permissions, function(x) {
         inner_join(cust_samp, by = "cust_id") %>%
         set_nonres_county_na() %>%
         salic::recode_agecat() %>%
-        mutate(priv = x) %>%
-        select(priv, cust_id, year, lapse, R3, res, sex, fips = county_fips, age)
+        mutate(
+            priv = x,
+            fips = drop_state_code(county_fips)
+        ) %>%
+        select(priv, cust_id, year, lapse, R3, res, sex, fips, age)
 }) %>% bind_rows()
 
 # Check & Visualize ---------------------------------------------------------
@@ -48,7 +51,7 @@ ggplot(cnt, aes(year, n, fill = grp)) +
     facet_wrap(~ priv, scales = "free_y")
 
 # visualize data dive
-county_map <- get_county_map_dive(state, drop_state_code = FALSE)
+county_map <- get_county_map_dive(state)
 x <- salic::label_categories(hist_samp) %>% salic::df_factor_age()
 run_visual_dive(x, county_map, pct = samp_pct)
 
@@ -67,7 +70,7 @@ pop_county <- pop_county %>%
     select(year, fips, county, sex, age, pop)
 
 # Write Output Files -------------------------------------------------------
-# store 3 output files in the dir_out directory with an adjacent zip file
+# store 4 output files in the dir_out directory with an adjacent zip file
 
 # initiate directory
 dir_out <- file.path(dir_production, state, "data-dive", lastyr)
@@ -77,6 +80,10 @@ dir.create(dir_out, showWarnings = FALSE, recursive = TRUE)
 out_file <- paste0("pop-cnty-", firstyr, "-to-", lastyr, ".csv")
 write_csv(pop_county, file.path(dir_out, out_file))
 glimpse(pop_county)
+
+# write county relation table
+distinct(county_map, fips, county) %>%
+    write_csv(file.path(dir_out, paste0("fips-to-county-", state, ".csv")))
 
 # write permission data
 out_file <- paste0("dive-", lastyr, "-", samp_pct, "pct", ".csv")

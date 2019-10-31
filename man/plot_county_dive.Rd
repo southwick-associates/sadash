@@ -27,7 +27,8 @@ plot_county_dive(priv, county_map, pct = 1)
 plot_county_dive(priv, county_map, "churn")
 }
 \seealso{
-Other data dive functions: \code{\link{filter_demo}},
+Other data dive functions: \code{\link{drop_state_code}},
+  \code{\link{filter_demo}},
   \code{\link{get_county_map_dive}},
   \code{\link{load_cust_samp}}, \code{\link{plot_dist}},
   \code{\link{plot_trend}}, \code{\link{run_visual_dive}},
