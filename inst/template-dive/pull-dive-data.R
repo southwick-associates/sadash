@@ -72,21 +72,23 @@ pop_county <- pop_county %>%
 # Write Output Files -------------------------------------------------------
 # store 4 output files in the dir_out directory with an adjacent zip file
 
+write_out <- function(x, ...) write_csv(x, na = "", ...)
+
 # initiate directory
 dir_out <- file.path(dir_production, state, "data-dive", lastyr)
 dir.create(dir_out, showWarnings = FALSE, recursive = TRUE)
 
 # write population data
 out_file <- paste0("pop-cnty-", firstyr, "-to-", lastyr, ".csv")
-write_csv(pop_county, file.path(dir_out, out_file))
+write_out(pop_county, file.path(dir_out, out_file))
 glimpse(pop_county)
 
 # write county relation table
-write_csv(counties, file.path(dir_out, paste0("fips-to-county-", state, ".csv")))
+write_out(counties, file.path(dir_out, paste0("fips-to-county-", state, ".csv")))
 
 # write permission data
 out_file <- paste0("dive-", lastyr, "-", samp_pct, "pct", ".csv")
-write_csv(hist_samp, file.path(dir_out, out_file))
+write_out(hist_samp, file.path(dir_out, out_file))
 glimpse(hist_samp)
 
 # write CODEBOOK
