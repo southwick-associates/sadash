@@ -16,7 +16,7 @@ plot_value2(df, plot_title = "", measure = "value", n = 5)
 \item{n}{passed to \code{\link{int_breaks}} for x-axis labelling}
 }
 \description{
-Mostly a wrapper for \code{\link[dashtemplate]{plot_bar}} with some 
+Mostly a wrapper for \code{\link{plot_bar}} with some 
 additional formatting. It's expected that the input table will only contain
 a single group-quarter-segment.
 }
@@ -29,8 +29,8 @@ plot_value2(x)
 \seealso{
 Other functions to run dashboard visualization: \code{\link{get_county_map}},
   \code{\link{int_breaks}}, \code{\link{join_county_map}},
-  \code{\link{plot_county}}, \code{\link{plot_month}},
-  \code{\link{plotly_config}},
+  \code{\link{plot_bar}}, \code{\link{plot_county}},
+  \code{\link{plot_month}}, \code{\link{plotly_config}},
   \code{\link{run_visual_county}},
   \code{\link{ui_button_layout}}
 }

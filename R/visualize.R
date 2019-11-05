@@ -16,13 +16,38 @@ int_breaks <- function(x, n = 5) {
     pretty(x, n)[pretty(x, n) %% 1 == 0]
 }
 
+#' Make a bar plot: measure by year (facetted using metric & category)
+#' 
+#' This is used as a generic function in \code{\link{plot_value2}}. It was 
+#' copied from dashboard-template code shared with state agencies. Included
+#' in entirety here to reduce dependencies.
+#' 
+#' @param df data frame with summary results
+#' @param plot_title caption to show in plot
+#' @param measure variable to be plotted on the y axis
+#' @family functions to run dashboard visualization
+#' @export
+plot_bar <- function(df, plot_title = "", measure = "value") {
+    df %>%
+        ggplot(aes_string("year", measure, fill = "metric")) +
+        geom_col() +
+        facet_grid(metric ~ category, scales = "free_y") +
+        scale_fill_brewer(type = "qual", palette = 7) +
+        theme(
+            axis.title = element_blank(),
+            text = element_text(size = 15),
+            legend.position = "none"
+        ) +
+        ggtitle(plot_title)
+}
+
 #' Plot value by year for metric-category
 #' 
-#' Mostly a wrapper for \code{\link[dashtemplate]{plot_bar}} with some 
+#' Mostly a wrapper for \code{\link{plot_bar}} with some 
 #' additional formatting. It's expected that the input table will only contain
 #' a single group-quarter-segment.
 #' 
-#' @inheritParams dashtemplate::plot_value
+#' @inheritParams plot_bar
 #' @param n passed to \code{\link{int_breaks}} for x-axis labelling
 #' @family functions to run dashboard visualization
 #' @export
@@ -33,7 +58,7 @@ int_breaks <- function(x, n = 5) {
 #' plot_value2(x)
 plot_value2 <- function(df, plot_title = "", measure = "value", n = 5) {
     df %>% 
-        dashtemplate::plot_bar(plot_title, measure) +
+        plot_bar(plot_title, measure) +
         scale_x_continuous(breaks = function(x) int_breaks(x, n)) +
         scale_y_continuous(breaks = scales::pretty_breaks(n = 2),
                            labels = scales::comma) +

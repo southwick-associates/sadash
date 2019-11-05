@@ -44,7 +44,7 @@ This includes a summary of the core functions grouped by task.
   all metrics for a permission
   \item use \code{\link{format_metrics}} and \code{\link{write_dash}}
   in sequence to produce csv files by permission-quarter
-  \item use dashtemplate::run_visual() to check results
+  \item use \code{\link{run_visual}} to check results
 }
 }
 

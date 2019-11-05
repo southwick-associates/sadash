@@ -1,4 +1,8 @@
 
+## Version 1.0.7
+
+Removed dashtemplate dependency
+
 ## Version 1.0.6
 
 Added functionality for producing data dive: setup_data_dive(), run_visual_dive(), etc.

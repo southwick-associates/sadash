@@ -39,9 +39,9 @@ plot_county(x) \%>\% gridExtra::grid.arrange(grobs = .)
 }
 \seealso{
 Other functions to run dashboard visualization: \code{\link{get_county_map}},
-  \code{\link{int_breaks}}, \code{\link{plot_county}},
-  \code{\link{plot_month}}, \code{\link{plot_value2}},
-  \code{\link{plotly_config}},
+  \code{\link{int_breaks}}, \code{\link{plot_bar}},
+  \code{\link{plot_county}}, \code{\link{plot_month}},
+  \code{\link{plot_value2}}, \code{\link{plotly_config}},
   \code{\link{run_visual_county}},
   \code{\link{ui_button_layout}}
 }

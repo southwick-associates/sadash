@@ -49,7 +49,7 @@ if (getRversion() >= "2.15.1") {
 #'   all metrics for a permission
 #'   \item use \code{\link{format_metrics}} and \code{\link{write_dash}}
 #'   in sequence to produce csv files by permission-quarter
-#'   \item use dashtemplate::run_visual() to check results
+#'   \item use \code{\link{run_visual}} to check results
 #' }
 #' 
 #' @section Preparing Data Dive:

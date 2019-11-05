@@ -15,9 +15,6 @@ install.packages(c("tidyverse", "data.table", "shiny", "DBI", "RSQLite",
 # salic
 devtools::install_github("southwick-associates/salic")
 
-# dashtemplate - need to use server since package docs aren't included in repo
-devtools::install("E:/SA/Projects/R-Software/Templates/dashboard-template")
-
 # sadash
 devtools::install_github("southwick-associates/sadash")
 ```

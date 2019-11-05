@@ -21,8 +21,9 @@ to prevent the menu drop downs from getting messed up, see
 \seealso{
 Other functions to run dashboard visualization: \code{\link{get_county_map}},
   \code{\link{int_breaks}}, \code{\link{join_county_map}},
-  \code{\link{plot_county}}, \code{\link{plot_month}},
-  \code{\link{plot_value2}}, \code{\link{plotly_config}},
+  \code{\link{plot_bar}}, \code{\link{plot_county}},
+  \code{\link{plot_month}}, \code{\link{plot_value2}},
+  \code{\link{plotly_config}},
   \code{\link{run_visual_county}}
 }
 \concept{functions to run dashboard visualization}
