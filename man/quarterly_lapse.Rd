@@ -18,7 +18,8 @@ Calculate lapse for a quarterly subset (where quarter != 4)
 }
 \seealso{
 Other functions to prepare data for summarization: \code{\link{aggregate_pop}},
-  \code{\link{extrapolate_pop}}, \code{\link{prep_pop}},
+  \code{\link{extrapolate_pop}},
+  \code{\link{factor_age_acs}}, \code{\link{prep_pop}},
   \code{\link{quarterly_filter}},
   \code{\link{recode_history}}
 }

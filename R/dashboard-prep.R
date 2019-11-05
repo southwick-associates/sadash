@@ -71,6 +71,33 @@ extrapolate_pop <- function(pop, yrs) {
         bind_rows(pop)
 }
 
+#' Convert age_acs from character to factor
+#' 
+#' This will ensure correct ordering in plots, etc. Uses \code{\link{age_map}}
+#' sample data to identify factor levels.
+#' 
+#' @inheritParams prep_pop
+#' @inheritParams salic::factor_var
+#' @family functions to prepare data for summarization
+#' @export
+#' @examples 
+#' db_census <- "E:/SA/Data-production/Data-Dashboards/_Shared/census.sqlite3"
+#' pop <- load_pop(db_census, "NC")
+#' pop <- factor_age_acs(pop, suppress_check = FALSE)
+factor_age_acs <- function(pop, suppress_check = TRUE) {
+    utils::data("age_map", envir = environment())
+    levs <- unique(age_map$age_acs)
+    
+    new <- factor(pop$age_acs, levels = levs)
+    if (!suppress_check) {
+        dplyr::bind_cols(new = new, old = pop$age_acs) %>% 
+            dplyr::count(.data$new, .data$old) %>% 
+            print(n = Inf)
+    }
+    pop$age_acs <- new
+    pop
+}
+
 # Permission data ---------------------------------------------------------
 
 #' Prepare license history for selected quarter (recoding)

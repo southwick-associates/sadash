@@ -17,6 +17,7 @@ This is partly a wrapper for aggregate_pop() & extrapolate_pop()
 \seealso{
 Other functions to prepare data for summarization: \code{\link{aggregate_pop}},
   \code{\link{extrapolate_pop}},
+  \code{\link{factor_age_acs}},
   \code{\link{quarterly_filter}},
   \code{\link{quarterly_lapse}},
   \code{\link{recode_history}}
