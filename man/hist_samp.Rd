@@ -20,8 +20,8 @@
 A 1 percent sample of one state's permission dynamics
 }
 \seealso{
-Other Sample Data: \code{\link{county_map_us}},
-  \code{\link{dashboard}}
+Other Sample Data: \code{\link{age_map}},
+  \code{\link{county_map_us}}, \code{\link{dashboard}}
 }
 \concept{Sample Data}
 \keyword{datasets}

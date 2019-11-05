@@ -1,7 +1,8 @@
 
 ## Version 1.0.7
 
-Removed dashtemplate dependency
+- Removed dashtemplate dependency
+- Added age_map sample data (relation to ACS census age categories)
 
 ## Version 1.0.6
 

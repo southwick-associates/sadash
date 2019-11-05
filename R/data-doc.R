@@ -63,3 +63,19 @@ NULL
 #' }
 #' @family Sample Data
 NULL
+
+#' Sample Data: ACS Age Category Relation Table
+#' 
+#' Based on the "pop_acs" table stored in "_Shared/census.sqlite3"
+#'
+#' @docType data
+#' @keywords datasets
+#' @name age_map
+#' @format A data frame with 3 variables and 101 observations
+#' \describe{
+#' \item{age_year}{integer: Ages from 0 to 100}
+#' \item{lic_age}{integer: Age category for dashboards}
+#' \item{acs_age}{factor: Age category used by ACS}
+#' }
+#' @family Sample Data
+NULL
