@@ -5,18 +5,11 @@ An R package for Southwick internal use: functions and templates to run individu
 
 ## Installation
 
-These should be installed on the server in the 'data-dashboards2' project library. Otherwise, install the necessary packages using devtools:
+These should be installed on the server in the 'data-dashboards2' project library. Otherwise, install the necessary packages from R:
 
 ``` r
-# dependencies
-install.packages(c("tidyverse", "data.table", "shiny", "DBI", "RSQLite", 
-                 "gridExtra", "plotly", "devtools"))
-
-# salic
-devtools::install_github("southwick-associates/salic")
-
-# sadash
-devtools::install_github("southwick-associates/sadash")
+install.packages("remotes")
+remotes::install_github("southwick-associates/sadash")
 ```
 
 ## Usage
