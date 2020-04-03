@@ -15,10 +15,12 @@ extrapolate_pop(pop, yrs)
 Extrapolate population forward for years without estimates
 }
 \seealso{
-Other functions to prepare data for summarization: \code{\link{aggregate_pop}},
-  \code{\link{factor_age_acs}}, \code{\link{prep_pop}},
-  \code{\link{quarterly_filter}},
-  \code{\link{quarterly_lapse}},
-  \code{\link{recode_history}}
+Other functions to prepare data for summarization: 
+\code{\link{aggregate_pop}()},
+\code{\link{factor_age_acs}()},
+\code{\link{prep_pop}()},
+\code{\link{quarterly_filter}()},
+\code{\link{quarterly_lapse}()},
+\code{\link{recode_history}()}
 }
 \concept{functions to prepare data for summarization}

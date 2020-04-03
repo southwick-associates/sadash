@@ -17,6 +17,7 @@ Depends:
 Imports:
     data.table (>= 1.11.4),
     DBI (>= 1.0.0),
+    dbplyr,
     dplyr (>= 0.7.6),
     ggplot2 (>= 3.0.0),
     gridExtra,
@@ -30,4 +31,4 @@ Imports:
     tidyr
 Remotes:
     southwick-associates/salic
-RoxygenNote: 6.1.0
+RoxygenNote: 7.1.0

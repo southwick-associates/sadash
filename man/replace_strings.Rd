@@ -4,20 +4,26 @@
 \alias{replace_strings}
 \title{Search and replace string across files with R}
 \usage{
-replace_strings(path = ".", find_string, replacement_string,
-  pattern = ".R", showmessage = TRUE)
+replace_strings(
+  path = ".",
+  find_string,
+  replacement_string,
+  pattern = ".R",
+  showmessage = TRUE
+)
 }
 \arguments{
 \item{path}{a character vector of full path names; the default
-    corresponds to the working directory, \code{\link{getwd}()}.  Tilde
-    expansion (see \code{\link{path.expand}}) is performed.  Missing
-    values will be ignored.}
+    corresponds to the working directory, \code{\link[base]{getwd}()}.  Tilde
+    expansion (see \code{\link[base]{path.expand}}) is performed.  Missing
+    values will be ignored.  Elements with a marked encoding will
+    be converted to the native encoding.}
 
 \item{find_string}{character: String (to find) that will be replaced}
 
 \item{replacement_string}{character: New string to use}
 
-\item{pattern}{an optional \link{regular expression}.  Only file names
+\item{pattern}{an optional \link[base]{regular expression}.  Only file names
     which match the regular expression will be returned.}
 
 \item{showmessage}{logical: If TRUE, prints a message about replacement}

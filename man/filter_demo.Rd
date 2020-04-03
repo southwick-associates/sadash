@@ -4,8 +4,12 @@
 \alias{filter_demo}
 \title{Filter data for given variable}
 \usage{
-filter_demo(priv, var = "sex", var_select = c("Male", "Female"),
-  var_all = c("Male", "Female"))
+filter_demo(
+  priv,
+  var = "sex",
+  var_select = c("Male", "Female"),
+  var_all = c("Male", "Female")
+)
 }
 \arguments{
 \item{priv}{data for one permission}
@@ -31,14 +35,17 @@ priv <- filter_demo(priv, "R3", c("Renew", "Reactivate"))
 count(priv, R3, year) \%>\% tidyr::spread(year, n)
 }
 \seealso{
-Other data dive functions: \code{\link{drop_state_code}},
-  \code{\link{get_county_map_dive}},
-  \code{\link{load_cust_samp}},
-  \code{\link{plot_county_dive}}, \code{\link{plot_dist}},
-  \code{\link{plot_trend}}, \code{\link{run_visual_dive}},
-  \code{\link{set_nonres_county_na}},
-  \code{\link{set_other_county_na}},
-  \code{\link{setup_data_dive}},
-  \code{\link{summarize_trend}}
+Other data dive functions: 
+\code{\link{drop_state_code}()},
+\code{\link{get_county_map_dive}()},
+\code{\link{load_cust_samp}()},
+\code{\link{plot_county_dive}()},
+\code{\link{plot_dist}()},
+\code{\link{plot_trend}()},
+\code{\link{run_visual_dive}()},
+\code{\link{set_nonres_county_na}()},
+\code{\link{set_other_county_na}()},
+\code{\link{setup_data_dive}()},
+\code{\link{summarize_trend}()}
 }
 \concept{data dive functions}

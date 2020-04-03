@@ -4,9 +4,14 @@
 \alias{update_dashboard}
 \title{Setup a new period for a dashboard state}
 \usage{
-update_dashboard(state, time_period, ref_period, sa_path = "E:/SA",
+update_dashboard(
+  state,
+  time_period,
+  ref_period,
+  sa_path = "E:/SA",
   files_to_keep = c("\\\\.r", "documentation\\\\.tex"),
-  files_to_drop = c("\\\\.rproj"))
+  files_to_drop = c("\\\\.rproj")
+)
 }
 \arguments{
 \item{state}{character: Two letter state designation}
@@ -32,7 +37,8 @@ folder will include all ref_period R files (.R, .Rmd, etc.) and their
 containing folders, as well as the documentation.tex file.
 }
 \seealso{
-Other functions for making template files/folders: \code{\link{new_dashboard}},
-  \code{\link{setup_dashboard}}
+Other functions for making template files/folders: 
+\code{\link{new_dashboard}()},
+\code{\link{setup_dashboard}()}
 }
 \concept{functions for making template files/folders}

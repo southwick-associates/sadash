@@ -1,7 +1,7 @@
 
 ## Version 1.0.7
 
-- May want vignettes rather than so much detail in the readme. Shouldn't be too difficult to basically transfer the existing example code (no need to get fancy)
+- Improve documentation, and store in vignettes
     + intro (overview & template code setup)
     + history
     + dashboard
@@ -15,7 +15,7 @@
     
 ## Version 1.1.0
 
-Need tests! Making changes to code is quite a pain currently b/c it is laborious to find things like syntax errors. Although even including examples (which get run with R CMD check) would improve this.
+We might want tests using testthat (similar to what was done in salic). Making changes to code is quite a pain currently b/c it is laborious to find things like syntax errors. Although even including examples (which get run with R CMD check) would improve this.
 
 It may be that functions will need to be tweaked, improved, etc. on the backend. However, it is difficult to do that reliably without tests (and probably sample data). Therefore, any changes should begin with tests to ensure that functionality is not broken, or a change to a function leads to an error in calculation.
 
@@ -43,8 +43,6 @@ est_part <- function(
 }
 ```
 
-- write tests (maybe also incorporating sample data)
-- maybe improve function documentation (e.g., with examples)
 - maybe make a fill_segs() function to ensure tableau gets res/nonres, etc.
     + filling with zeroes for any missing categories (in res, sex, agecat)
     + probably won't happen for sex, agecat, but might be worth generalizing

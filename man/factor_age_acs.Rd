@@ -21,10 +21,12 @@ pop <- load_pop(db_census, "NC")
 pop <- factor_age_acs(pop, suppress_check = FALSE)
 }
 \seealso{
-Other functions to prepare data for summarization: \code{\link{aggregate_pop}},
-  \code{\link{extrapolate_pop}}, \code{\link{prep_pop}},
-  \code{\link{quarterly_filter}},
-  \code{\link{quarterly_lapse}},
-  \code{\link{recode_history}}
+Other functions to prepare data for summarization: 
+\code{\link{aggregate_pop}()},
+\code{\link{extrapolate_pop}()},
+\code{\link{prep_pop}()},
+\code{\link{quarterly_filter}()},
+\code{\link{quarterly_lapse}()},
+\code{\link{recode_history}()}
 }
 \concept{functions to prepare data for summarization}

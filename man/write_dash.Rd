@@ -20,10 +20,14 @@ output (e.g., 'all_sports', 'fish', 'hunt')}
 Convenience function: output a csv file for given permission-quarter results
 }
 \seealso{
-Other dashboard functions: \code{\link{calc_metrics}},
-  \code{\link{calc_part_rate}}, \code{\link{calc_part}},
-  \code{\link{calc_priv_rate}}, \code{\link{est_month}},
-  \code{\link{est_pop}}, \code{\link{est_rate}},
-  \code{\link{format_metrics}}
+Other dashboard functions: 
+\code{\link{calc_metrics}()},
+\code{\link{calc_part_rate}()},
+\code{\link{calc_part}()},
+\code{\link{calc_priv_rate}()},
+\code{\link{est_month}()},
+\code{\link{est_pop}()},
+\code{\link{est_rate}()},
+\code{\link{format_metrics}()}
 }
 \concept{dashboard functions}

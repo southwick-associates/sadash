@@ -10,3 +10,4 @@
 ^docs$
 ^\.gitignore$
 ^development$
+^github_vignettes$

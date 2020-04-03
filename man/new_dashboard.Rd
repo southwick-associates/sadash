@@ -4,8 +4,13 @@
 \alias{new_dashboard}
 \title{Setup a new state dashboard with default directories and template scripts}
 \usage{
-new_dashboard(state, time_period, sa_path = "E:/SA",
-  R_version = "3.5.1", project_library = "data-dashboards2")
+new_dashboard(
+  state,
+  time_period,
+  sa_path = "E:/SA",
+  R_version = "3.5.1",
+  project_library = "data-dashboards2"
+)
 }
 \arguments{
 \item{state}{character: Two letter state designation}
@@ -27,7 +32,8 @@ This is intended to be run before data processing for a new state begins.
 # new_dashboard("YY", "2018-q4")
 }
 \seealso{
-Other functions for making template files/folders: \code{\link{setup_dashboard}},
-  \code{\link{update_dashboard}}
+Other functions for making template files/folders: 
+\code{\link{setup_dashboard}()},
+\code{\link{update_dashboard}()}
 }
 \concept{functions for making template files/folders}

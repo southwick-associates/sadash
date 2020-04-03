@@ -21,7 +21,9 @@ write_history(history, group, lic_slct, db_history, db_license)
 Write history table to sqlite
 }
 \seealso{
-Other functions for producing license history: \code{\link{data_check_sa}},
-  \code{\link{drop_na_custid}}, \code{\link{load_license}}
+Other functions for producing license history: 
+\code{\link{data_check_sa}()},
+\code{\link{drop_na_custid}()},
+\code{\link{load_license}()}
 }
 \concept{functions for producing license history}

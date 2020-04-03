@@ -18,10 +18,14 @@ percent). A warning will be printed for every row that exceeds the threshold}
 Estimate rate based on participant and population counts
 }
 \seealso{
-Other dashboard functions: \code{\link{calc_metrics}},
-  \code{\link{calc_part_rate}}, \code{\link{calc_part}},
-  \code{\link{calc_priv_rate}}, \code{\link{est_month}},
-  \code{\link{est_pop}}, \code{\link{format_metrics}},
-  \code{\link{write_dash}}
+Other dashboard functions: 
+\code{\link{calc_metrics}()},
+\code{\link{calc_part_rate}()},
+\code{\link{calc_part}()},
+\code{\link{calc_priv_rate}()},
+\code{\link{est_month}()},
+\code{\link{est_pop}()},
+\code{\link{format_metrics}()},
+\code{\link{write_dash}()}
 }
 \concept{dashboard functions}

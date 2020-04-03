@@ -3,7 +3,6 @@
 \docType{package}
 \name{sadash}
 \alias{sadash}
-\alias{sadash-package}
 \title{sadash: Prepare state data dashboards}
 \description{
 This includes a summary of the core functions grouped by task.

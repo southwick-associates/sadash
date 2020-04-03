@@ -4,8 +4,14 @@
 \alias{calc_part}
 \title{Calculate participants: return list of length 2 (participants, residents)}
 \usage{
-calc_part(history, segs, tests, scaleup_test, res_type = NULL,
-  use_recruits = FALSE)
+calc_part(
+  history,
+  segs,
+  tests,
+  scaleup_test,
+  res_type = NULL,
+  use_recruits = FALSE
+)
 }
 \arguments{
 \item{history}{data frame: input history table for permission}
@@ -26,10 +32,14 @@ history$R3 == "Recruit"}
 Calculate participants: return list of length 2 (participants, residents)
 }
 \seealso{
-Other dashboard functions: \code{\link{calc_metrics}},
-  \code{\link{calc_part_rate}},
-  \code{\link{calc_priv_rate}}, \code{\link{est_month}},
-  \code{\link{est_pop}}, \code{\link{est_rate}},
-  \code{\link{format_metrics}}, \code{\link{write_dash}}
+Other dashboard functions: 
+\code{\link{calc_metrics}()},
+\code{\link{calc_part_rate}()},
+\code{\link{calc_priv_rate}()},
+\code{\link{est_month}()},
+\code{\link{est_pop}()},
+\code{\link{est_rate}()},
+\code{\link{format_metrics}()},
+\code{\link{write_dash}()}
 }
 \concept{dashboard functions}

@@ -15,10 +15,14 @@ est_pop(pop_acs, segment)
 Summarize population by year for a given segment
 }
 \seealso{
-Other dashboard functions: \code{\link{calc_metrics}},
-  \code{\link{calc_part_rate}}, \code{\link{calc_part}},
-  \code{\link{calc_priv_rate}}, \code{\link{est_month}},
-  \code{\link{est_rate}}, \code{\link{format_metrics}},
-  \code{\link{write_dash}}
+Other dashboard functions: 
+\code{\link{calc_metrics}()},
+\code{\link{calc_part_rate}()},
+\code{\link{calc_part}()},
+\code{\link{calc_priv_rate}()},
+\code{\link{est_month}()},
+\code{\link{est_rate}()},
+\code{\link{format_metrics}()},
+\code{\link{write_dash}()}
 }
 \concept{dashboard functions}

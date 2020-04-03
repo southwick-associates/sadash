@@ -4,7 +4,8 @@
 \name{dashboard}
 \alias{dashboard}
 \title{Sample Data: Metrics formatted for Dashboard Input}
-\format{A data frame with 7 variables
+\format{
+A data frame with 7 variables
 \describe{
 \item{quarter}{Time period covered (2 or 4)}
 \item{group}{Permission group ("all_sports", "hunt", "fish", etc.)}
@@ -13,14 +14,17 @@
 \item{category}{Category breakouts for segment}
 \item{metric}{Metric Summarized ("participants", "recruits", "churn", "rate")}
 \item{value}{Value of metric for given dimension}
-}}
+}
+}
 \description{
 This data frame holds national/regional dashboard metrics formatted for 
 dashboard input pulled from SC 2019-Q2 in Oct, 2019.
 }
 \seealso{
-Other Sample Data: \code{\link{age_map}},
-  \code{\link{county_map_us}}, \code{\link{hist_samp}}
+Other Sample Data: 
+\code{\link{age_map}},
+\code{\link{county_map_us}},
+\code{\link{hist_samp}}
 }
 \concept{Sample Data}
 \keyword{datasets}

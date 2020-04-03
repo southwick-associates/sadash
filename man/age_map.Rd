@@ -4,18 +4,22 @@
 \name{age_map}
 \alias{age_map}
 \title{Sample Data: ACS Age Category Relation Table}
-\format{A data frame with 3 variables and 101 observations
+\format{
+A data frame with 3 variables and 101 observations
 \describe{
 \item{age_year}{integer: Ages from 0 to 100}
 \item{age}{integer: Age category for dashboards}
 \item{age_acs}{character: Age category used by ACS}
-}}
+}
+}
 \description{
 Based on the "pop_acs" table stored in "_Shared/census.sqlite3"
 }
 \seealso{
-Other Sample Data: \code{\link{county_map_us}},
-  \code{\link{dashboard}}, \code{\link{hist_samp}}
+Other Sample Data: 
+\code{\link{county_map_us}},
+\code{\link{dashboard}},
+\code{\link{hist_samp}}
 }
 \concept{Sample Data}
 \keyword{datasets}

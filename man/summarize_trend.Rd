@@ -4,8 +4,13 @@
 \alias{summarize_trend}
 \title{Summarize trend for either participants or churn}
 \usage{
-summarize_trend(priv, down = "None", across = "None",
-  metric = "participants", pct = 10)
+summarize_trend(
+  priv,
+  down = "None",
+  across = "None",
+  metric = "participants",
+  pct = 10
+)
 }
 \arguments{
 \item{priv}{data for one permission}
@@ -34,14 +39,17 @@ summarize_trend(priv, metric = "churn")
 summarize_trend(priv, "age", metric = "churn")
 }
 \seealso{
-Other data dive functions: \code{\link{drop_state_code}},
-  \code{\link{filter_demo}},
-  \code{\link{get_county_map_dive}},
-  \code{\link{load_cust_samp}},
-  \code{\link{plot_county_dive}}, \code{\link{plot_dist}},
-  \code{\link{plot_trend}}, \code{\link{run_visual_dive}},
-  \code{\link{set_nonres_county_na}},
-  \code{\link{set_other_county_na}},
-  \code{\link{setup_data_dive}}
+Other data dive functions: 
+\code{\link{drop_state_code}()},
+\code{\link{filter_demo}()},
+\code{\link{get_county_map_dive}()},
+\code{\link{load_cust_samp}()},
+\code{\link{plot_county_dive}()},
+\code{\link{plot_dist}()},
+\code{\link{plot_trend}()},
+\code{\link{run_visual_dive}()},
+\code{\link{set_nonres_county_na}()},
+\code{\link{set_other_county_na}()},
+\code{\link{setup_data_dive}()}
 }
 \concept{data dive functions}

@@ -4,7 +4,8 @@
 \name{hist_samp}
 \alias{hist_samp}
 \title{Sample Data: Permission data for use in \code{\link{run_visual_dive}}}
-\format{a data frame with 9 variables and approximately 550K observations
+\format{
+a data frame with 9 variables and approximately 550K observations
 \describe{
 \item{priv}{name of permission}
 \item{cust_id}{customer ID}
@@ -15,13 +16,16 @@
 \item{sex}{gender}
 \item{fips}{county fips code (without state portion of code)}
 \item{age}{age category}
-}}
+}
+}
 \description{
 A 1 percent sample of one state's permission dynamics
 }
 \seealso{
-Other Sample Data: \code{\link{age_map}},
-  \code{\link{county_map_us}}, \code{\link{dashboard}}
+Other Sample Data: 
+\code{\link{age_map}},
+\code{\link{county_map_us}},
+\code{\link{dashboard}}
 }
 \concept{Sample Data}
 \keyword{datasets}

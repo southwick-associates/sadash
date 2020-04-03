@@ -4,12 +4,17 @@
 \alias{data_check_sa}
 \title{Check std. data formatting rules for Southwick dashboards}
 \usage{
-data_check_sa(cust, lic, sale, cust_vars = c("cust_id", "sex",
-  "birth_year", "county_fips"), lic_vals = list(type = c("fish", "hunt",
-  "combo", "trap", "other"), duration = 1:99), sale_vals = list(year =
-  c(2000:substr(Sys.Date(), 1, 4)), month = 0:15, res = c(1, 0, NA)),
-  cust_vals = list(sex = c(1, 2, NA), birth_year =
-  c(1870:substr(Sys.Date(), 1, 4), NA)))
+data_check_sa(
+  cust,
+  lic,
+  sale,
+  cust_vars = c("cust_id", "sex", "birth_year", "county_fips"),
+  lic_vals = list(type = c("fish", "hunt", "combo", "trap", "other"), duration = 1:99),
+  sale_vals = list(year = c(2000:substr(Sys.Date(), 1, 4)), month = 0:15, res = c(1, 0,
+    NA)),
+  cust_vals = list(sex = c(1, 2, NA), birth_year = c(1870:substr(Sys.Date(), 1, 4),
+    NA))
+)
 }
 \arguments{
 \item{cust}{data frame: customer table (primary key = "cust_id")}
@@ -31,7 +36,9 @@ This is a variation on \code{\link[salic]{data_check}} that has some
 differences in required variables and allowed values.
 }
 \seealso{
-Other functions for producing license history: \code{\link{drop_na_custid}},
-  \code{\link{load_license}}, \code{\link{write_history}}
+Other functions for producing license history: 
+\code{\link{drop_na_custid}()},
+\code{\link{load_license}()},
+\code{\link{write_history}()}
 }
 \concept{functions for producing license history}

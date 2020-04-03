@@ -4,8 +4,11 @@
 \alias{recode_history}
 \title{Prepare license history for selected quarter (recoding)}
 \usage{
-recode_history(history, month_to_quarter = function(x) case_when(x <= 3 ~
-  1, x <= 6 ~ 2, x <= 9 ~ 3, TRUE ~ 4))
+recode_history(
+  history,
+  month_to_quarter = function(x) case_when(x <= 3 ~ 1, x <= 6 ~ 2, x <= 9 ~ 3, TRUE ~
+    4)
+)
 }
 \arguments{
 \item{history}{data frame: table produced by load_history()}
@@ -21,10 +24,12 @@ The month_to_quarter parameter is used to specify an output "quarter" variable
 based on the input "month" variable.
 }
 \seealso{
-Other functions to prepare data for summarization: \code{\link{aggregate_pop}},
-  \code{\link{extrapolate_pop}},
-  \code{\link{factor_age_acs}}, \code{\link{prep_pop}},
-  \code{\link{quarterly_filter}},
-  \code{\link{quarterly_lapse}}
+Other functions to prepare data for summarization: 
+\code{\link{aggregate_pop}()},
+\code{\link{extrapolate_pop}()},
+\code{\link{factor_age_acs}()},
+\code{\link{prep_pop}()},
+\code{\link{quarterly_filter}()},
+\code{\link{quarterly_lapse}()}
 }
 \concept{functions to prepare data for summarization}

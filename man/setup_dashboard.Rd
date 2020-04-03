@@ -21,7 +21,8 @@ Runs initial variable preparation, sets up folders, and creates a ".Rproj"
 file in the analysis folder.
 }
 \seealso{
-Other functions for making template files/folders: \code{\link{new_dashboard}},
-  \code{\link{update_dashboard}}
+Other functions for making template files/folders: 
+\code{\link{new_dashboard}()},
+\code{\link{update_dashboard}()}
 }
 \concept{functions for making template files/folders}

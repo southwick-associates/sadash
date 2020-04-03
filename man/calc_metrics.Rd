@@ -4,11 +4,19 @@
 \alias{calc_metrics}
 \title{Calculate all 5 metrics for a permission}
 \usage{
-calc_metrics(history, pop_county, sale, dashboard_yrs, part_ref = NULL,
-  res_type = NULL, segs = c("tot", "res", "sex", "agecat", "county"),
+calc_metrics(
+  history,
+  pop_county,
+  sale,
+  dashboard_yrs,
+  part_ref = NULL,
+  res_type = NULL,
+  segs = c("tot", "res", "sex", "agecat", "county"),
   tests = c(tot = 20, res = 35, sex = 35, agecat = 35, county = 70),
-  tests_recruits = c(tot = 30, res = 45, sex = 45, agecat = 45, county =
-  150), scaleup_test = 25, rate_test = 1)
+  tests_recruits = c(tot = 30, res = 45, sex = 45, agecat = 45, county = 150),
+  scaleup_test = 25,
+  rate_test = 1
+)
 }
 \arguments{
 \item{history}{data frame: input history table for permission}
@@ -39,10 +47,14 @@ for privilege rate. If NULL, calculates participation rate using pop_county}
 Calculate all 5 metrics for a permission
 }
 \seealso{
-Other dashboard functions: \code{\link{calc_part_rate}},
-  \code{\link{calc_part}}, \code{\link{calc_priv_rate}},
-  \code{\link{est_month}}, \code{\link{est_pop}},
-  \code{\link{est_rate}}, \code{\link{format_metrics}},
-  \code{\link{write_dash}}
+Other dashboard functions: 
+\code{\link{calc_part_rate}()},
+\code{\link{calc_part}()},
+\code{\link{calc_priv_rate}()},
+\code{\link{est_month}()},
+\code{\link{est_pop}()},
+\code{\link{est_rate}()},
+\code{\link{format_metrics}()},
+\code{\link{write_dash}()}
 }
 \concept{dashboard functions}

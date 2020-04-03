@@ -19,10 +19,14 @@ A privilege rate refers to the ratio between a given privilege (or subtype)
 permission and a reference overall permission.
 }
 \seealso{
-Other dashboard functions: \code{\link{calc_metrics}},
-  \code{\link{calc_part_rate}}, \code{\link{calc_part}},
-  \code{\link{est_month}}, \code{\link{est_pop}},
-  \code{\link{est_rate}}, \code{\link{format_metrics}},
-  \code{\link{write_dash}}
+Other dashboard functions: 
+\code{\link{calc_metrics}()},
+\code{\link{calc_part_rate}()},
+\code{\link{calc_part}()},
+\code{\link{est_month}()},
+\code{\link{est_pop}()},
+\code{\link{est_rate}()},
+\code{\link{format_metrics}()},
+\code{\link{write_dash}()}
 }
 \concept{dashboard functions}

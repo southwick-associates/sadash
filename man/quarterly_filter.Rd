@@ -23,10 +23,12 @@ the current quarter (quarter argument) is behind select_quarter, in which
 case the most recent year is dropped.
 }
 \seealso{
-Other functions to prepare data for summarization: \code{\link{aggregate_pop}},
-  \code{\link{extrapolate_pop}},
-  \code{\link{factor_age_acs}}, \code{\link{prep_pop}},
-  \code{\link{quarterly_lapse}},
-  \code{\link{recode_history}}
+Other functions to prepare data for summarization: 
+\code{\link{aggregate_pop}()},
+\code{\link{extrapolate_pop}()},
+\code{\link{factor_age_acs}()},
+\code{\link{prep_pop}()},
+\code{\link{quarterly_lapse}()},
+\code{\link{recode_history}()}
 }
 \concept{functions to prepare data for summarization}
