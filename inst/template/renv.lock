@@ -389,10 +389,10 @@
     },
     "lattice": {
       "Package": "lattice",
-      "Version": "0.20-38",
+      "Version": "0.20-41",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "848f8c593fd1050371042d18d152e3d7"
+      "Hash": "fbd9285028b0263d76d18c95ae51a53d"
     },
     "lazyeval": {
       "Package": "lazyeval",
@@ -400,6 +400,18 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "d908914ae53b04d4c0c0fd72ecc35370"
+    },
+    "lictemplate": {
+      "Package": "lictemplate",
+      "Version": "0.5.2",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "southwick-associates",
+      "RemoteRepo": "lictemplate",
+      "RemoteRef": "master",
+      "RemoteSha": "e42e179ada88a59cc35d365f931e2effc8e81561",
+      "Hash": "5acc484da2d1796e13a3830ed04500f5"
     },
     "lifecycle": {
       "Package": "lifecycle",
@@ -473,10 +485,10 @@
     },
     "nlme": {
       "Package": "nlme",
-      "Version": "3.1-144",
+      "Version": "3.1-145",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "e80d41932d3cc235ccbbbb9732ae162e"
+      "Hash": "0ed9365684dc39cdd0bb5bd2f316dc67"
     },
     "openssl": {
       "Package": "openssl",
@@ -613,15 +625,15 @@
     },
     "renv": {
       "Package": "renv",
-      "Version": "0.9.3-60",
+      "Version": "0.9.3-68",
       "Source": "GitHub",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "renv",
       "RemoteUsername": "rstudio",
+      "RemoteRepo": "renv",
       "RemoteRef": "master",
-      "RemoteSha": "9518d011c305d6e36ee5fcb25d0878e43cfb829b",
-      "Hash": "b20f80445465424d447548b1245b5afb"
+      "RemoteSha": "aaecb9a4ed1112b5cc481ba395ba78cec281e4f5",
+      "RemoteHost": "api.github.com",
+      "Hash": "f697d1a24816a81e3132e625b7e06db7"
     },
     "reprex": {
       "Package": "reprex",
@@ -674,15 +686,15 @@
     },
     "sadash": {
       "Package": "sadash",
-      "Version": "1.0.7",
+      "Version": "1.0.8",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteUsername": "southwick-associates",
       "RemoteRepo": "sadash",
       "RemoteRef": "master",
-      "RemoteSha": "f09a19da0590c3d7a9cf932a930c7893fd6cfae5",
-      "Hash": "0718b4c0fddbcb8a9007ff41c7a30ffe"
+      "RemoteSha": "f5860d6bf3958eca4b4d176b5f7f44a45378d08f",
+      "Hash": "4da6b47675ff3ade5bdd2f4d9c380237"
     },
     "salic": {
       "Package": "salic",
