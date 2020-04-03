@@ -1,7 +1,7 @@
 
 # Summarizing for Dashboards & Data Dive
 
-The dashboard summary workflow essentially mirrors the [national/regional template](https://github.com/southwick-associates/dashboard-template). It is more complex for a number of reasons:
+The dashboard summary workflow essentially mirrors the [dashboard-template](https://github.com/southwick-associates/dashboard-template) repository. It is more complex for a number of reasons:
 
 - Summarizing by County
 - Participation Rates
