@@ -16,7 +16,25 @@ remotes::install_github("southwick-associates/sadash")
 
 Sadash serves two primary purposes: (1) providing boilerplate (template) code for state processing, and (2) providing a modular workflow through data processing functions. Run `?sadash` for an overview of the included functionality.
 
-- TODO: [Setup Templates](github_vignettes/setup-templates.md)
-- TODO: [Prepare License Data](github_vignettes/prepare-license-data.md)
-- TODO: [Produce Summary Data](github_vignettes/dashboard-summaries.md)
-- TODO: [Produce Data Dive](github_vignettes/data-dive.md)
+### Getting Started
+
+Use `new_dashboard()` or `update_dashboard()` to setup code for a given state and time period:
+
+``` r
+# initialize new template
+sadash::new_dashboard("YY", "2018-q4")
+
+# alternatively, update code from a previous period
+sadash::update_dashboard("YY", "2019-q2", "2018-q4")
+
+# if a data dive tool is needed
+sadash::setup_data_dive("YY", "2018-q4")
+```
+
+### Workflow Steps
+
+Several vignettes are included to describe the workflow:
+
+- Needs updating: [Prepare License Data](github_vignettes/prepare-license-data.md)
+- Needs updating: [Produce Summary Data](github_vignettes/dashboard-summaries.md)
+- [Produce Data Dive](github_vignettes/data-dive.md)
