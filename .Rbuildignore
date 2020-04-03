@@ -11,3 +11,4 @@
 ^inst/template/renv/library$
 ^inst/template/renv/staging$
 ^lictemplate\.Rproj$
+^sadash\.Rproj$

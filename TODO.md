@@ -1,11 +1,13 @@
 
-## Version 1.0.7
+## Version 1.0.8
 
 - Improve documentation, and store in vignettes
     + intro (overview & template code setup)
     + history
     + dashboard
     + dive
+
+## Version 1.0.9
 
 - Generate a sample dashboard from salic (rather than the full version)
     + This will also probably provide an opportunity to add more sample data and include examples for certain other functions
