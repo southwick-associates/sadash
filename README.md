@@ -35,6 +35,6 @@ sadash::setup_data_dive("YY", "2018-q4")
 
 Several vignettes are included to describe the workflow:
 
-- Needs updating: [Prepare License Data](github_vignettes/prepare-license-data.md)
+- TODO: [Prepare License Data](github_vignettes/prepare-license-data.md)
 - Needs updating: [Produce Summary Data](github_vignettes/dashboard-summaries.md)
 - [Produce Data Dive](github_vignettes/data-dive.md)

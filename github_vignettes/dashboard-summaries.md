@@ -10,7 +10,12 @@ The dashboard summary workflow essentially mirrors the [national/regional templa
 - Additional steps needed for subtypes specifically (e.g., spousal license) since they don't represent unique permissions
 - Accounting for permissions that are residency-specific
 
-## License History
+### Contents
+
+- [Build License History](#build-license-history)
+- [Produce Dashboard Metrics](#-produce-dashboard-metrics)
+
+## Build License History
 
 Producing license histories is fairly straightfoward (see the template code in 2-license-history). An example workflow for one permission is included below.
 
@@ -41,7 +46,7 @@ history <- lic_group  %>%
     make_history(yrs, carry_vars = c("month", "res"))
 ```
 
-## Dashboard Metrics
+## Produce Dashboard Metrics
 
 Producing dashboard metrics is a bit more involved than running license history (see template code in 3-dashboard-results). An example workflow for one permission-quarter is included below.
 
