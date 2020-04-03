@@ -9,7 +9,7 @@ update_dashboard(
   time_period,
   ref_period,
   sa_path = "E:/SA",
-  files_to_keep = c("\\\\.r", "documentation\\\\.tex")
+  files_to_keep = c("\\\\.r", "documentation\\\\.tex", "\\\\.txt")
 )
 }
 \arguments{

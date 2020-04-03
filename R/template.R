@@ -80,7 +80,7 @@ setup_dashboard <- function(state, time_period, sa_path) {
 #' @export
 update_dashboard <- function(
     state, time_period, ref_period, sa_path = "E:/SA",
-    files_to_keep = c("\\.r", "documentation\\.tex")
+    files_to_keep = c("\\.r", "documentation\\.tex", "\\.txt")
 ) {
     ref_path <- file.path(
         sa_path, "Projects", "Data-Dashboards", toupper(state), ref_period
