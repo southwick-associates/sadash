@@ -1,54 +1,5 @@
 # producing data dive input for Tableau
 
-#' Setup data dive template
-#' 
-#' This is to be run for an existing state-time_period dashboard project. 
-#' It creates a new folder with template code. Defaults to placing a "5-data-dive"
-#' folder in the working directory (i.e., when state and time_period are NULL).
-#' 
-#' @inheritParams new_dashboard
-#' @param analysis_dir full path name for analysis directory (only used if state
-#' and time_period are NULL)
-#' @param dive_dir folder for data dive code
-#' @family data dive functions
-#' @seealso \code{\link{new_dashboard}}
-#' @export
-#' @examples 
-#' # setup_data_dive()
-setup_data_dive <- function(
-    state = NULL, time_period = NULL, analysis_dir = getwd(), 
-    sa_path = "E:/SA", dive_dir = "5-data-dive"
-) {
-    # identify analysis_dir
-    if (!(is.null(state) && is.null(time_period))) {
-        if (is.null(state) || is.null(time_period)) {
-            stop("The state & time_period arguments must both be NULL (or neither)",
-                 call. = FALSE)
-        }
-        analysis_dir <- file.path(
-            sa_path, "Projects", "Data-Dashboards", toupper(state), 
-            as.character(time_period)
-        )
-    }
-    
-    # create dive_dir
-    dive_dir <- file.path(analysis_dir, dive_dir)
-    dir.create(dive_dir)
-    
-    # copy template files to dive_dir
-    template_dir <- system.file("template-dive", package = "sadash")
-    template_files <- list.files(template_dir)
-    
-    for (i in template_files) {
-        file.copy(
-            file.path(template_dir, i), 
-            file.path(dive_dir, i), 
-            overwrite = FALSE
-        )
-    }
-    message("A data dive folder has been initialized:\n  ", dive_dir)
-}
-
 #' Load a 10 percent sample of all sportspersons
 #' 
 #' Every customer who holds a hunting or fishing permission at some point over

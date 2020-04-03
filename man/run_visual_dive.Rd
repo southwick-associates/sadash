@@ -39,7 +39,6 @@ Other data dive functions:
 \code{\link{plot_trend}()},
 \code{\link{set_nonres_county_na}()},
 \code{\link{set_other_county_na}()},
-\code{\link{setup_data_dive}()},
 \code{\link{summarize_trend}()}
 }
 \concept{data dive functions}

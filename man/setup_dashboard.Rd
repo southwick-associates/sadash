@@ -23,6 +23,7 @@ file in the analysis folder.
 \seealso{
 Other functions for making template files/folders: 
 \code{\link{new_dashboard}()},
+\code{\link{setup_data_dive}()},
 \code{\link{update_dashboard}()}
 }
 \concept{functions for making template files/folders}

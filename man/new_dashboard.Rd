@@ -6,27 +6,28 @@
 \usage{
 new_dashboard(
   state,
-  time_period,
-  sa_path = "E:/SA",
-  R_version = "3.5.1",
-  project_library = "data-dashboards2"
+  period,
+  package = "sadash",
+  print_message = "A new dashboard project has been initialized",
+  ...
 )
 }
 \arguments{
 \item{state}{character: Two letter state designation}
 
-\item{time_period}{character: Time period for the first dashboard 
-(e.g., "2015", "2016-q1", etc.)}
+\item{period}{character: Time period for the first project 
+(e.g., "2019-q4", "2020-q4", etc.)}
 
-\item{sa_path}{character: File path to the Southwick main folder 
-(for analysis and data, etc.)}
+\item{package}{character: name of package where the template files live}
 
-\item{R_version}{character: Version of R to use for this project}
+\item{print_message}{character: Message to print on success}
 
-\item{project_library}{character: Name of project-specific R package library}
+\item{...}{other arguments passed to \code{\link[lictemplate]{new_project}}}
 }
 \description{
-This is intended to be run before data processing for a new state begins.
+This is intended to be run before data processing for a new state begins. 
+It's just a wrapper for \code{\link[lictemplate]{new_project}} from the 
+lictemplate package.
 }
 \examples{
 # new_dashboard("YY", "2018-q4")
@@ -34,6 +35,7 @@ This is intended to be run before data processing for a new state begins.
 \seealso{
 Other functions for making template files/folders: 
 \code{\link{setup_dashboard}()},
+\code{\link{setup_data_dive}()},
 \code{\link{update_dashboard}()}
 }
 \concept{functions for making template files/folders}

@@ -9,8 +9,7 @@ update_dashboard(
   time_period,
   ref_period,
   sa_path = "E:/SA",
-  files_to_keep = c("\\\\.r", "documentation\\\\.tex"),
-  files_to_drop = c("\\\\.rproj")
+  files_to_keep = c("\\\\.r", "documentation\\\\.tex")
 )
 }
 \arguments{
@@ -26,9 +25,6 @@ update_dashboard(
 
 \item{files_to_keep}{file matching for grep (not case sensitive). Files
 with matching patterns will be copied from ref_period}
-
-\item{files_to_drop}{file exclusion for grep (not case sensitive). The
-default is to exclude R studio .Rproj files (which get matched in files_to_keep)}
 }
 \description{
 This will setup files based on a reference time period, rather than 
@@ -39,6 +35,7 @@ containing folders, as well as the documentation.tex file.
 \seealso{
 Other functions for making template files/folders: 
 \code{\link{new_dashboard}()},
-\code{\link{setup_dashboard}()}
+\code{\link{setup_dashboard}()},
+\code{\link{setup_data_dive}()}
 }
 \concept{functions for making template files/folders}
