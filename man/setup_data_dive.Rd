@@ -9,7 +9,7 @@ setup_data_dive(
   time_period = NULL,
   analysis_dir = getwd(),
   sa_path = "E:/SA",
-  dive_dir = "5-data-dive"
+  dive_dir = "code/5-data-dive"
 )
 }
 \arguments{

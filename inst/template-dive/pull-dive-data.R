@@ -3,7 +3,7 @@
 library(tidyverse)
 library(sadash)
 
-source("params.R")
+source("code/params.R")
 
 if (quarter != 4) lastyr <- lastyr - 1 # we don't want partial years
 yrs <- firstyr:lastyr

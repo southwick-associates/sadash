@@ -193,7 +193,7 @@ replace_strings <- function(
 #' # setup_data_dive()
 setup_data_dive <- function(
     state = NULL, time_period = NULL, analysis_dir = getwd(), 
-    sa_path = "E:/SA", dive_dir = "5-data-dive"
+    sa_path = "E:/SA", dive_dir = "code/5-data-dive"
 ) {
     # identify analysis_dir
     if (!(is.null(state) && is.null(time_period))) {
