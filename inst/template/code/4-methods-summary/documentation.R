@@ -9,10 +9,12 @@
 # - Potentially other state-specific info
 
 library(tidyverse)
-source("params.R")
+source("colde/params.R")
 
 # License Types
 db <- src_sqlite(db_license) 
 lic <- tbl(db, "lic") %>% collect()
 glimpse(lic)
-write_csv(lic, "4-methods-summary/lic-docx.csv", na = "")
+
+dir.create("data", showWarnings = FALSE)
+write_csv(lic, "data/lic-docx.csv", na = "")

@@ -1,0 +1,155 @@
+---
+title: "Initial Check of License Data"
+date: '`r strftime(Sys.time(), format = "%B %d, %Y")`'
+output: 
+    html_document:
+        toc: true
+        toc_float: true
+        code_folding: show
+---
+
+## Notes
+
+Include some notes here about your assessment of the initial validation.
+
+```{r setup, message=FALSE}
+knitr::opts_chunk$set(comment = NA)
+library(tidyverse)
+library(lubridate)
+library(DBI)
+library(salic)
+library(salicprep)
+source("../params.R")
+```
+
+## Load Data 
+
+```{r}
+con <- dbConnect(RSQLite::SQLite(), db_standard)
+sale <- tbl(con, "sale") %>% select(lic_id, cust_id, year) %>% collect()
+cust <- tbl(con, "cust") %>% select(cust_id, sex, dob, cust_res) %>% collect()
+dbDisconnect(con)
+
+lic <- read_csv("../../data/lic-clean.csv")
+cust <- df_factor_sex(cust, "sex") %>% 
+    df_factor_res("cust_res") %>%
+    mutate(dob = ymd(dob), birth_year = year(dob))
+```
+
+## All Customers
+
+### Overall
+
+Initial summary of customers per year:
+
+- Year-to-year variation in churn and customers is typically small.
+- If there are data issues, it may show up in strange patterns here.
+- The [USFWS Historical License Data](https://www.fws.gov/wsfrprograms/Subpages/LicenseInfo/LicenseIndex.htm) may be useful for ground-truthing customer counts.
+
+```{r}
+summary_initial(sale)
+```
+
+### Customers
+
+```{r, warning=FALSE}
+filter(cust, birth_year >= 1900) %>% 
+    plot_demo(c("sex", "birth_year", "cust_res"))
+```
+
+## Hunters
+
+### Overall
+
+```{r}
+hunt <- sale %>%
+    semi_join(filter(lic, type %in% c("hunt", "combo")), by = "lic_id")
+summary_initial(hunt)
+```
+
+### Customers
+
+```{r, warning=FALSE}
+filter(cust, birth_year >= 1900) %>% 
+    semi_join(hunt, by = "cust_id") %>%
+    plot_demo(c("sex", "birth_year", "cust_res"))
+```
+
+### Customer Trends
+
+```{r, warning=FALSE}
+hunt <- left_join(hunt, cust, by = "cust_id") %>%
+    recode_agecat() %>%
+    df_factor_age()
+plot_demo(hunt, c("sex", "age", "cust_res"), trend = TRUE)
+```
+
+## Anglers
+
+### Overall
+
+```{r}
+fish <- sale %>%
+    semi_join(filter(lic, type %in% c("fish", "combo")), by = "lic_id")
+summary_initial(fish)
+```
+
+### Customers
+
+```{r, warning=FALSE}
+filter(cust, birth_year >= 1900) %>% 
+    semi_join(fish, by = "cust_id") %>%
+    plot_demo(c("sex", "birth_year", "cust_res"))
+```
+
+### Customer Trends
+
+```{r, warning=FALSE}
+fish <- left_join(fish, cust, by = "cust_id") %>%
+    recode_agecat() %>%
+    df_factor_age()
+plot_demo(fish, c("sex", "age", "cust_res"), trend = TRUE)
+```
+
+## Dates
+
+### Year vs Transaction Date
+
+The year variable provided by the state doesn't always line up with transaction dates. This typically has to do with a "license year" not directly corresponding to calendar year (at least for certain license types). For dashboards, we ultimately want the `sale$year` variable to correspond with calendar year (i.e., year should be based on `sale$dot` in the production database).
+
+```{r}
+sale <- mutate_at(sale, vars(dot, start_date, end_date), "ymd")
+summary_year_dot(sale, lastyr) %>% knitr::kable()
+```
+
+### Transaction Date Ranges
+
+Getting a sense of what the transaction date looks like.
+
+```{r}
+summary_date(sale, "dot", yrs)
+```
+
+### License Durations
+
+Looking at the difference between start and end date to get a sense of what that looks like.
+
+```{r}
+summary_duration(sale, yrs)
+```
+
+## License Types
+
+Gaps in license types for certain years can sometimes (though not always) indicate missing data. This is typically alot of data to scan, included mainly in case it's needed for future reference.
+
+```{r}
+lic <- mutate(lic, description = paste(type, lic_id, description, sep = "-"))
+sale <- left_join(sale, lic, by = "lic_id")
+x <- summary_lic_types(sale)
+spread(x, year, n, fill = "") %>% 
+    knitr::kable(caption = "Customer counts by year for license types")
+```
+
+```{r, fig.height=15}
+plot_lic_types(x)
+```

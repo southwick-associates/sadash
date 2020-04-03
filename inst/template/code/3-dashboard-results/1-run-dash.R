@@ -4,8 +4,8 @@ library(tidyverse)
 library(salic)
 library(sadash)
 
-source("params.R")
-source("3-dashboard-results/functions.R") # run_dash()
+source("code/params.R")
+source("code/3-dashboard-results/functions.R") # run_dash()
 
 # define additional parameters
 all_quarters <- quarter  # quarters to be estimated

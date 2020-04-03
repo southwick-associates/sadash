@@ -8,7 +8,7 @@
 library(tidyverse)
 library(DBI)
 library(salic)
-source("params.R")
+source("code/params.R")
 
 if (!exists("data_src")) data_src <- "db_history"
 

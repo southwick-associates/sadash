@@ -4,7 +4,7 @@ library(tidyverse)
 library(salic)
 library(sadash)
 
-source("params.R")
+source("code/params.R")
 
 # Combine Results -----------------------------------------------------------
 

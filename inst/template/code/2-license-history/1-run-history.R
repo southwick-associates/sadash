@@ -5,8 +5,8 @@ library(tidyverse)
 library(salic)
 library(sadash)
 
-source("params.R")
-source("2-license-history/functions.R") # run_group()
+source("code/params.R")
+source("code/2-license-history/functions.R") # run_group()
 
 # pull license data into a list
 all <- load_license(db_license, yrs)
