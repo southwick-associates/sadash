@@ -18,7 +18,7 @@ Sadash provides a modular workflow through data processing functions. Run `?sada
 
 ### Getting Started
 
-Use `lictemplate::new_project_individual()` or `lictemplate::update_project()` to setup code for a given state and time period:
+Use templating functions from [lictemplate](https://github.com/southwick-associates/lictemplate) to setup workflows:
 
 ``` r
 remotes::install_github("southwick-associates/lictemplate")
