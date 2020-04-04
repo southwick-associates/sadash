@@ -29,8 +29,6 @@ dplyr::glimpse(cust_samp)
 }
 }
 \seealso{
-\code{\link{new_dashboard}}
-
 Other data dive functions: 
 \code{\link{drop_state_code}()},
 \code{\link{filter_demo}()},

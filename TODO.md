@@ -1,5 +1,5 @@
 
-## Version 1.0.8
+## Version 1.2
 
 - Improve documentation, and store in vignettes
     + intro (overview & template code setup)
@@ -7,7 +7,7 @@
     + dashboard
     + dive
 
-## Version 1.0.9
+## Ideas Version 1.3+
 
 - Generate a sample dashboard from salic (rather than the full version)
     + This will also probably provide an opportunity to add more sample data and include examples for certain other functions
@@ -15,7 +15,7 @@
 - run_visual(), etc.:
     + may want nicer labelling on hover for plotly
     
-## Version 1.1.0
+### More Ideas
 
 We might want tests using testthat (similar to what was done in salic). Making changes to code is quite a pain currently b/c it is laborious to find things like syntax errors. Although even including examples (which get run with R CMD check) would improve this.
 

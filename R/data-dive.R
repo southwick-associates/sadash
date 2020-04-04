@@ -10,7 +10,6 @@
 #' @param pct Sample size to draw, in whole percentage points (defaults to 10
 #' percent)
 #' @family data dive functions
-#' @seealso \code{\link{new_dashboard}}
 #' @export
 #' @examples 
 #' \dontrun{

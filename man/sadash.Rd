@@ -7,15 +7,6 @@
 \description{
 This includes a summary of the core functions grouped by task.
 }
-\section{Setup Templates}{
-
-\itemize{
-  \item use \code{\link{new_dashboard}} to setup files/folders for a new state
-  \item use \code{\link{update_dashboard}} to copy scripts from another time
-  period for a given state
-}
-}
-
 \section{Preparing License History}{
 
 \itemize{
@@ -44,14 +35,6 @@ This includes a summary of the core functions grouped by task.
   \item use \code{\link{format_metrics}} and \code{\link{write_dash}}
   in sequence to produce csv files by permission-quarter
   \item use \code{\link{run_visual}} to check results
-}
-}
-
-\section{Preparing Data Dive}{
-
-\itemize{
-\item use \code{\link{setup_data_dive}} to initialize template files
-\item use \code{\link{run_visual_dive}} to check/explore interactively with shiny
 }
 }
 

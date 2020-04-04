@@ -1,7 +1,7 @@
 Package: sadash
 Type: Package
 Title: Prepare Agency Dashboard Data for state-level dashboards
-Version: 1.1.0
+Version: 1.2.0
 Authors@R: c(
     person("Dan", "Kary", , "Rsoftware@SouthwickAssociates.com", role = c("aut", "cre")),
     person("Southwick Associates", role = c("cph", "fnd"))
@@ -21,7 +21,6 @@ Imports:
     dplyr (>= 0.7.6),
     ggplot2 (>= 3.0.0),
     gridExtra,
-    lictemplate,
     maps,
     plotly,
     RSQLite (>= 2.1.1),
@@ -31,6 +30,5 @@ Imports:
     stringr (>= 1.3.1),
     tidyr
 Remotes:
-    southwick-associates/lictemplate,
     southwick-associates/salic
 RoxygenNote: 7.1.0

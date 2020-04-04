@@ -1,7 +1,7 @@
 
 # Data Dive
 
-Building data dive summary data is fairly straightforward: use `setup_data_dive()` to get template code. You can make use of `hist_samp` sample data to see an example data dive:
+Building data dive summary data is fairly straightforward: use `lictemplate::setup_data_dive()` to get template code. You can make use of `hist_samp` sample data to see an example data dive:
 
 ``` r
 library(sadash)
