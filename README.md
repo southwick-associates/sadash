@@ -1,7 +1,7 @@
 
 # sadash
 
-An R package for Southwick internal use, includes functions for individual state dashboard workflows. This is similar to [package salicprep](https://github.com/southwick-associates/salicprep), but covers the more complex use-case of state-level dashboards (county-level summaries, privilege/subtype permissions, etc.).
+An R package for Southwick internal use, includes functions for individual state dashboard workflows. Sadash extends [package salicprep](https://github.com/southwick-associates/salicprep) to cover the more complex use-case of state-level dashboards (county-level summaries, privilege/subtype permissions, etc.).
 
 ## Installation
 
@@ -18,7 +18,7 @@ Sadash provides a modular workflow through data processing functions. Run `?sada
 
 ### Getting Started
 
-Use templating functions from [lictemplate](https://github.com/southwick-associates/lictemplate) to setup workflows:
+Use [lictemplate](https://github.com/southwick-associates/lictemplate) to setup workflows:
 
 ``` r
 remotes::install_github("southwick-associates/lictemplate")
