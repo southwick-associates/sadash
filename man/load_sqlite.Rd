@@ -3,7 +3,9 @@
 \name{load_sqlite}
 \alias{load_sqlite}
 \alias{load_cust}
+\alias{load_cust_standard}
 \alias{load_sale}
+\alias{load_sale_standard}
 \alias{load_counties}
 \alias{load_pop}
 \alias{load_lic_ids}
@@ -14,7 +16,11 @@ load_sqlite(db, query)
 
 load_cust(db)
 
+load_cust_standard(db)
+
 load_sale(db, yrs)
+
+load_sale_standard(db)
 
 load_counties(
   db = "E:/SA/Data-production/Data-Dashboards/_Shared/census.sqlite3",
@@ -45,7 +51,11 @@ Load sqlite data
 \itemize{
 \item \code{load_cust}: Load customer data
 
+\item \code{load_cust_standard}: Load standard customer data
+
 \item \code{load_sale}: Load sales for selected years
+
+\item \code{load_sale_standard}: Load standard sale data
 
 \item \code{load_counties}: Load county fips-names for attaching to cust & pop_county
 

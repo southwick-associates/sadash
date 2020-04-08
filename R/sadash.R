@@ -5,12 +5,15 @@
 #' @rawNamespace import(data.table, except = c(first, between, last))
 NULL
 
+# to prevent warnings in devtools::check()
 if (getRversion() >= "2.15.1") {
     utils::globalVariables(
         c("R3", "age", "age_year", "birth_year", "change", "county_fips",
           "county_name", "cust_id", "description", "duration_run", "lapse",
           "lic_id", "participants", "permission", "pop", "rate", "res", "sex",
-          "state_abbrev", "county_map_us", "age_map")
+          "state_abbrev", "county_map_us", "age_map", "cust_period", "cust_res",
+          "dob", "dot", "end_date", "raw_cust_id", "raw_sale_id", "sale_period",
+          "start_date", "state")
     )
 }
 

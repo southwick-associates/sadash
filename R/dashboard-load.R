@@ -27,6 +27,17 @@ load_cust <- function(db) {
     })
 }
 
+#' @describeIn load_sqlite Load standard customer data
+#' @export
+load_cust_standard <- function(db) {
+    load_sqlite(db, function(con) {
+        tbl(con, "cust") %>% 
+            select(cust_id, sex, dob, last, first, state, cust_res, cust_period, 
+                   raw_cust_id) %>% 
+            collect()
+    })
+}
+
 #' @describeIn load_sqlite Load sales for selected years
 #' @export
 load_sale <- function(db, yrs) {
@@ -34,6 +45,17 @@ load_sale <- function(db, yrs) {
         tbl(con, "sale") %>% 
             filter(year %in% yrs) %>%
             select(cust_id, lic_id, year, month) %>% 
+            collect()
+    })
+}
+
+#' @describeIn load_sqlite Load standard sale data
+#' @export
+load_sale_standard <- function(db) {
+    load_sqlite(db, function(con) {
+        tbl(con, "sale") %>% 
+            select(cust_id, lic_id, year, dot, start_date, end_date, 
+                   sale_period, raw_sale_id) %>% 
             collect()
     })
 }
