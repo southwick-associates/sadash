@@ -21,9 +21,10 @@ lictemplate::update_project("YY", "2020-q2", "2019-q4")
 
 ## Differences to National/Regional
 
-The workflow requirements generally match that of the national/regional dashboards, but with some additional needs
+The workflow generally matches that of the national/regional dashboards, but with some additional requirements:
 
 - [Legacy Data Processing](#legacy-data-processing)
+- [State License Years](#state-license-years)
 - [Database Schemas](#database-schemas)
 - [Geocoding](#geocoding)
 - [Privileges](#privileges)
@@ -36,6 +37,17 @@ Individual state dashboards have been created since 2016, and the workflow has e
     + The dashboard manager can help with referencing documentation stored on Office 365 (individual state methodologies) 
     + Previous validation summaries may have been produced using LaTeX, and are usually stored within `./1-prep-license-data/latex_documentation/documentation.pdf`
     + See WI for an example
+
+### State License Years
+
+The individual dashboards rely up state-defined license years based on effective dates (unlike sales dates as is done for the national/regional dashboards). These sometimes (but not always) follow calendar years, and some percentage of sales for a given license year will fall outside the relevant dates. As a consequence the "month" variable is defined based on an unbounded integer range: ..., -1 (previous Nov), 0 (previous Dec), 1 (Jan), 2 (Feb), ..., 12 (Dec), 13 (Jan), 14 (Feb), ... 
+
+#### Examples
+
+Any particular state will have it's own set of reasonable month ranges. For example:
+
+- A state may have an April 1st through March 31st license year, and people will buy licenses before the start of the license year. The "month" range might reasonably run from 2 (previous Feb) through 15 (March, the last month in the calendar year). 
+- Another state may have a calendar-based license year where some people buy licenses anywhere from the previous Nov (-1) to the current-year December (12).
 
 ### Database Schemas
 
