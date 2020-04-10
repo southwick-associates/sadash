@@ -14,29 +14,8 @@ remotes::install_github("southwick-associates/sadash")
 
 ## Usage
 
-Sadash provides a modular workflow through data processing functions. Run `?sadash` for an overview of the included functionality.
+Sadash provides a modular workflow through data processing functions. Run `?sadash` for an overview of the included functionality. Several vignettes are included to describe the workflow:
 
-### Getting Started
-
-Use [lictemplate](https://github.com/southwick-associates/lictemplate) to setup workflows:
-
-``` r
-remotes::install_github("southwick-associates/lictemplate")
-
-# initialize new template
-lictemplate::new_project_individual("YY", "2018-q4")
-
-# alternatively, update code from a previous period
-lictemplate::update_project("YY", "2019-q2", "2018-q4")
-
-# if a data dive tool is needed
-lictemplate::setup_data_dive("YY", "2018-q4")
-```
-
-### Workflow Steps
-
-Several vignettes are included to describe the workflow:
-
-- TODO: [Prepare License Data](github_vignettes/prepare-license-data.md)
+- In progress: [Prepare License Data](github_vignettes/prepare-license-data.md)
 - Needs updating: [Produce Summary Data](github_vignettes/dashboard-summaries.md)
 - [Produce Data Dive](github_vignettes/data-dive.md)
