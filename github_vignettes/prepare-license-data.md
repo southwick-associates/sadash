@@ -44,7 +44,7 @@ The individual dashboards rely up state-defined license years based on effective
 
 #### Examples
 
-Any particular state will have it's own set of reasonable month ranges. For example:
+Any particular state will have its own set of reasonable month ranges. For example:
 
 - A state may have an April 1st through March 31st license year, and people will buy licenses before the start of the license year. The "month" range might reasonably run from 2 (previous Feb) through 15 (March, the last month in the calendar year). 
 - Another state may have a calendar-based license year where some people buy licenses anywhere from the previous Nov (-1) to the current-year December (12).
@@ -60,9 +60,20 @@ Data should be structure in a set of sqlite databases (similar to national/regio
     + license.sqlite3
     + history.sqlite3
     
+#### License.sqlite3 Additional/Modified columns
 
+- county_fips (produced using geocoding)
+- zip4dp (temporary for checking for customer duplicates, produced using geocoding
+- month with more allowed values (..., -1, 0, 1, 2, ...)
+
+#### History.sqlite3
+
+The national/regional workflow creates [license history](https://southwick-associates.github.io/salic/articles/salic.html#license-history) tables only as a temporary datasets in producing [dashbord summaries](https://southwick-associates.github.io/salic/articles/salic.html#dashboard-metrics). For individual state dashboards, these history tables are stored in a database, where each table corresponds to a given privilege (hunters, anglers, deer hunters, etc.).
 
 ### Geocoding
 
+The BulkMailer software is used for geocoding (details to be added.)
+
 ### Privileges
 
+TODO.
