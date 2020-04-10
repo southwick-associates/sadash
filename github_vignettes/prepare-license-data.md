@@ -27,7 +27,7 @@ The workflow generally matches that of the national/regional dashboards, but wit
 - [State License Years](#state-license-years)
 - [Database Schemas](#database-schemas)
 - [Geocoding](#geocoding)
-- [Privileges](#privileges)
+- [Privileges & Subtypes](#privileges-and-subtypes)
 
 ### Legacy Data Processing
 
@@ -79,6 +79,24 @@ The national/regional workflow creates [license history](https://southwick-assoc
 
 TODO: The BulkMailer software is used for geocoding
 
-### Privileges
+### Privileges and Subtypes
+
+Privilege/subtype permissions shouldn't need to be updated for existing states. You can access the logic that was used to identify these from the production database (license.sqlite3) in `lic$priv` (for privileges) and `lic$subtype` (for subtypes). License histories for permissions are stored in history.sqlite3.
+
+```r
+# example: count WI deer hunters from 2015 to 2018
+library(tidyverse)
+library(DBI)
+con <- dbConnect(RSQLite::SQLite(), "E:/SA/Data-production/Data-Dashboards/WI/history.sqlite3")
+deer <- tbl(con, "deer") %>% filter(year > 2015, year <= 2018) %>% collect()
+dbDisconnect(con)
+count(deer, year)
+## A tibble: 3 x 2
+#   year      n
+#  <int>  <int>
+#1  2016 640935
+#2  2017 632154
+#3  2018 620079
+```
 
 TODO: Provide some examples of typical privileges/subtypes
