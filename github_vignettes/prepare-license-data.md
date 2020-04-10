@@ -40,7 +40,7 @@ Individual state dashboards have been created since 2016, and the workflow has e
 
 ### State License Years
 
-The individual dashboards rely up state-defined license years based on effective dates (unlike sales dates as is done for the national/regional dashboards). These sometimes (but not always) follow calendar years, and some percentage of sales for a given license year will fall outside the relevant dates. As a consequence the "month" variable is defined based on an unbounded integer range: ..., -1 (previous Nov), 0 (previous Dec), 1 (Jan), 2 (Feb), ..., 12 (Dec), 13 (Jan), 14 (Feb), ... 
+The individual dashboards use state-defined license years based on effective dates (unlike strict calendar-year sale dates as is done for the national/regional dashboards). These sometimes (but not always) follow calendar years, and some percentage of sales for a given license year will fall outside the relevant dates. As a consequence the "month" variable is defined based on an unbounded integer range: `..., -1 (previous Nov), 0 (previous Dec), 1 (Jan), 2 (Feb), ..., 12 (Dec), 13 (Jan), 14 (Feb), ...` 
 
 #### Examples
 
@@ -62,9 +62,14 @@ Data should be structure in a set of sqlite databases (similar to national/regio
     
 #### License.sqlite3 Additional/Modified columns
 
-- county_fips (produced using geocoding)
-- zip4dp (temporary for checking for customer duplicates, produced using geocoding
-- month with more allowed values (..., -1, 0, 1, 2, ...)
+The individual dashboards include some additional data columns:
+
+- `cust$county_fips` (produced using geocoding)
+- `cust$zip4dp` (temporary for checking for customer duplicates, produced using geocoding)
+- `lic$priv` for defining privilege permissions (deer hunting, trout fishing, etc.)
+- `lic$subtype` for permissions that represent a subset of customers holding a given privilege (e.g., spousal fishing, which tracks anglers who purchase a spouse license type).
+
+The `sale$month` is modified too allow additional values: `..., -1, 0, 1, 2, ...`
 
 #### History.sqlite3
 
@@ -72,8 +77,8 @@ The national/regional workflow creates [license history](https://southwick-assoc
 
 ### Geocoding
 
-The BulkMailer software is used for geocoding (details to be added.)
+TODO: The BulkMailer software is used for geocoding
 
 ### Privileges
 
-TODO.
+TODO: Provide some examples of typical privileges/subtypes
