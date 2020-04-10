@@ -17,5 +17,5 @@ remotes::install_github("southwick-associates/sadash")
 Sadash provides a modular workflow through data processing functions. Run `?sadash` for an overview of the included functionality. Several vignettes are included to describe the workflow:
 
 - In progress: [Prepare License Data](github_vignettes/prepare-license-data.md)
-- Needs updating: [Produce Summary Data](github_vignettes/dashboard-summaries.md)
+- [Produce Summary Data](github_vignettes/dashboard-summaries.md)
 - [Produce Data Dive](github_vignettes/data-dive.md)

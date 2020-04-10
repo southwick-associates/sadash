@@ -51,7 +51,7 @@ Any particular state will have its own set of reasonable month ranges. For examp
 
 ### Database Schemas
 
-Data should be structure in a set of sqlite databases (similar to national/regional but with some additions):
+Data should be structured in a set of sqlite databases (similar to national/regional but with some additions):
 
 - Data-Sensitive:
     + raw-[period].sqlite3
@@ -69,7 +69,7 @@ The individual dashboards include some additional data columns:
 - `lic$priv` for defining privilege permissions (deer hunting, trout fishing, etc.)
 - `lic$subtype` for permissions that represent a subset of customers holding a given privilege (e.g., spousal fishing, which tracks anglers who purchase a spouse license type).
 
-The `sale$month` is modified too allow additional values: `..., -1, 0, 1, 2, ...`
+The `sale$month` is modified to allow additional values: `..., -1, 0, 1, 2, ...`
 
 #### History.sqlite3
 
