@@ -83,7 +83,7 @@ The national/regional workflow creates [license history](https://southwick-assoc
 
 ### Geocoding
 
-Customer county and delivery point (zip4dp) can be identified by geocoding customer addresses (details below). Note that this is a fairly time-consuming process; an alternative (but less accurate) approach is to use a zip-to-county crosswalk stored in `E:/SA/Data-production/Data-Dashboards/_Shared/census.sqlite3` although this won't provide a zip4dp to aid in deduplication.
+Customer county and delivery point (zip4dp) can be identified by geocoding customer addresses (details below). Note that this is a fairly time-consuming process; a much quicker (although potentially less accurate) approach is to use a zip-to-county crosswalk stored in `E:/SA/Data-production/Data-Dashboards/_Shared/census.sqlite3` although this won't provide a zip4dp to aid in deduplication.
 
 #### BulkMailer Steps
 
