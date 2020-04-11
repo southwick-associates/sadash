@@ -87,7 +87,7 @@ Customer county and delivery point (zip4dp) can be identified by geocoding custo
 
 #### BulkMailer Steps
 
-1. Open sofware and create a New Mailing:
+1. Open BulkMailer sofware and create a New Mailing:
 
 ![](img/new-mailing.png)
 
@@ -95,7 +95,7 @@ Customer county and delivery point (zip4dp) can be identified by geocoding custo
 
 ![](img/import.png)
 
-3. Go to Address Quality >> Address Correction. Running through this process may take a while (e.g., overnight). A file larger than 1 million rows may need to be split into multiple files.
+3. Go to Address Quality >> Address Correction. Running through this process may take a while (e.g., overnight). A file larger than 1.5 million rows or so may need to be split into multiple files.
 
 4. Run Export Wizard
 
@@ -118,5 +118,3 @@ count(deer, year)
 #2  2017 632154
 #3  2018 620079
 ```
-
-TODO: Provide some examples of typical privileges/subtypes
