@@ -83,7 +83,21 @@ The national/regional workflow creates [license history](https://southwick-assoc
 
 ### Geocoding
 
-TODO: The BulkMailer software is used for geocoding
+Customer county and delivery point (zip4dp) can be identified by geocoding customer addresses (details below). Note that this is a fairly time-consuming process; an alternative (but less accurate) approach is to use a zip-to-county crosswalk stored in `E:/SA/Data-production/Data-Dashboards/_Shared/census.sqlite3` although this won't provide a zip4dp to aid in deduplication.
+
+#### BulkMailer Steps
+
+1. Open sofware and create a New Mailing:
+
+![](img/new-mailing.png)
+
+2. Open import/export for "Dashboard_county_append", point to file and make sure fields are correctly linked (note that the cust_id user field needs to be appropriately set as Text or Number under "User Fields"):
+
+![](img/import.png)
+
+3. Go to Address Quality >> Address Correction. Running through this process may take a while (e.g., overnight). A file larger than 1 million rows may need to be split into multiple files.
+
+4. Run Export Wizard
 
 ### Privileges and Subtypes
 
