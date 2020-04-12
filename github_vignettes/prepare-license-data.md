@@ -85,19 +85,23 @@ The national/regional workflow creates [license history](https://southwick-assoc
 
 Customer county and delivery point (zip4dp) can be identified by geocoding customer addresses (details below). Note that this is a fairly time-consuming process; a much quicker (although potentially less accurate) approach is to use a zip-to-county crosswalk stored in `E:/SA/Data-production/Data-Dashboards/_Shared/census.sqlite3` although this won't provide a zip4dp to aid in deduplication.
 
+You can reference WI-2019-q4 for an example, where an R script is used to create the builk mailer import file: `.code/1-prep-license-data/03-pull-geocode.R`
+
 #### BulkMailer Steps
 
 1. Open BulkMailer sofware and create a New Mailing:
 
 ![](img/new-mailing.png)
 
-2. Open import/export for "Dashboard_county_append", point to file and make sure fields are correctly linked (note that the cust_id user field needs to be appropriately set as Text or Number under "User Fields"):
+2. Open import/export for "Dashboard_county_append" and point to the import file, making sure fields are correctly linked (note that the cust_id user field needs to be appropriately set as Text or Number under "User Fields"):
 
 ![](img/import.png)
 
 3. Go to Address Quality >> Address Correction. Running through this process may take a while (e.g., overnight). A file larger than 1.5 million rows or so may need to be split into multiple files.
 
-4. Run Export Wizard
+4. Groups >> All Corrected Records. This ensures only those with a delivery point match are exported.
+
+5. Run Export Wizard (Dashboard_county_append), saving three variables ("ZIP+4 + DPC", "County FIPS", "cust_id") in a text file.
 
 ### Privileges and Subtypes
 
