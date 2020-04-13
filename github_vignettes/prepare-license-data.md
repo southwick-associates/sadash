@@ -99,9 +99,7 @@ You can reference WI-2019-q4 for an example, where an R script is used to create
 
 3. Go to Address Quality >> Address Correction. Running through this process may take a while (e.g., overnight). A file larger than 1.5 million rows or so may need to be split into multiple files.
 
-4. Groups >> All Corrected Records. This ensures only those with a delivery point match are exported.
-
-5. Run Export Wizard (Dashboard_county_append), saving three variables ("ZIP+4 + DPC", "County FIPS", "cust_id") in a text file.
+4. Run Export Wizard (Dashboard_county_append), saving three variables ("ZIP+4 + DPC", "County FIPS", "cust_id") in a text file.
 
 ### Privileges and Subtypes
 
