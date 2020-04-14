@@ -4,7 +4,7 @@
 \alias{write_dash}
 \title{Convenience function: output a csv file for given permission-quarter results}
 \usage{
-write_dash(dash, quarter, group, outdir = "3-dashboard-results/dash")
+write_dash(dash, quarter, group, outdir = "code/3-dashboard-results/dash")
 }
 \arguments{
 \item{dash}{data frame output of format_metrics()}

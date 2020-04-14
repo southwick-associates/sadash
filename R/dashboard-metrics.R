@@ -280,7 +280,7 @@ format_metrics <- function(
 #' @family dashboard functions
 #' @export
 write_dash <- function(
-    dash, quarter, group, outdir = "3-dashboard-results/dash"
+    dash, quarter, group, outdir = "code/3-dashboard-results/dash"
 ) {
     dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
     write.csv(dash, file = file.path(outdir, paste0(group, "-", quarter, ".csv")),
