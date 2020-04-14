@@ -17,6 +17,7 @@ are usually a handfull of NAs.
 Other functions for producing license history: 
 \code{\link{data_check_sa}()},
 \code{\link{load_license}()},
+\code{\link{remove_table}()},
 \code{\link{write_history}()}
 }
 \concept{functions for producing license history}

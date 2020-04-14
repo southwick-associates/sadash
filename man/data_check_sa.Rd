@@ -39,6 +39,7 @@ differences in required variables and allowed values.
 Other functions for producing license history: 
 \code{\link{drop_na_custid}()},
 \code{\link{load_license}()},
+\code{\link{remove_table}()},
 \code{\link{write_history}()}
 }
 \concept{functions for producing license history}

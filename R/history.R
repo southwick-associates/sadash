@@ -138,3 +138,21 @@ write_history <- function(
     }
     DBI::dbDisconnect(con)
 }
+
+#' Convenience function to remove a table from a database
+#' 
+#' It can be helpful to make a fresh start with the permission table to avoid
+#' potentially cryptic errors if column types change (e.g., lic_id stored 
+#' as integer vs. character). This happened in 2019-q4 in WI.
+#' 
+#' @param db file path to database
+#' @param table_name name of table to remove
+#' @family functions for producing license history
+#' @export
+remove_table <- function(db, table_name) {
+    con <- DBI::dbConnect(RSQLite::SQLite(), db)
+    if (table_name %in% DBI::dbListTables(con)) {
+        DBI::dbRemoveTable(con, table_name)
+    }
+    DBI::dbDisconnect(con)
+}

@@ -24,6 +24,7 @@ Write history table to sqlite
 Other functions for producing license history: 
 \code{\link{data_check_sa}()},
 \code{\link{drop_na_custid}()},
-\code{\link{load_license}()}
+\code{\link{load_license}()},
+\code{\link{remove_table}()}
 }
 \concept{functions for producing license history}

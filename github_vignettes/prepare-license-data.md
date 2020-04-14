@@ -81,6 +81,12 @@ The `sale$month` is modified to allow additional values: `..., -1, 0, 1, 2, ...`
 
 The national/regional workflow creates [license history](https://southwick-associates.github.io/salic/articles/salic.html#license-history) tables only as a temporary datasets in producing [dashbord summaries](https://southwick-associates.github.io/salic/articles/salic.html#dashboard-metrics). For individual state dashboards, these history tables are stored in a database, where each table corresponds to a given privilege (hunters, anglers, deer hunters, etc.).
 
+#### License.sqlite3 Permission Table
+
+A `permission` table is written as part of building license histories for each permission. It is a convenience table that makes it easy to pull all license types (or sales) that contribute to a given permission. Example:
+
+![](img/permission.png)
+
 ### Geocoding
 
 Customer county and delivery point (zip4dp) can be identified by geocoding customer addresses (details below). Note that this is a fairly time-consuming process; a much quicker (although potentially less accurate) approach is to use a zip-to-county crosswalk stored in `E:/SA/Data-production/Data-Dashboards/_Shared/census.sqlite3` although this won't provide a zip4dp to aid in deduplication.
