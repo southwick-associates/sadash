@@ -25,6 +25,12 @@ Open the new Rstudio project and setup the project package library:
 renv::restore()
 ```
 
+Backup existing sqlite databases that will be overwritten:
+
+```r
+lictemplate::data_backup("YY")
+```
+
 ## Differences to National/Regional
 
 The workflow generally matches that of the national/regional dashboards, but with some additional requirements:
