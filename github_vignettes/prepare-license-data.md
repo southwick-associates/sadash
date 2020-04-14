@@ -19,16 +19,16 @@ lictemplate::update_project("YY", "2020-q2", "2019-q4")
 ##  E:/SA/Projects/Data-Dashboards/YY/2020-q2
 ```
 
-Open the new Rstudio project and setup the project package library:
-
-```r
-renv::restore()
-```
-
 Backup existing sqlite databases that will be overwritten:
 
 ```r
 lictemplate::data_backup("YY")
+```
+
+Open the new Rstudio project and setup the project package library:
+
+```r
+renv::restore()
 ```
 
 ## Differences to National/Regional
