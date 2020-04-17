@@ -286,3 +286,45 @@ write_dash <- function(
     write.csv(dash, file = file.path(outdir, paste0(group, "-", quarter, ".csv")),
               row.names = FALSE)
 }
+
+# Changes to Dashboard ----------------------------------------------------------
+# functions to make some final tweaks to the dashboard formatting
+
+#' Set missing months to zero in month breakouts
+#' 
+#' This takes the completed dashboard and ensures consistency in month ranges
+#' shown across the different permissions
+#' 
+#' @param dat formatted data frame for tableau dashboard
+#' @family dashboard functions
+#' @export
+fill_missing_months <- function(dat) {
+    # filter to relevant data rows
+    dat_month <- filter(dat, .data$segment == "month")
+    
+    reference_table <- dat_month %>%
+        distinct(.data$quarter, .data$group, .data$segment, .data$year, 
+                 .data$metric)
+    months <- unique(dat_month$category) %>% as.integer() %>% sort()
+    
+    # get zero months across all data (temporarily)
+    zero_month_table <- list()
+    for (i in seq_along(months)) {
+        zero_month_table[[i]] <- reference_table %>%
+            mutate(category = as.character(months[i]), value = 0)
+    }
+    zero_month_table <- bind_rows(zero_month_table)
+    
+    # recombine data
+    # - month data
+    dat_month <- bind_rows(
+        anti_join(zero_month_table, dat_month, 
+                  by = c("quarter", "group", "segment", "year", "metric", "category")),
+        dat_month
+    )
+    # - all data
+    bind_rows(
+        filter(dat, .data$segment != "month"),
+        dat_month
+    )
+}

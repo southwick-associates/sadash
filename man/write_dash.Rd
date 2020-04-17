@@ -28,6 +28,7 @@ Other dashboard functions:
 \code{\link{est_month}()},
 \code{\link{est_pop}()},
 \code{\link{est_rate}()},
+\code{\link{fill_missing_months}()},
 \code{\link{format_metrics}()}
 }
 \concept{dashboard functions}

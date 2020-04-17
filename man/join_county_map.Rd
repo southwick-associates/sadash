@@ -24,18 +24,18 @@ as oppossed to county name).
 library(dplyr)
 data(dashboard)
 
-county_map <- get_county_map("SC")
-county_census <- load_counties(state = "SC")
-dash_list <- join_county_map(dashboard, county_map, county_census)
-
-# produce a warning by using the wrong state
-county_map <- get_county_map("ME")
-county_census <- load_counties(state = "ME")
-dash_list <- join_county_map(dashboard, county_map, county_census)
-
-# Maine and South Carolina actually share one county name
-x <- filter(dash_list$county, group == "all_sports", quarter == 4)
-plot_county(x) \%>\% gridExtra::grid.arrange(grobs = .)
+# county_map <- get_county_map("SC")
+# county_census <- load_counties(state = "SC")
+# dash_list <- join_county_map(dashboard, county_map, county_census)
+# 
+# # produce a warning by using the wrong state
+# county_map <- get_county_map("ME")
+# county_census <- load_counties(state = "ME")
+# dash_list <- join_county_map(dashboard, county_map, county_census)
+# 
+# # Maine and South Carolina actually share one county name
+# x <- filter(dash_list$county, group == "all_sports", quarter == 4)
+# plot_county(x) \%>\% gridExtra::grid.arrange(grobs = .)
 }
 \seealso{
 Other functions to run dashboard visualization: 

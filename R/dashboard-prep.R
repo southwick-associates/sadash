@@ -81,9 +81,9 @@ extrapolate_pop <- function(pop, yrs) {
 #' @family functions to prepare data for summarization
 #' @export
 #' @examples 
-#' db_census <- "E:/SA/Data-production/Data-Dashboards/_Shared/census.sqlite3"
-#' pop <- load_pop(db_census, "NC")
-#' pop <- factor_age_acs(pop, suppress_check = FALSE)
+#' # db_census <- "E:/SA/Data-production/Data-Dashboards/_Shared/census.sqlite3"
+#' # pop <- load_pop(db_census, "NC")
+#' # pop <- factor_age_acs(pop, suppress_check = FALSE)
 factor_age_acs <- function(pop, suppress_check = TRUE) {
     utils::data("age_map", envir = environment())
     levs <- unique(age_map$age_acs)
