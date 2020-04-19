@@ -106,10 +106,12 @@ plot_month <- function(df, plot_title = "Sales by Month") {
 #' @family functions to run dashboard visualization
 #' @export
 #' @examples 
+#' \dontrun{
 #' library(ggplot2)
 #' county_map <- get_county_map("SC")
 #' ggplot(county_map) + 
 #'     geom_polygon(aes(long, lat, group = county))
+#' }
 get_county_map <- function(state) {
     utils::data("county_map_us", envir = environment())
     county_map_us %>%
@@ -132,21 +134,23 @@ get_county_map <- function(state) {
 #' @family functions to run dashboard visualization
 #' @export
 #' @examples 
+#' \dontrun{
 #' library(dplyr)
 #' data(dashboard)
 #' 
-#' # county_map <- get_county_map("SC")
-#' # county_census <- load_counties(state = "SC")
-#' # dash_list <- join_county_map(dashboard, county_map, county_census)
-#' # 
-#' # # produce a warning by using the wrong state
-#' # county_map <- get_county_map("ME")
-#' # county_census <- load_counties(state = "ME")
-#' # dash_list <- join_county_map(dashboard, county_map, county_census)
-#' # 
-#' # # Maine and South Carolina actually share one county name
-#' # x <- filter(dash_list$county, group == "all_sports", quarter == 4)
-#' # plot_county(x) %>% gridExtra::grid.arrange(grobs = .)
+#' county_map <- get_county_map("SC")
+#' county_census <- load_counties(state = "SC")
+#' dash_list <- join_county_map(dashboard, county_map, county_census)
+#' 
+#' # produce a warning by using the wrong state
+#' county_map <- get_county_map("ME")
+#' county_census <- load_counties(state = "ME")
+#' dash_list <- join_county_map(dashboard, county_map, county_census)
+#' 
+#' # Maine and South Carolina actually share one county name
+#' x <- filter(dash_list$county, group == "all_sports", quarter == 4)
+#' plot_county(x) %>% gridExtra::grid.arrange(grobs = .)
+#' }
 join_county_map <- function(dashboard, county_map, county_census) {
     
     # split dashboard by segment
@@ -190,6 +194,7 @@ join_county_map <- function(dashboard, county_map, county_census) {
 #' @family functions to run dashboard visualization
 #' @export
 #' @examples 
+#' \dontrun{
 #' library(dplyr)
 #' data(dashboard)
 #' county_map <- get_county_map("SC")
@@ -204,6 +209,7 @@ join_county_map <- function(dashboard, county_map, county_census) {
 #' # interactive with plotly
 #' plotly::ggplotly(p$churn)
 #' plotly::subplot(p, nrows = 2) %>% plotly::hide_colorbar()
+#' }
 plot_county <- function(dat) {
     # function to plot a single metric
     plot_one <- function(dat_one, measure) {
@@ -330,12 +336,12 @@ run_visual_county <- function(dash_list) {
 #' @family functions to run dashboard visualization
 #' @export
 #' @examples 
+#' \dontrun{
 #' data(dashboard)
 #' county_map <- get_county_map("SC")
 #' county_census <- load_counties(state = "SC")
 #' dash_list <- join_county_map(dashboard, county_map, county_census)
 #' 
-#' \dontrun{
 #' run_visual(dash_list)
 #' 
 #' # including county makes things a bit slow currently

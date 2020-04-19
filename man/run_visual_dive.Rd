@@ -19,10 +19,9 @@ This is a rough mock-up, intended to ensure (1) no surprises on the Tableau
 end and (2) results look correct.
 }
 \examples{
+\dontrun{
 data(hist_samp)
 county_map <- get_county_map_dive("WI")
-
-\dontrun{
 run_visual_dive(hist_samp, county_map, pct = 1)
 }
 }

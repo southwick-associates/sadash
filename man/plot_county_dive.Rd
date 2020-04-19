@@ -19,12 +19,14 @@ plot_county_dive(priv, county_map, metric = "participants", pct = 10)
 Chloropleth county plot for data dive
 }
 \examples{
+\dontrun{
 library(dplyr)
 data(hist_samp)
 priv <- filter(hist_samp, priv == "all_sports", year == 2014)
 county_map <- get_county_map_dive("WI")
 plot_county_dive(priv, county_map, pct = 1)
 plot_county_dive(priv, county_map, "churn")
+}
 }
 \seealso{
 Other data dive functions: 

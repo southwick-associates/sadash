@@ -13,10 +13,12 @@ get_county_map(state)
 Load county spatial data for selected state
 }
 \examples{
+\dontrun{
 library(ggplot2)
 county_map <- get_county_map("SC")
 ggplot(county_map) + 
     geom_polygon(aes(long, lat, group = county))
+}
 }
 \seealso{
 Other functions to run dashboard visualization: 

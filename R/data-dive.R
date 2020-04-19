@@ -292,8 +292,10 @@ drop_state_code <- function(x) {
 #' @family data dive functions
 #' @export
 #' @examples 
+#' \dontrun{
 #' get_county_map_dive("AL")
 #' get_county_map_dive("AL", drop_state_code = FALSE)
+#' }
 get_county_map_dive <- function(state, drop_state_code = TRUE) {
     x <- get_county_map(state)
     
@@ -314,12 +316,14 @@ get_county_map_dive <- function(state, drop_state_code = TRUE) {
 #' @family data dive functions
 #' @export
 #' @examples 
+#' \dontrun{
 #' library(dplyr)
 #' data(hist_samp)
 #' priv <- filter(hist_samp, priv == "all_sports", year == 2014)
 #' county_map <- get_county_map_dive("WI")
 #' plot_county_dive(priv, county_map, pct = 1)
 #' plot_county_dive(priv, county_map, "churn")
+#' }
 plot_county_dive <- function(priv, county_map, metric = "participants", pct = 10) {
     priv <- priv %>%
         filter(!is.na(.data$fips)) %>%
@@ -363,10 +367,9 @@ plot_county_dive <- function(priv, county_map, metric = "participants", pct = 10
 #' @seealso \code{\link{run_visual}}
 #' @export
 #' @examples 
+#' \dontrun{
 #' data(hist_samp)
 #' county_map <- get_county_map_dive("WI")
-#' 
-#' \dontrun{
 #' run_visual_dive(hist_samp, county_map, pct = 1)
 #' }
 run_visual_dive <- function(hist_samp, county_map, pct = 10) {

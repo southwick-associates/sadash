@@ -16,9 +16,11 @@ This will ensure correct ordering in plots, etc. Uses \code{\link{age_map}}
 sample data to identify factor levels.
 }
 \examples{
-# db_census <- "E:/SA/Data-production/Data-Dashboards/_Shared/census.sqlite3"
-# pop <- load_pop(db_census, "NC")
-# pop <- factor_age_acs(pop, suppress_check = FALSE)
+\dontrun{
+db_census <- "E:/SA/Data-production/Data-Dashboards/_Shared/census.sqlite3"
+pop <- load_pop(db_census, "NC")
+pop <- factor_age_acs(pop, suppress_check = FALSE)
+}
 }
 \seealso{
 Other functions to prepare data for summarization: 

@@ -18,8 +18,10 @@ Mostly a wrapper for \code{\link{get_county_map}} with some formatting used
 in data dive.
 }
 \examples{
+\dontrun{
 get_county_map_dive("AL")
 get_county_map_dive("AL", drop_state_code = FALSE)
+}
 }
 \seealso{
 Other data dive functions: 

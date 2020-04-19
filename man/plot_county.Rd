@@ -16,6 +16,7 @@ Intended to be run on the output of \code{\link{join_county_map}} (the
 of the dat$metric variable.
 }
 \examples{
+\dontrun{
 library(dplyr)
 data(dashboard)
 county_map <- get_county_map("SC")
@@ -30,6 +31,7 @@ gridExtra::grid.arrange(grobs = p)
 # interactive with plotly
 plotly::ggplotly(p$churn)
 plotly::subplot(p, nrows = 2) \%>\% plotly::hide_colorbar()
+}
 }
 \seealso{
 Other functions to run dashboard visualization: 

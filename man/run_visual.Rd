@@ -17,12 +17,12 @@ The idea here is to replicate the functionality of the Tableau dashboard
 to check/explore the results prior to sending to the Tableau analyst.
 }
 \examples{
+\dontrun{
 data(dashboard)
 county_map <- get_county_map("SC")
 county_census <- load_counties(state = "SC")
 dash_list <- join_county_map(dashboard, county_map, county_census)
 
-\dontrun{
 run_visual(dash_list)
 
 # including county makes things a bit slow currently
