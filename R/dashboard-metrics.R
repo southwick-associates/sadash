@@ -314,6 +314,10 @@ fill_missing_months <- function(dat) {
             mutate(category = as.character(months[i]), value = 0)
     }
     zero_month_table <- bind_rows(zero_month_table)
+    zero_month_table <- filter(zero_month_table,
+                               !(quarter==2 & category %in% 
+                                   c("7","8", "9", "10", "11", "12",
+                                     "13", "14", "15")))
     
     # recombine data
     # - month data
