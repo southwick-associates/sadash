@@ -63,7 +63,7 @@ load_sale_standard <- function(db) {
 #' @describeIn load_sqlite Load county fips-names for attaching to cust & pop_county
 #' @export
 load_counties <- function(
-    db = "E:/SA/Data-production/Data-Dashboards/_Shared/census.sqlite3", state
+    db = "E:/OneDrive - Southwick Associates, Inc/Documents/SA/Data-production/Data-Dashboards/_Shared/census.sqlite3", state
 ) { 
     load_sqlite(db, function(con) {
         tbl(con, "county_fips") %>% 
